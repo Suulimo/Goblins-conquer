@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Static_Game_Scope;
 
-public class Loop_Sys : MonoBehaviour
+public static class Loop_Sys
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static void Run_Last_Update(float dt) {
+        for (int i = 0; i < battle_scope.state.shark_num; i++) {
+            if (battle_scope.state.sharks_move_switch[i].Item1 != 0 || battle_scope.state.sharks_move_switch[i].Item2 != 0) {
+            }
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Battle_Sys.Run(battle_scope, dt);
     }
 }
+

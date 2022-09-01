@@ -6,8 +6,9 @@ public static class Static_Game_Scope
     static void DomainReload() {
         Debug.Log("Static_Game_Scope reset.");
 
-        battle_scope = new Battle_Scope();
+        game_state = new Game_State();
     }
 
+    public static Game_State game_state;
     public static Battle_Scope battle_scope;
 }
