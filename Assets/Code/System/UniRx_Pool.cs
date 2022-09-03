@@ -44,7 +44,19 @@ public class UniRx_Pool : ObjectPool<UniRx_Pool_Component>
 
         switch (instance.type) {
             case UniRx_Pool_Type.Goblin:
+                var g_pawn_control = instance.GetComponent<Pawn_Control>();
+                g_pawn_control.goblin_pawn = null;
+                g_pawn_control.human_pawn = null;
+                instance.transform.position = Vector3.zero;
+                break;
+
             case UniRx_Pool_Type.Human:
+                var h_pawn_control = instance.GetComponent<Pawn_Control>();
+                h_pawn_control.goblin_pawn = null;
+                h_pawn_control.human_pawn = null;
+                instance.transform.position = Vector3.zero;
+                break;
+
             case UniRx_Pool_Type.None:
                 instance.transform.position = Vector3.zero;
                 break;
@@ -56,9 +68,18 @@ public class UniRx_Pool : ObjectPool<UniRx_Pool_Component>
 
         switch (instance.type) {
             case UniRx_Pool_Type.Goblin:
+                var g_pawn_control = instance.GetComponent<Pawn_Control>();
+                g_pawn_control.goblin_pawn = null;
+                g_pawn_control.human_pawn = null;
                 break;
+
             case UniRx_Pool_Type.Human:
+                var h_pawn_control = instance.GetComponent<Pawn_Control>();
+                h_pawn_control.goblin_pawn = null;
+                h_pawn_control.human_pawn = null;
+                instance.transform.position = Vector3.zero; 
                 break;
+
             case UniRx_Pool_Type.None:
                 break;
         }

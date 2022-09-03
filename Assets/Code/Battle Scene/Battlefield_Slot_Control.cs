@@ -78,7 +78,6 @@ public class Battlefield_Slot_Control : MonoBehaviour
     }
 
     private void OnMouseUp() {
-        Debug.Log(gameObject.name + "X");
         MessageBroker.Default.Publish(new Drag_End { slot_id = slot_id, slot_type = slot_type });
     }
 

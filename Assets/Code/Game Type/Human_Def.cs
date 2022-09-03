@@ -28,8 +28,10 @@ public class Human_Other_Data
 [System.Serializable]
 public class Human_Battle_Data
 {
+    public float attack_cd;
     public int[] attack_power;
     public string ability_id;
+    public int[] hp;
 }
 
 public static class Human_Def
@@ -47,8 +49,10 @@ public static class Human_Def
             },
             battle = new Human_Battle_Data
             {
-                attack_power = new [] { 5, 10, 15, 20, 25, },
+                attack_cd = 5,
+                attack_power = new [] { 1, 2, 3, 4, 5, },
                 ability_id = "ABILITY_000",
+                hp = new [] { 20, 20, 20, 30, 30 },
             },
         },
         new Human_Data() {
@@ -62,8 +66,10 @@ public static class Human_Def
             },
             battle = new Human_Battle_Data
             {
-                attack_power = new [] { 5, 10, 15, 20, 25, },
+                attack_cd = 5,
+                attack_power = new [] { 2, 4, 6, 8, 10, },
                 ability_id = "ABILITY_000",
+                hp = new [] { 40, 40, 50, 60, 70 },
             },
         },
         new Human_Data() {
@@ -77,8 +83,10 @@ public static class Human_Def
             },
             battle = new Human_Battle_Data
             {
-                attack_power = new [] { 5, 10, 15, 20, 25, },
+                attack_cd = 5,
+                attack_power = new [] { 3, 6, 9, 12, 15, },
                 ability_id = "ABILITY_000",
+                hp = new [] { 40, 50, 70, 70, 90 },
             },
         },
     };

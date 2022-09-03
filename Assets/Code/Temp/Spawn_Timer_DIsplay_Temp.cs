@@ -16,5 +16,7 @@ public class Spawn_Timer_DIsplay_Temp : MonoBehaviour
         Static_Game_Scope.battle_scope.state.enemy_spawn_timer.SubscribeToText(timer_text).AddTo(this);
     }
 
-    // Update is called once per frame
+    private void OnMouseUpAsButton() {
+        Static_Game_Scope.battle_scope.state.is_auto_spawn ^= true;
+    }
 }

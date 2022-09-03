@@ -57,7 +57,7 @@ public class Data_Manager : MonoBehaviour
                 component = prefab.AddComponent<UniRx_Pool_Component>();
             }
             prefabDict.Add(p.key, (prefab, p.init_pool_capacity));
-            Debug.Log(p.key);
+            Debug.Log($"{p.key} ({p.init_pool_capacity})");
         }
 
         this.prefab_oK = true;

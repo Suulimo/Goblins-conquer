@@ -55,3 +55,18 @@ public struct Bed_Spawned
     public int slot_id;
     public Human_Data human_data;
 }
+
+public struct Goblin_Attack_Human
+{
+    public int goblin_slot_id;
+    public int human_slot_id;
+    public Goblin_Data goblin_data;
+}
+
+public struct Human_Attack_Goblin
+{
+    public int human_slot_id;
+    public int goblin_slot_id;
+    public Goblin_Data goblin_data;
+}
+

@@ -25,10 +25,6 @@ MonoBehaviour:
     m_Address: Game_Control
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 475925ae91a1a3044a39ed90c919b33a
-    m_Address: Pawn
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 66012356e787f2c4fb48141327c7375a
     m_Address: Pawn
     m_ReadOnly: 0

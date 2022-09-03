@@ -12,7 +12,13 @@ using UnityEngine.SceneManagement;
 public class Game_Control : MonoBehaviour
 {
     private static Game_Control _singleton;
-    public static Game_Control game_control=> _singleton;
+    public static Game_Control game_control => _singleton;
+
+    // HACK, TODO
+    public System.Func<Slot_Type, int, Vector3> Hack_Ask_Position;
+    public System.Func<GameObject, (Slot_Type, int, Vector3)> Hack_Ask_Slot;
+    public System.Func<Vector3, int, (Slot_Type, int, Vector3)> Hack_Scan_Target;
+    public System.Action<Slot_Type, int> Hack_Pawn_Die;
 
     [ShowInInspector]
     Game_State game_state => Static_Game_Scope.game_state;
@@ -69,7 +75,6 @@ public class Game_Control : MonoBehaviour
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
-
     }
 
     void Update() {

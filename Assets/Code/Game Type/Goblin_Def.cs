@@ -28,8 +28,10 @@ public class Goblin_Other_Data
 [System.Serializable]
 public class Goblin_BattleData
 {
+    public float attack_cd;
     public int[] attack_power;
     public string ability_id;
+    public int[] hp;
 }
 
 public static class Goblin_Def
@@ -47,8 +49,10 @@ public static class Goblin_Def
             },
             battle = new Goblin_BattleData
             {
-                attack_power = new [] { 5, 10, 15, 20, 25, },
+                attack_cd = 3,
+                attack_power = new [] { 3, 5, 7, 9, 11, },
                 ability_id = "GOBLIBILITY_000",
+                hp = new [] { 40, 40, 50, 60, 70 },
             },
         },
         new Goblin_Data() {
@@ -62,8 +66,10 @@ public static class Goblin_Def
             },
             battle = new Goblin_BattleData
             {
-                attack_power = new [] { 5, 10, 15, 20, 25, },
+                attack_cd = 3,
+                attack_power = new [] { 5, 5, 5, 5, 5 },
                 ability_id = "GOBLIBILITY_000",
+                hp = new [] { 40, 70, 100, 130, 160 },
             },
         },
         new Goblin_Data() {
@@ -77,8 +83,10 @@ public static class Goblin_Def
             },
             battle = new Goblin_BattleData
             {
+                attack_cd = 3,
                 attack_power = new [] { 5, 10, 15, 20, 25, },
                 ability_id = "GOBLIBILITY_000",
+                hp = new [] { 40, 40, 40, 40, 50 },
             },
         },
     };
