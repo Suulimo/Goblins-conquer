@@ -29,10 +29,10 @@ public class Human_Other_Data
 public class Human_Battle_Data
 {
     public float attack_cd;
-    public int[] attack_power;
+    public int attack_power;
     public string ability_id;
-    public int[] hp;
     public float bed_spawn_cd;
+    public int hp;
 }
 
 public static class Human_Def
@@ -40,130 +40,161 @@ public static class Human_Def
     public static Human_Data[] Default_Human_List = new Human_Data[]
     {
         new Human_Data() {
-            id = "HUMAN_001",
+            id = "FEMALE_001",
             rank = 1,
             other = new Human_Other_Data
             {
-                beauty = 3,
-                name = "HUMAN_NAME_001",
+                beauty = 1,
+                name = "",
                 sprite = "EnemyFemale (1)",
-                sprite_bed = "ani01g",
+                sprite_bed = "Bed (1)",
                 femininity = 1,
             },
             battle = new Human_Battle_Data
             {
-                attack_cd = 5,
-                attack_power = new [] { 1, 2, 3, 4, 5, },
+                attack_cd = 4.9f,
+                attack_power = 5,
                 ability_id = "ABILITY_000",
-                hp = new [] { 20, 20, 20, 30, 30 },
-                bed_spawn_cd = 20,
+                hp = 30,
             },
         },
         new Human_Data() {
-            id = "HUMAN_002",
+        id = "FEMALE_002",
             rank = 2,
             other = new Human_Other_Data
             {
                 beauty = 2,
-                name = "HUMAN_NAME_001",
+                name = "",
                 sprite = "EnemyFemale (2)",
-                sprite_bed = "ani01g",
+                sprite_bed = "Bed (2)",
                 femininity = 1,
             },
             battle = new Human_Battle_Data
             {
-                attack_cd = 5,
-                attack_power = new [] { 2, 4, 6, 8, 10, },
+                attack_cd = 4.8f,
+                attack_power = 10,
                 ability_id = "ABILITY_000",
-                hp = new [] { 40, 40, 50, 60, 70 },
+                hp = 60,
                 bed_spawn_cd = 20,
             },
         },
         new Human_Data() {
-            id = "HUMAN_003",
+            id = "FEMALE_003",
             rank = 3,
             other = new Human_Other_Data
             {
-                beauty = 1,
+                beauty = 2,
                 name = "HUMAN_NAME_001",
                 sprite = "EnemyFemale (3)",
-                sprite_bed = "ani01g",
+                sprite_bed = "Bed (3)",
                 femininity = 1,
             },
             battle = new Human_Battle_Data
             {
-                attack_cd = 5,
-                attack_power = new [] { 3, 6, 9, 12, 15, },
+                attack_cd = 4.7f,
+                attack_power = 15,
                 ability_id = "ABILITY_000",
-                hp = new [] { 40, 50, 70, 70, 90 },
-                bed_spawn_cd = 20,
+                hp = 90,
+            },
+        },
+        new Human_Data() {
+            id = "FEMALE_004",
+            rank = 4,
+            other = new Human_Other_Data
+            {
+                beauty = 2,
+                name = "HUMAN_NAME_001",
+                sprite = "EnemyFemale (4)",
+                sprite_bed = "Bed (4)",
+                femininity = 1,
+            },
+            battle = new Human_Battle_Data
+            {
+                attack_cd = 4.6f,
+                attack_power = 20,
+                ability_id = "ABILITY_000",
+                hp = 120,
             },
         },
     };
-
     public static Human_Data[] Default_Male_Human_List = new Human_Data[]
-{
+    {
         new Human_Data() {
-            id = "MAN_001",
+            id = "MALE_001",
             rank = 1,
             other = new Human_Other_Data
             {
-                beauty = 3,
-                name = "MAN_NAME_001",
+                beauty = 1,
+                name = "",
                 sprite = "EnemyMale (1)",
-                sprite_bed = "ani01g",
+                sprite_bed = "",
+                femininity = 0,
             },
             battle = new Human_Battle_Data
             {
-                attack_cd = 5,
-                attack_power = new [] { 1, 2, 3, 4, 5, },
+                attack_cd = 4.9f,
+                attack_power = 5,
                 ability_id = "ABILITY_000",
-                hp = new [] { 20, 20, 20, 30, 30 },
-                bed_spawn_cd = 20,
+                hp = 30,
             },
         },
         new Human_Data() {
-            id = "" +
-            "MAN_002",
+        id = "MALE_002",
             rank = 2,
             other = new Human_Other_Data
             {
                 beauty = 2,
-                name = "" +
-                "MAN_NAME_001",
+                name = "",
                 sprite = "EnemyMale (2)",
-                sprite_bed = "ani01g",
-           },
+                sprite_bed = "",
+                femininity = 0,
+            },
             battle = new Human_Battle_Data
             {
-                attack_cd = 5,
-                attack_power = new [] { 2, 4, 6, 8, 10, },
+                attack_cd = 4.8f,
+                attack_power = 10,
                 ability_id = "ABILITY_000",
-                hp = new [] { 40, 40, 50, 60, 70 },
+                hp = 60,
                 bed_spawn_cd = 20,
             },
         },
         new Human_Data() {
-            id = "" +
-            "MAN_003",
+            id = "MALE_003",
             rank = 3,
             other = new Human_Other_Data
             {
-                beauty = 1,
-                name = "" +
-                "MAN_NAME_001",
+                beauty = 2,
+                name = "",
                 sprite = "EnemyMale (3)",
-                sprite_bed = "ani01g",
+                sprite_bed = "",
+                femininity = 0,
             },
             battle = new Human_Battle_Data
             {
-                attack_cd = 5,
-                attack_power = new [] { 3, 6, 9, 12, 15, },
+                attack_cd = 4.7f,
+                attack_power = 15,
                 ability_id = "ABILITY_000",
-                hp = new [] { 40, 50, 70, 70, 90 },
-                bed_spawn_cd = 20,
+                hp = 90,
             },
         },
-};
-
+        new Human_Data() {
+            id = "MALE_004",
+            rank = 4,
+            other = new Human_Other_Data
+            {
+                beauty = 2,
+                name = "",
+                sprite = "EnemyMale (4)",
+                sprite_bed = "",
+                femininity = 0,
+            },
+            battle = new Human_Battle_Data
+            {
+                attack_cd = 4.6f,
+                attack_power = 20,
+                ability_id = "ABILITY_000",
+                hp = 120,
+            },
+        },
+    };
 }

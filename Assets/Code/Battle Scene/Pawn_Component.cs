@@ -32,10 +32,10 @@ public class Pawn_Component : MonoBehaviour
         goblin_pawn = pawn;
         if (goblin_pawn != null) {
             rank_text.text = pawn.data.rank.ToString();
-            fhp_text.text = pawn.data.battle.hp[0].ToString();
-            attack_text.text = pawn.data.battle.attack_power[0].ToString();
+            fhp_text.text = pawn.data.battle.hp.ToString();
+            attack_text.text = pawn.data.battle.attack_power.ToString();
 
-            hp_bar.Init(pawn.state.hp, pawn.data.battle.hp[0]);
+            hp_bar.Init(pawn.state.hp, pawn.data.battle.hp);
             cd_bar.Init(pawn.state.attack_cycle, pawn.data.battle.attack_cd);
         }
     }
@@ -47,10 +47,10 @@ public class Pawn_Component : MonoBehaviour
         human_pawn = pawn;
         if (human_pawn != null) {
             rank_text.text = pawn.data.rank.ToString();
-            fhp_text.text = pawn.data.battle.hp[0].ToString();
-            attack_text.text = pawn.data.battle.attack_power[0].ToString();
+            fhp_text.text = pawn.data.battle.hp.ToString();
+            attack_text.text = pawn.data.battle.attack_power.ToString();
 
-            hp_bar.Init(pawn.state.hp, pawn.data.battle.hp[0]);
+            hp_bar.Init(pawn.state.hp, pawn.data.battle.hp);
             cd_bar.Init(pawn.state.attack_cycle, pawn.data.battle.attack_cd);
         }
     }
