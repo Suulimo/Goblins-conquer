@@ -5,7 +5,7 @@ using TMPro;
 using UniRx;
 using Cysharp.Threading.Tasks;
 
-public class Pawn_Control : MonoBehaviour
+public class Pawn_Component : MonoBehaviour
 {
     public TMP_Text rank_text;
     public TMP_Text fhp_text;

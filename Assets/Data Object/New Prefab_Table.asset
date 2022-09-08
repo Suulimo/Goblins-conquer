@@ -15,3 +15,5 @@ MonoBehaviour:
   sheet:
   - key: Pawn
     init_pool_capacity: 20
+  - key: Temp Slot Display
+    init_pool_capacity: 20

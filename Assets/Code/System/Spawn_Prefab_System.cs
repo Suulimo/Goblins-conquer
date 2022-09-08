@@ -124,7 +124,7 @@ public static class SpawnPrefabSystem
             Return(gObj);
     }
 
-    public static void Return(GameObject gObj) {
+    static void Return(GameObject gObj) {
         // Rex Particle 動畫完就自己setActive false，讓他可以回收
         if (gObj.activeSelf == false) {
             Debug.LogWarning($"returning an inactive object : {gObj.name}", gObj);

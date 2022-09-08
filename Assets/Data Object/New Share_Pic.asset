@@ -34,6 +34,10 @@ MonoBehaviour:
     - {fileID: 21300000, guid: a4c9b92a212de6d4f9e9d3f65c33f417, type: 3}
     - {fileID: 21300000, guid: 8f92ba79ad1af6f4fa8e8a9064073677, type: 3}
     - {fileID: 21300000, guid: 31e7c0c295f4eae4c9fea3e7a7f7b0e8, type: 3}
+    - {fileID: 21300000, guid: c3fac24545baef54a9668409609a1e12, type: 3}
+    - {fileID: 21300000, guid: e2a87bd1b53656d4f9b983c98b0563cc, type: 3}
+    - {fileID: 21300000, guid: ca04faeab39a44440be3039592a0a1e8, type: 3}
+    - {fileID: 707916680, guid: 499f030c825b6cd49956f29e9917b43f, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -104,7 +108,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 12
-      Data: 15
+      Data: 18
     - Name: 
       Entry: 7
       Data: 
@@ -282,6 +286,74 @@ MonoBehaviour:
     - Name: $v
       Entry: 10
       Data: 17
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: EnemyMale (1)
+    - Name: $v
+      Entry: 10
+      Data: 18
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: EnemyMale (2)
+    - Name: $v
+      Entry: 10
+      Data: 19
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: EnemyMale (3)
+    - Name: $v
+      Entry: 10
+      Data: 20
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: bed_pic
+      Entry: 7
+      Data: 3|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[UnityEngine.Sprite,
+        UnityEngine.CoreModule]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 4|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: ani01g
+    - Name: $v
+      Entry: 10
+      Data: 21
     - Name: 
       Entry: 8
       Data: 

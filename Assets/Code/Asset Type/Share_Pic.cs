@@ -10,5 +10,7 @@ public class Share_Pic : SerializedScriptableObject
 {
     public Dictionary<string, Sprite> goblin_pic = new Dictionary<string, Sprite>();
     public Dictionary<string, Sprite> human_pic = new Dictionary<string, Sprite>();
-//    public Sprite[] Rarity_Pic = new Sprite[] { };
+    public Dictionary<string, Sprite> bed_pic = new Dictionary<string, Sprite>();
+
+    //    public Sprite[] Rarity_Pic = new Sprite[] { };
 }

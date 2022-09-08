@@ -15,7 +15,7 @@ public class Auto_Loader
     private static async UniTask LoadAppManager() {
         Debug.Log("Auto_Loader Before scene loaded");
 
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 500;
 
 
         if (Data_Manager.data_manager == null) {

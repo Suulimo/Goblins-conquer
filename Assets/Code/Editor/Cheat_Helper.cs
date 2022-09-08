@@ -34,7 +34,7 @@ public class Cheat_Helper : EditorWindow
     [MenuItem("My Game/Battlefield Control _F3")]
     public static void NewBattleFieldControlWindow() {
         if (EditorApplication.isPlaying) {
-            var runtime = FindObjectOfType<Battlefield_Control>();
+            var runtime = FindObjectOfType<Battlefield_Main_Component>();
             Selection.activeGameObject = runtime.gameObject;
             var type = typeof(EditorWindow).Assembly.GetType("UnityEditor.InspectorWindow");
             GetWindow(type, false, "static inspector", true);

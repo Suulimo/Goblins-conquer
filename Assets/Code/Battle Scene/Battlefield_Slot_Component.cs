@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using static Static_Game_Scope;
 
-public class Battlefield_Slot_Control : MonoBehaviour
+public class Battlefield_Slot_Component : MonoBehaviour
 {
     public Slot_Type slot_type;
     public int slot_id;
@@ -20,6 +20,8 @@ public class Battlefield_Slot_Control : MonoBehaviour
     GameObject pawn_object;
     SpriteRenderer pawon_sprite_renderer;
 
+    GameObject slot_display_object;
+
     public bool Lock_Collider {
         set => my_collider2D.enabled = !value;
     }
@@ -29,6 +31,12 @@ public class Battlefield_Slot_Control : MonoBehaviour
         pawon_sprite_renderer = value?.GetComponent<SpriteRenderer>();
     }
     public GameObject Get_Pawn_Object => pawn_object;
+
+    public void Set_Slot_Display_Object(GameObject value) {
+        slot_display_object = value;
+    }
+
+    public GameObject Get_Slot_Display_Object => slot_display_object;
 
 
     public Swap_Info Get_Swap_Info => new Swap_Info {
@@ -82,63 +90,22 @@ public class Battlefield_Slot_Control : MonoBehaviour
     }
 
     private void OnMouseUpAsButton() {
-        if (slot_type == Slot_Type.C) {
-            fnHopC().Forget();
-        }
-        else if (slot_type == Slot_Type.B) {
-            fnHopB().Forget();
-        }
-        else if (slot_type == Slot_Type.A) {
-            fnHopA().Forget();
+        switch (slot_type) {
+            case Slot_Type.C:
+            case Slot_Type.B:
+            case Slot_Type.A:
+                fnHopB();
+                break;
         }
     }
 
-    async UniTaskVoid fnHopC() {
-        my_collider2D.enabled = false;
-        Vector3 tall = new Vector3(0, 0, 0);
-
-        while (tall.y < 5) {
-            tall.y += 5f * Time.deltaTime;
-            transform.position = original_location + tall;
-            await UniTask.NextFrame();
-        }
-
-        transform.position = original_location + tall;
-
-        await UniTask.Delay(300);
-
-        while (tall.y > 0) {
-            tall.y -= 7.5f * Time.deltaTime;
-            transform.position = original_location + tall;
-            await UniTask.NextFrame();
-        }
-
-        transform.position = original_location;
-        my_collider2D.enabled = true;
-    }
 
     async UniTaskVoid fnHopB() {
         my_collider2D.enabled = false;
 
-        await transform.DOLocalMoveY(5, 1).SetRelative().SetEase(Ease.Linear);
-        await UniTask.Delay(300);
-        await transform.DOLocalMoveY(-5, 0.66f).SetRelative().SetEase(Ease.OutElastic);
-
-        transform.position = original_location;
-        my_collider2D.enabled = true;
-    }
-    async UniTaskVoid fnHopA() {
-        my_collider2D.enabled = false;
-
-        _ = transform.DORotate(new Vector3(0, 0, 360), 1.2f, RotateMode.FastBeyond360);
-
-        await transform.DOLocalMoveY(5, 1).SetRelative().SetEase(Ease.InOutCirc);
-        await UniTask.Delay(300);
-
-        await transform.DOScale(new Vector3(2, 1.2f, 1), 0.3f).SetRelative().SetLoops(2, LoopType.Yoyo);
-
-        _ = transform.DORotate(new Vector3(0, 0, 360), 0.7f, RotateMode.FastBeyond360);
-        await transform.DOLocalMoveY(-5, 0.66f).SetRelative().SetEase(Ease.OutBounce);
+        await transform.DOLocalMoveY(1.5f, 0.2f).SetRelative().SetEase(Ease.Linear);
+        await UniTask.Delay(250);
+        await transform.DOLocalMoveY(-1.5f, 0.16f).SetRelative().SetEase(Ease.OutElastic);
 
         transform.position = original_location;
         my_collider2D.enabled = true;
