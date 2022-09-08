@@ -22,6 +22,9 @@ public class Battle_State
 
     public FloatReactiveProperty enemy_spawn_timer = new FloatReactiveProperty(Game_Spec.INIT_ENEMY_SPAWN_TIME);
 
+    [PropertyRange(1, 4)]
+    public float difficulty = 1.0f;
+
     public bool is_auto_spawn = true;
 
 }

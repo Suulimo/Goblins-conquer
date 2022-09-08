@@ -23,7 +23,35 @@ MonoBehaviour:
       femininity: 0
     battle:
       attack_cd: 0
-      attack_power: 
+      attack_power: 0
       ability_id: 
-      hp: 
       bed_spawn_cd: 0
+      hp: 0
+  - id: 
+    rank: 0
+    other:
+      beauty: 0
+      name: 
+      sprite: 
+      sprite_bed: 
+      femininity: 0
+    battle:
+      attack_cd: 0
+      attack_power: 0
+      ability_id: 
+      bed_spawn_cd: 0
+      hp: 0
+  - id: 
+    rank: 0
+    other:
+      beauty: 0
+      name: 
+      sprite: 
+      sprite_bed: 
+      femininity: 0
+    battle:
+      attack_cd: 0
+      attack_power: 0
+      ability_id: 
+      bed_spawn_cd: 0
+      hp: 0
