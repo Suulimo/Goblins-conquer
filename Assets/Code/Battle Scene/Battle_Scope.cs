@@ -118,11 +118,7 @@ public static class Battle_Sys
                 state.enemy_spawn_timer.Value = Game_Spec.INIT_ENEMY_SPAWN_TIME;
                 var index = Get_Empty_Slot(scope.b_group);
                 if (index > -1) {
-                    Spawn_Human_At(scope.state.difficulty, scope.b_group, index);
-                    if (scope.state.difficulty < 4.0f)
-                    {
-                        scope.state.difficulty += 0.1f;
-                    }
+                    Spawn_Human_At(scope.b_group, index);
                 }
             }
         }
@@ -244,9 +240,9 @@ public static class Battle_Sys
     }
 
     static void Spawn_Goblin_At(Slot_State[] group, int index) {
-        var data = Goblin_Def.Default_Goblin_List[Random.Range(0, 4)];
+        var data = Goblin_Def.Default_Goblin_List[Random.Range(0, 3)];
         var state = new Goblin_State();
-        state.hp.Value = data.battle.hp;
+        state.hp.Value = data.battle.hp[0];
         state.attack_cycle.Value = 0/*data.battle.attack_cd*/;
         var g = new Goblin_Pawn() { data = data, state = state };
 
@@ -255,10 +251,10 @@ public static class Battle_Sys
         MessageBroker.Default.Publish(new Goblin_Spawned { slot_id = group[index].id, goblin_data = data });
     }
 
-    static void Spawn_Human_At(float difficulty, Slot_State[] group, int index) {
-        var data = (Random.value < 0.8) ? Human_Def.Default_Male_Human_List[(int)difficulty + Random.Range(0, 1)] : Human_Def.Default_Human_List[(int)difficulty + Random.Range(0, 1)];
+    static void Spawn_Human_At(Slot_State[] group, int index) {
+        var data = (Random.value < 0.8) ? Human_Def.Default_Male_Human_List[Random.Range(0, 3)] : Human_Def.Default_Human_List[Random.Range(0, 3)];
         var state = new Human_State();
-        state.hp.Value = data.battle.hp;
+        state.hp.Value = data.battle.hp[0];
         state.attack_cycle.Value = 0/*data.battle.attack_cd*/;
         var h = new Human_Pawn() { data = data, state = state };
 
@@ -268,7 +264,7 @@ public static class Battle_Sys
     }
 
     static void Spawn_Bed_At(Slot_State[] group, int index) {
-        var data = Human_Def.Default_Human_List[Random.Range(0, 4)];
+        var data = Human_Def.Default_Human_List[Random.Range(0, 3)];
         var state = new Human_State();
         state.attack_cycle.Value = 0/*data.battle.attack_cd*/;
 
@@ -287,7 +283,7 @@ public static class Battle_Sys
     public static void Spawn_Human_Random(Battle_Scope scope) {
         var index = Get_Empty_Slot(scope.b_group);
         if (index > -1) {
-            Spawn_Human_At(scope.state.difficulty, scope.b_group, index);
+            Spawn_Human_At(scope.b_group, index);
         }
     }
 
@@ -359,7 +355,7 @@ public static class Battle_Sys
     }
 
     public static void Human_Attack_Goblin(Battle_Scope scope, Human_Pawn human_pawn, int human_slot_id, Goblin_Pawn goblin_pawn, int goblin_slot_id) {
-        goblin_pawn.state.hp.Value -= human_pawn.data.battle.attack_power;
+        goblin_pawn.state.hp.Value -= human_pawn.data.battle.attack_power[0];
 
         if (goblin_pawn.state.hp.Value <= 0) {
             // die
@@ -372,7 +368,7 @@ public static class Battle_Sys
     }
 
     public static void Goblin_Attack_Human(Battle_Scope scope, Human_Pawn human_pawn, int human_slot_id, Goblin_Pawn goblin_pawn, int goblin_slot_id) {
-        human_pawn.state.hp.Value -= goblin_pawn.data.battle.attack_power;
+        human_pawn.state.hp.Value -= goblin_pawn.data.battle.attack_power[0];
 
         if (human_pawn.state.hp.Value <= 0) {
             // die

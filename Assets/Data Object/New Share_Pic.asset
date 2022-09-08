@@ -19,14 +19,6 @@ MonoBehaviour:
     - {fileID: 21300000, guid: eb26689b83ca6c14985436dbd8bfabdc, type: 3}
     - {fileID: 21300000, guid: b7de3cb3f65356e44b30047665ea2e5b, type: 3}
     - {fileID: 21300000, guid: 2d05daf1d0528874b964f15c11fd0090, type: 3}
-    - {fileID: 21300000, guid: 8857c534918d8d64e9e17e8fc5658973, type: 3}
-    - {fileID: 21300000, guid: cc986de1a1fe8574c888d77f4053e9b3, type: 3}
-    - {fileID: 21300000, guid: d710ff0fcc54be04795668fd61e83bd2, type: 3}
-    - {fileID: 21300000, guid: 340a342c82981bf47a5994fd631b33dd, type: 3}
-    - {fileID: 21300000, guid: 5ed9513992f4ed64db9f3a49e595ee58, type: 3}
-    - {fileID: 21300000, guid: a53189211c292824b9a5b2df28fa1256, type: 3}
-    - {fileID: 21300000, guid: 41177c3d8caa6f14fb2f53ee773ffa65, type: 3}
-    - {fileID: 21300000, guid: b7fd1a4fa57c49a4da6dace219914224, type: 3}
     - {fileID: 21300000, guid: 23b741e1650956a458cdb885a55690bd, type: 3}
     - {fileID: 21300000, guid: 564653819a2d81f4c80f70a1800737cd, type: 3}
     - {fileID: 21300000, guid: bec4660640a974b41ababce7d9265ea0, type: 3}
@@ -45,30 +37,7 @@ MonoBehaviour:
     - {fileID: 21300000, guid: c3fac24545baef54a9668409609a1e12, type: 3}
     - {fileID: 21300000, guid: e2a87bd1b53656d4f9b983c98b0563cc, type: 3}
     - {fileID: 21300000, guid: ca04faeab39a44440be3039592a0a1e8, type: 3}
-    - {fileID: 21300000, guid: 9ee31a8485c84684db26c1c79293201a, type: 3}
-    - {fileID: 21300000, guid: 05aa06d8cbc9b3d47a40736b3c106522, type: 3}
-    - {fileID: 21300000, guid: ef711f519f9a2034696e32a4ace7da76, type: 3}
-    - {fileID: 21300000, guid: 7516687a04fe60d45b794567dedefc3b, type: 3}
-    - {fileID: 21300000, guid: 9f8d9b3b1ab31fa46a0512362ed66607, type: 3}
-    - {fileID: 21300000, guid: b19e46836fb9cde46bab1d9918f4c5a9, type: 3}
-    - {fileID: 21300000, guid: 87378fde1ee89e342882cb8db987e750, type: 3}
-    - {fileID: 21300000, guid: f1bd2fb0e8b8ce14f956ec8f5fa0e92f, type: 3}
-    - {fileID: 21300000, guid: a10bc1ee0a447f745b06109711fd4c45, type: 3}
-    - {fileID: 21300000, guid: bf3171cc37d54f940b35c1d7fe94d2ce, type: 3}
-    - {fileID: 21300000, guid: e90bda3d2332ead42ab42af80cc5d88b, type: 3}
-    - {fileID: 21300000, guid: a72cd71c589654f48a740c9cbbb45cbb, type: 3}
-    - {fileID: 21300000, guid: 46bbd2abf758e1f4591e20f6954f0da1, type: 3}
-    - {fileID: 21300000, guid: 711875021d3ca204ab5adcb2306daf3d, type: 3}
-    - {fileID: 21300000, guid: ff7b92f9e0c13d14c96a35405ba4c02d, type: 3}
-    - {fileID: 21300000, guid: c96ad579a7020104f85a558a30b8d32f, type: 3}
-    - {fileID: 21300000, guid: d6cdc1657d05a9440a119c1ff2cdb7ee, type: 3}
-    - {fileID: 21300000, guid: a3a4a296764e9c147b32c84de04dcfe3, type: 3}
-    - {fileID: 1367527384, guid: 0e62fddcfc65ab7469a6e5974928de41, type: 3}
-    - {fileID: -605490564, guid: e9db65bb60994474ab3d68f5d618a63b, type: 3}
-    - {fileID: 2017643823, guid: 5e3122659c4fe624d8b8ec29e03dc1bd, type: 3}
-    - {fileID: -782948630, guid: 08ad0969b617aae4086da6917debc19b, type: 3}
-    - {fileID: 1594395404, guid: ab7c7a352c69a9741897cbd43bc9f83e, type: 3}
-    - {fileID: 124056175, guid: cd1d6816e2173e44b89fec0078e52df8, type: 3}
+    - {fileID: 707916680, guid: 499f030c825b6cd49956f29e9917b43f, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -87,7 +56,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 11
+      Data: 3
     - Name: 
       Entry: 7
       Data: 
@@ -125,102 +94,6 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: GoblinP (1)
-    - Name: $v
-      Entry: 10
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: GoblinP (2)
-    - Name: $v
-      Entry: 10
-      Data: 4
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: GoblinP (3)
-    - Name: $v
-      Entry: 10
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: GoblinHob
-    - Name: $v
-      Entry: 10
-      Data: 6
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: GoblinChampion
-    - Name: $v
-      Entry: 10
-      Data: 7
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: GoblinLord
-    - Name: $v
-      Entry: 10
-      Data: 8
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: GoblinPaladin
-    - Name: $v
-      Entry: 10
-      Data: 9
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: GoblinShaman
-    - Name: $v
-      Entry: 10
-      Data: 10
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
       Entry: 13
       Data: 
     - Name: 
@@ -235,7 +108,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 12
-      Data: 36
+      Data: 18
     - Name: 
       Entry: 7
       Data: 
@@ -244,7 +117,7 @@ MonoBehaviour:
       Data: EnemyFemale (1)
     - Name: $v
       Entry: 10
-      Data: 11
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
@@ -256,7 +129,7 @@ MonoBehaviour:
       Data: EnemyFemale (2)
     - Name: $v
       Entry: 10
-      Data: 12
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -268,7 +141,7 @@ MonoBehaviour:
       Data: EnemyFemale (3)
     - Name: $v
       Entry: 10
-      Data: 13
+      Data: 5
     - Name: 
       Entry: 8
       Data: 
@@ -280,7 +153,7 @@ MonoBehaviour:
       Data: EnemyFemale (4)
     - Name: $v
       Entry: 10
-      Data: 14
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
@@ -292,7 +165,7 @@ MonoBehaviour:
       Data: EnemyFemale (5)
     - Name: $v
       Entry: 10
-      Data: 15
+      Data: 7
     - Name: 
       Entry: 8
       Data: 
@@ -304,7 +177,7 @@ MonoBehaviour:
       Data: EnemyFemale (6)
     - Name: $v
       Entry: 10
-      Data: 16
+      Data: 8
     - Name: 
       Entry: 8
       Data: 
@@ -316,7 +189,7 @@ MonoBehaviour:
       Data: EnemyFemale (7)
     - Name: $v
       Entry: 10
-      Data: 17
+      Data: 9
     - Name: 
       Entry: 8
       Data: 
@@ -328,7 +201,7 @@ MonoBehaviour:
       Data: EnemyFemale (8)
     - Name: $v
       Entry: 10
-      Data: 18
+      Data: 10
     - Name: 
       Entry: 8
       Data: 
@@ -340,7 +213,7 @@ MonoBehaviour:
       Data: EnemyFemale (9)
     - Name: $v
       Entry: 10
-      Data: 19
+      Data: 11
     - Name: 
       Entry: 8
       Data: 
@@ -352,7 +225,7 @@ MonoBehaviour:
       Data: EnemyFemale (10)
     - Name: $v
       Entry: 10
-      Data: 20
+      Data: 12
     - Name: 
       Entry: 8
       Data: 
@@ -364,7 +237,7 @@ MonoBehaviour:
       Data: EnemyFemale (11)
     - Name: $v
       Entry: 10
-      Data: 21
+      Data: 13
     - Name: 
       Entry: 8
       Data: 
@@ -376,7 +249,7 @@ MonoBehaviour:
       Data: EnemyFemale (12)
     - Name: $v
       Entry: 10
-      Data: 22
+      Data: 14
     - Name: 
       Entry: 8
       Data: 
@@ -388,7 +261,7 @@ MonoBehaviour:
       Data: EnemyFemale (13)
     - Name: $v
       Entry: 10
-      Data: 23
+      Data: 15
     - Name: 
       Entry: 8
       Data: 
@@ -400,7 +273,7 @@ MonoBehaviour:
       Data: EnemyFemale (14)
     - Name: $v
       Entry: 10
-      Data: 24
+      Data: 16
     - Name: 
       Entry: 8
       Data: 
@@ -412,7 +285,7 @@ MonoBehaviour:
       Data: EnemyFemale (15)
     - Name: $v
       Entry: 10
-      Data: 25
+      Data: 17
     - Name: 
       Entry: 8
       Data: 
@@ -424,7 +297,7 @@ MonoBehaviour:
       Data: EnemyMale (1)
     - Name: $v
       Entry: 10
-      Data: 26
+      Data: 18
     - Name: 
       Entry: 8
       Data: 
@@ -436,7 +309,7 @@ MonoBehaviour:
       Data: EnemyMale (2)
     - Name: $v
       Entry: 10
-      Data: 27
+      Data: 19
     - Name: 
       Entry: 8
       Data: 
@@ -448,223 +321,7 @@ MonoBehaviour:
       Data: EnemyMale (3)
     - Name: $v
       Entry: 10
-      Data: 28
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (4)
-    - Name: $v
-      Entry: 10
-      Data: 29
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (5)
-    - Name: $v
-      Entry: 10
-      Data: 30
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (6)
-    - Name: $v
-      Entry: 10
-      Data: 31
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (7)
-    - Name: $v
-      Entry: 10
-      Data: 32
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (8)
-    - Name: $v
-      Entry: 10
-      Data: 33
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (9)
-    - Name: $v
-      Entry: 10
-      Data: 34
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (10)
-    - Name: $v
-      Entry: 10
-      Data: 35
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (11)
-    - Name: $v
-      Entry: 10
-      Data: 36
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (12)
-    - Name: $v
-      Entry: 10
-      Data: 37
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (13)
-    - Name: $v
-      Entry: 10
-      Data: 38
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (14)
-    - Name: $v
-      Entry: 10
-      Data: 39
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (15)
-    - Name: $v
-      Entry: 10
-      Data: 40
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (16)
-    - Name: $v
-      Entry: 10
-      Data: 41
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (17)
-    - Name: $v
-      Entry: 10
-      Data: 42
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (18)
-    - Name: $v
-      Entry: 10
-      Data: 43
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (19)
-    - Name: $v
-      Entry: 10
-      Data: 44
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (20)
-    - Name: $v
-      Entry: 10
-      Data: 45
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: EnemyMale (21)
-    - Name: $v
-      Entry: 10
-      Data: 46
+      Data: 20
     - Name: 
       Entry: 8
       Data: 
@@ -687,76 +344,16 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 6
+      Data: 1
     - Name: 
       Entry: 7
       Data: 
     - Name: $k
       Entry: 1
-      Data: Bed (1)
+      Data: ani01g
     - Name: $v
       Entry: 10
-      Data: 47
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Bed (2)
-    - Name: $v
-      Entry: 10
-      Data: 48
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Bed (3)
-    - Name: $v
-      Entry: 10
-      Data: 49
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Bed (4)
-    - Name: $v
-      Entry: 10
-      Data: 50
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Bed (5)
-    - Name: $v
-      Entry: 10
-      Data: 51
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: Bed (6)
-    - Name: $v
-      Entry: 10
-      Data: 52
+      Data: 21
     - Name: 
       Entry: 8
       Data: 

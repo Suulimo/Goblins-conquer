@@ -16,7 +16,6 @@ public class Battlefield_Main_Component : MonoBehaviour
     Battlefield_Use battlefield_use = null;
 
 
-
     void Awake() {
         battlefield_use = new Battlefield_Use(this);
     }

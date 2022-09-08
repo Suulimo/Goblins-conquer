@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ab7c7a352c69a9741897cbd43bc9f83e
+guid: 499f030c825b6cd49956f29e9917b43f
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -100,11 +100,23 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bed (5)_0
+      name: ani01g_0
       rect:
         serializedVersion: 2
         x: 0
@@ -118,14 +130,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ddfcd4e2a61df814eb270d7697681a9f
-      internalID: 1594395404
+      spriteID: 93563e0d99d4a674d96bbf4551a18d41
+      internalID: 707916680
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Bed (5)_1
+      name: ani01g_1
       rect:
         serializedVersion: 2
         x: 128
@@ -139,8 +151,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b5c5addca69fd6340aa30221984a5ea5
-      internalID: 1175217044
+      spriteID: 2aeb9e7bb847a4a4a8d7d99e2aca522e
+      internalID: 1888594345
       vertices: []
       indices: 
       edges: []
@@ -156,8 +168,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Bed (5)_0: 1594395404
-      Bed (5)_1: 1175217044
+      ani01g_1: 1888594345
+      ani01g_0: 707916680
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

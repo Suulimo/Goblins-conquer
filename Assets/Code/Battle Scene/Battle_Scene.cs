@@ -14,11 +14,6 @@ public class Battle_Scene : MonoBehaviour
         battle_scope = new Battle_Scope();
         battle_scope.Init_Scope();
         battle_state = battle_scope.state;
-
-        battle_state.play_speed.Subscribe(value =>
-        {
-            Time.timeScale = value;
-        }).AddTo(this);
     }
 
     // Start is called before the first frame update

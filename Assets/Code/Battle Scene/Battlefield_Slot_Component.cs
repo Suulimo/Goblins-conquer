@@ -94,7 +94,7 @@ public class Battlefield_Slot_Component : MonoBehaviour
             case Slot_Type.C:
             case Slot_Type.B:
             case Slot_Type.A:
-                //fnHopB();
+                fnHopB();
                 break;
         }
     }
