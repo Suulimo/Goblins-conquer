@@ -478,7 +478,7 @@ public class Battlefield_Use
         (BoundsInt bound, int count, Slot_Type type, Color color, int layer)[] loop_setting = {
             (new BoundsInt(-3, -6, 0, 4, 12, 0), 0, Slot_Type.A, new Color32(0, 0, 255, 100), LayerMask.NameToLayer("Takeable_A")),
             (new BoundsInt(3, -6, 0, 3, 12, 0), 0, Slot_Type.B, new Color32(255, 0, 255, 100), LayerMask.NameToLayer("Takeable_B")),
-            (new BoundsInt(-6, -6, 0, 3, 12, 0), 0, Slot_Type.C, new Color32(0, 255, 0, 100), LayerMask.NameToLayer("Takeable_C")),
+            (new BoundsInt(-6, -6, 0, 2, 12, 0), 0, Slot_Type.C, new Color32(0, 255, 0, 100), LayerMask.NameToLayer("Takeable_C")),
         };
 
         for (int s = 0; s < loop_setting.Length; s++) {

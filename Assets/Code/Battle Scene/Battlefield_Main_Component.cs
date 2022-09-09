@@ -39,10 +39,10 @@ public class Battlefield_Main_Component : MonoBehaviour
         await UniTask.WaitUntil(() => Data_Manager.data_manager.Is_Pool_PreLoading_OK);
 
         var setting = Data_Manager.data_manager.temp_game_setting;
-        for (int i = 0; i < setting.ally_start_num; i++) {
+        for (int i = 0; i < setting.enemy_start_num; i++) {
             Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
         }
-        for (int i = 0; i < setting.enemy_start_num; i++) {
+        for (int i = 0; i < setting.ally_start_num; i++) {
             Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
         }
         for (int i = 0; i < setting.bed_start_num; i++) {
