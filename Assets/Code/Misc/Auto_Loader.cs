@@ -26,6 +26,8 @@ public class Auto_Loader
             await Game_Control.Make_Instance();
         }
 
+        await UniTask.WaitUntil(() => Data_Manager.UserReady());
+
         Debug.Log("Auto_Loader Before scene loaded await end");
     }
 

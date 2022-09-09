@@ -47,3 +47,4 @@ MonoBehaviour:
   prefab_table: {fileID: 11400000, guid: 475925ae91a1a3044a39ed90c919b33a, type: 2}
   share_pic: {fileID: 11400000, guid: 2b3195a003807eb4182575c3eca3f58d, type: 2}
   share_audio: {fileID: 11400000, guid: 7b986533166cb4f459cc787c5511d706, type: 2}
+  temp_game_setting: {fileID: 11400000, guid: dfd0df7b92fcef740821d0cdfce52022, type: 2}

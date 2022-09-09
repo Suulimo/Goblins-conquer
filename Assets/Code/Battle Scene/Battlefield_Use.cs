@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UniRx;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
@@ -47,15 +48,15 @@ public class Battlefield_Use
 
         slot_look_up = new Dictionary<(Slot_Type, int), Battlefield_Slot_Component>();
 
-        foreach (var o in main_component.a_group) {
-            slot_look_up.Add((o.slot_type, o.slot_id), o);
-        }
-        foreach (var o in main_component.b_group) {
-            slot_look_up.Add((o.slot_type, o.slot_id), o);
-        }
-        foreach (var o in main_component.c_group) {
-            slot_look_up.Add((o.slot_type, o.slot_id), o);
-        }
+        //foreach (var o in main_component.a_group) {
+        //    slot_look_up.Add((o.slot_type, o.slot_id), o);
+        //}
+        //foreach (var o in main_component.b_group) {
+        //    slot_look_up.Add((o.slot_type, o.slot_id), o);
+        //}
+        //foreach (var o in main_component.c_group) {
+        //    slot_look_up.Add((o.slot_type, o.slot_id), o);
+        //}
 
     }
 
@@ -440,7 +441,7 @@ public class Battlefield_Use
 
     public (Slot_Type, int, Vector3) Scan_Target(Vector3 center, int layer) {
         var start = center;
-        var num2 = Physics2D.OverlapCircleNonAlloc(start, 60, overlapResults, layer);
+        var num2 = Physics2D.OverlapCircleNonAlloc(start, 20, overlapResults, layer);
 
         System.Array.Sort(overlapResults, 0, num2, new Point_Distance_Comparer(start));
 
@@ -469,6 +470,45 @@ public class Battlefield_Use
         if (discard != null) {
             SpawnPrefabSystem.SafeReturn(discard.Get_Pawn_Object);
         }
+    }
+
+
+    public (int, int, int) MakeMap(Tilemap tilemap, GameObject slot_clone) {
+        // scan
+        (BoundsInt bound, int count, Slot_Type type, Color color, int layer)[] loop_setting = {
+            (new BoundsInt(-3, -6, 0, 4, 12, 0), 0, Slot_Type.A, new Color32(0, 0, 255, 100), LayerMask.NameToLayer("Takeable_A")),
+            (new BoundsInt(3, -6, 0, 3, 12, 0), 0, Slot_Type.B, new Color32(255, 0, 255, 100), LayerMask.NameToLayer("Takeable_B")),
+            (new BoundsInt(-6, -6, 0, 3, 12, 0), 0, Slot_Type.C, new Color32(0, 255, 0, 100), LayerMask.NameToLayer("Takeable_C")),
+        };
+
+        for (int s = 0; s < loop_setting.Length; s++) {
+            ref var setting = ref loop_setting[s];
+            for (int i = setting.bound.xMax; i >= setting.bound.xMin; i--) {
+                for (int j = setting.bound.yMin; j <= setting.bound.yMax; j++) {
+                    var tl = tilemap.GetTile(new Vector3Int(i, j, 0));
+                    if (tl != null) {
+                        int index_from = setting.count + 1;
+
+                        var new_slot = GameObject.Instantiate(slot_clone);
+                        new_slot.GetComponent<SpriteRenderer>().color = setting.color;
+                        new_slot.transform.position = tilemap.GetCellCenterWorld(new Vector3Int(i, j, 0));
+                        new_slot.layer = setting.layer;
+                        new_slot.name = $"slot {setting.type}{index_from}";
+
+                        var slot_component = new_slot.GetComponent<Battlefield_Slot_Component>();
+                        slot_component.slot_type = setting.type;
+                        slot_component.slot_id = index_from;
+                        slot_component.Reset_Original();
+
+                        slot_look_up.Add((slot_component.slot_type, slot_component.slot_id), slot_component);
+
+                        setting.count++;
+                    }
+                }
+            }
+        }
+
+        return (loop_setting[0].count, loop_setting[1].count, loop_setting[2].count);
     }
 
 }

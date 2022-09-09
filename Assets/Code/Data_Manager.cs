@@ -18,6 +18,7 @@ public class Data_Manager : MonoBehaviour
     
     public Share_Pic share_pic;
     public Share_Audio share_audio;
+    public Temp_Game_Setting temp_game_setting;
 
     public Dictionary<string, (GameObject prefab, int initPoolCapacity)> prefabDict;
     public Dictionary<string, (GameObject prefab, int initPoolCapacity)> monsterPrefabDict;

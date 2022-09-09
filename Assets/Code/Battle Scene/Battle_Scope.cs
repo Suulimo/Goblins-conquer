@@ -68,25 +68,27 @@ public class Battle_Scope
 
     public void Init_Scope() {
         state = new Battle_State();
+    }
 
+    public void Init_Scope_Slot(int num_a, int num_b, int num_c) {
         slot_state_look_up = new Dictionary<(Slot_Type, int), Slot_State>();
 
-        b_group = new Slot_State[Game_Spec.MAX_ENEMY_SLOT];
-        for (int i = 1; i <= Game_Spec.MAX_ENEMY_SLOT; i++) {
+        b_group = new Slot_State[num_b];
+        for (int i = 1; i <= num_b; i++) {
             var b = new Slot_State() { id = i, slot_type = Slot_Type.B };
             b_group[i - 1] = b;
             slot_state_look_up.Add((Slot_Type.B, b.id), b);
         }
 
-        a_group = new Slot_State[Game_Spec.MAX_ALLY_SLOT];
-        for (int i = 1; i <= Game_Spec.MAX_ALLY_SLOT; i++) {
+        a_group = new Slot_State[num_a];
+        for (int i = 1; i <= num_a; i++) {
             var a = new Slot_State() { id = i, slot_type = Slot_Type.A };
             a_group[i - 1] = a;
             slot_state_look_up.Add((Slot_Type.A, a.id), a);
         }
 
-        c_group = new Slot_State[Game_Spec.MAX_BED_SLOT];
-        for (int i = 1; i <= Game_Spec.MAX_BED_SLOT; i++) {
+        c_group = new Slot_State[num_c];
+        for (int i = 1; i <= num_c; i++) {
             var c = new Slot_State() { id = i, slot_type = Slot_Type.C };
             c_group[i - 1] = c;
             slot_state_look_up.Add((Slot_Type.C, c.id), c);
@@ -115,7 +117,8 @@ public static class Battle_Sys
         if (state.is_auto_spawn) {
             state.enemy_spawn_timer.Value -= dt;
             if (state.enemy_spawn_timer.Value <= 0) {
-                state.enemy_spawn_timer.Value = Game_Spec.INIT_ENEMY_SPAWN_TIME;
+                //state.enemy_spawn_timer.Value = Game_Spec.INIT_ENEMY_SPAWN_TIME;
+                state.enemy_spawn_timer.Value = Data_Manager.data_manager.temp_game_setting.enemy_spawn_cd;
                 var index = Get_Empty_Slot(scope.b_group);
                 if (index > -1) {
                     Spawn_Human_At((int)scope.state.difficulty,scope.state.growth_rate, scope.b_group, index);
@@ -259,7 +262,8 @@ public static class Battle_Sys
     }
 
     static void Spawn_Human_At(int rank, float growth_rate, Slot_State[] group, int index) {
-        var data = (Random.value < 0.8) ? Human_Def.Default_Male_Human_List[Random.Range(0, 6)] : Human_Def.Default_Human_List[Random.Range(0, 6)];
+        var setting = Data_Manager.data_manager.temp_game_setting;
+        var data = (Random.Range(0, setting.enemy_female_num_weight + setting.enemy_male_num_weight) < setting.enemy_male_num_weight) ? Human_Def.Default_Male_Human_List[Random.Range(0, 6)] : Human_Def.Default_Human_List[Random.Range(0, 6)];
         var state = new Human_State();
         data.rank = rank;
         data.battle.hp = (int)(data.battle.hp * Mathf.Pow(growth_rate, (data.rank-1)));
@@ -335,7 +339,7 @@ public static class Battle_Sys
         g_state.attack_cycle.Value = Mathf.Min(g_state.attack_cycle.Value + dt, g_data.battle.attack_cd);
         if (g_state.attack_cycle.Value == g_data.battle.attack_cd) {
             g_state.attack_cycle.Value = 0;
-            g_state.hp.Value += 2;
+            g_state.hp.Value += Data_Manager.data_manager.temp_game_setting.bed_recovery_rate;
         }
     }
 
@@ -359,9 +363,11 @@ public static class Battle_Sys
         var b_data = pawn.data;
         b_state.attack_cycle.Value = Mathf.Min(b_state.attack_cycle.Value + dt, b_data.battle.bed_spawn_cd);
         if (b_state.attack_cycle.Value == b_data.battle.bed_spawn_cd) {
-            b_state.attack_cycle.Value = 0;
-
-            Spawn_Goblin_Random( ((b_data.rank + goblin_pawn.data.rank) / 2) , scope);
+            var index = Get_Empty_Slot(scope.a_group);
+            if (index > -1) {
+                Spawn_Goblin_At(((b_data.rank + goblin_pawn.data.rank) / 2), scope.state.growth_rate, scope.a_group, index);
+                b_state.attack_cycle.Value = 0;
+            }
         }
     }
 

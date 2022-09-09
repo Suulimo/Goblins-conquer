@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c516499fa29ac4180261dad2144cc5, type: 3}
+  m_Name: New Temp_Game_Setting
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  enemy_spawn_cd: 18
+  enemy_male_num_weight: 80
+  enemy_female_num_weight: 20
+  enemy_start_num: 3
+  ally_start_num: 3
+  bed_start_num: 1
+  enemy_lv1_hp: 10
+  enemy_lv1_attack: 10
+  enemy_hp_growth_rate: 1.1
+  enemy_attack_growth_rate: 1.05
+  ally_lv1_hp: 10
+  ally_lv1_attack: 10
+  ally_hp_growth_rate: 1.1
+  ally_attack_growth_rate: 1.05
+  bed_recovery_rate: 3
+  bed_spawn_accelerate: 1

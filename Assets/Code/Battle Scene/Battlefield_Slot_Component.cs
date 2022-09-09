@@ -57,6 +57,11 @@ public class Battlefield_Slot_Component : MonoBehaviour
         my_collider2D = GetComponent<Collider2D>();
     }
 
+    public void Reset_Original() {
+        original_location = transform.position;
+        original_color = sprite_renderer.color;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
