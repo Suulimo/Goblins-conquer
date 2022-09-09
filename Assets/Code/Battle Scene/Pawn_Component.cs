@@ -16,6 +16,7 @@ public class Pawn_Component : MonoBehaviour
 
     public Goblin_Pawn goblin_pawn;
     public Human_Pawn human_pawn;
+    public Human_Pawn bed_pawn;
 
     // Start is called before the first frame update
     void Start() {
@@ -55,4 +56,17 @@ public class Pawn_Component : MonoBehaviour
         }
     }
 
+    public void Set_Bed_Pawn(Human_Pawn pawn)
+    {
+        var pool_component = GetComponent<UniRx_Pool_Component>();
+        var compoDispo = pool_component.GetCompositeDisposableOnReturn;
+
+        bed_pawn = pawn;
+        if (bed_pawn != null)
+        {
+            rank_text.text = pawn.data.rank.ToString();
+
+            cd_bar.Init(pawn.state.attack_cycle, pawn.data.battle.bed_spawn_cd);
+        }
+    }
 }

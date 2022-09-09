@@ -44,7 +44,7 @@ public static class Goblin_Def
             other = new Goblin_Other_Data
             {
                 beauty = 1,
-                name = "GOBLIN_NAME_001",
+                name = "GOBLIN",
                 sprite = "Goblin ("+Random.Range(1, 3)+")",
             },
             battle = new Goblin_BattleData
@@ -57,19 +57,19 @@ public static class Goblin_Def
         },
         new Goblin_Data() {
             id = "GOBLIN_002",
-            rank = 2,
+            rank = 1,
             other = new Goblin_Other_Data
             {
                 beauty = 1,
-                name = "GOBLIN_NAME_002",
+                name = "GOBLINP",
                 sprite = "GoblinP ("+Random.Range(1, 3)+")",
             },
             battle = new Goblin_BattleData
             {
                 attack_cd = 3,
-                attack_power = 8,
+                attack_power = 5,
                 ability_id = "GOBLIBILITY_000",
-                hp = 100,
+                hp = 50,
             },
         },
         new Goblin_Data() {
@@ -78,7 +78,7 @@ public static class Goblin_Def
             other = new Goblin_Other_Data
             {
                 beauty = 1,
-                name = "GOBLIN_NAME_003",
+                name = "GOBLINHOB",
                 sprite = "GoblinHob",
             },
             battle = new Goblin_BattleData
@@ -91,17 +91,68 @@ public static class Goblin_Def
         },
         new Goblin_Data() {
             id = "GOBLIN_004",
-            rank = 4,
+            rank = 1,
             other = new Goblin_Other_Data
             {
                 beauty = 1,
-                name = "GOBLIN_NAME_004",
+                name = "GOBLINCHAMPION",
                 sprite = "GoblinChampion",
             },
             battle = new Goblin_BattleData
             {
                 attack_cd = 3,
                 attack_power = 15,
+                ability_id = "GOBLIBILITY_000",
+                hp = 200,
+            },
+        },
+        new Goblin_Data() {
+            id = "GOBLIN_005",
+            rank = 1,
+            other = new Goblin_Other_Data
+            {
+                beauty = 1,
+                name = "GOBLINPALADIN",
+                sprite = "GoblinPaladin",
+            },
+            battle = new Goblin_BattleData
+            {
+                attack_cd = 3,
+                attack_power = 15,
+                ability_id = "GOBLIBILITY_000",
+                hp = 300,
+            },
+        },
+        new Goblin_Data() {
+            id = "GOBLIN_006",
+            rank = 1,
+            other = new Goblin_Other_Data
+            {
+                beauty = 1,
+                name = "GOBLINSHAMAN",
+                sprite = "GoblinShaman",
+            },
+            battle = new Goblin_BattleData
+            {
+                attack_cd = 3,
+                attack_power = 20,
+                ability_id = "GOBLIBILITY_000",
+                hp = 250,
+            },
+        },
+        new Goblin_Data() {
+            id = "GOBLIN_007",
+            rank = 1,
+            other = new Goblin_Other_Data
+            {
+                beauty = 1,
+                name = "GOBLINLORD",
+                sprite = "GoblinLord",
+            },
+            battle = new Goblin_BattleData
+            {
+                attack_cd = 3,
+                attack_power = 20,
                 ability_id = "GOBLIBILITY_000",
                 hp = 300,
             },

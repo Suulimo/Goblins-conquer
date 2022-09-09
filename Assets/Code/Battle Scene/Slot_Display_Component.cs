@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Slot_Display_Component : MonoBehaviour
 {
+    public TMP_Text rank_text;
     public Action_Bar cd_bar;
     public Human_Pawn human_pawn;
 
@@ -13,6 +15,7 @@ public class Slot_Display_Component : MonoBehaviour
 
         human_pawn = pawn;
         if (human_pawn != null) {
+            rank_text.text = pawn.data.rank.ToString();
             cd_bar.Init(pawn.state.attack_cycle, pawn.data.battle.bed_spawn_cd);
         }
     }

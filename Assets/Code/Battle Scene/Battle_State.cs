@@ -20,10 +20,14 @@ public class Battle_State
     [HideInInspector]
     public FloatReactiveProperty play_speed = new FloatReactiveProperty(1);
 
-    public FloatReactiveProperty enemy_spawn_timer = new FloatReactiveProperty(Game_Spec.INIT_ENEMY_SPAWN_TIME);
+    public static float init_enemy_spawn_timer = Game_Spec.INIT_ENEMY_SPAWN_TIME;
 
-    [PropertyRange(1, 4)]
+    public FloatReactiveProperty enemy_spawn_timer = new FloatReactiveProperty(init_enemy_spawn_timer);
+
+    [PropertyRange(1, 100)]
     public float difficulty = 1.0f;
+
+    public float growth_rate = 1.05f;
 
     public bool is_auto_spawn = true;
 

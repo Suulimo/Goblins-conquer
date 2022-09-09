@@ -118,8 +118,8 @@ public static class Battle_Sys
                 state.enemy_spawn_timer.Value = Game_Spec.INIT_ENEMY_SPAWN_TIME;
                 var index = Get_Empty_Slot(scope.b_group);
                 if (index > -1) {
-                    Spawn_Human_At(scope.state.difficulty, scope.b_group, index);
-                    if (scope.state.difficulty < 4.0f)
+                    Spawn_Human_At((int)scope.state.difficulty,scope.state.growth_rate, scope.b_group, index);
+                    if (scope.state.difficulty < 100.0f)
                     {
                         scope.state.difficulty += 0.1f;
                     }
@@ -154,7 +154,7 @@ public static class Battle_Sys
                 var g_state = c.bed.state;
                 if (g_state.is_busy)
                     continue;
-                Bed_Normal_Act(scope, c.bed, dt, (c.slot_type, c.id));
+                Bed_Normal_Act(scope, c.bed, c.goblin, dt, (c.slot_type, c.id));
             }
             if (c.goblin != null) {
                 Goblin_Recover_Act(scope, c.goblin, dt, (c.slot_type, c.id));
@@ -243,9 +243,12 @@ public static class Battle_Sys
         //MessageBroker.Default.Publish(new Goblin_Spawned { slot_id = group[index].id, goblin_data = data });
     }
 
-    static void Spawn_Goblin_At(Slot_State[] group, int index) {
-        var data = Goblin_Def.Default_Goblin_List[Random.Range(0, 4)];
+    static void Spawn_Goblin_At(int rank, float growth_rate, Slot_State[] group, int index) {
+        var data = Goblin_Def.Default_Goblin_List[Random.Range(0, 7)];
         var state = new Goblin_State();
+        data.rank = rank;
+        data.battle.hp = (int)(data.battle.hp * Mathf.Pow(growth_rate, (data.rank - 1)));
+        data.battle.attack_power = (int)(data.battle.attack_power * Mathf.Pow(growth_rate, (data.rank - 1)));
         state.hp.Value = data.battle.hp;
         state.attack_cycle.Value = 0/*data.battle.attack_cd*/;
         var g = new Goblin_Pawn() { data = data, state = state };
@@ -255,10 +258,13 @@ public static class Battle_Sys
         MessageBroker.Default.Publish(new Goblin_Spawned { slot_id = group[index].id, goblin_data = data });
     }
 
-    static void Spawn_Human_At(float difficulty, Slot_State[] group, int index) {
-        var data = (Random.value < 0.8) ? Human_Def.Default_Male_Human_List[(int)difficulty + Random.Range(0, 1)] : Human_Def.Default_Human_List[(int)difficulty + Random.Range(0, 1)];
+    static void Spawn_Human_At(int rank, float growth_rate, Slot_State[] group, int index) {
+        var data = (Random.value < 0.8) ? Human_Def.Default_Male_Human_List[Random.Range(0, 6)] : Human_Def.Default_Human_List[Random.Range(0, 6)];
         var state = new Human_State();
-        state.hp.Value = data.battle.hp;
+        data.rank = rank;
+        data.battle.hp = (int)(data.battle.hp * Mathf.Pow(growth_rate, (data.rank-1)));
+        data.battle.attack_power = (int)(data.battle.attack_power * Mathf.Pow(growth_rate, (data.rank - 1)));
+        state.hp.Value = data.battle.hp ;
         state.attack_cycle.Value = 0/*data.battle.attack_cd*/;
         var h = new Human_Pawn() { data = data, state = state };
 
@@ -267,9 +273,10 @@ public static class Battle_Sys
         MessageBroker.Default.Publish(new Human_Spawned { slot_id = group[index].id, human_data = data });
     }
 
-    static void Spawn_Bed_At(Slot_State[] group, int index) {
-        var data = Human_Def.Default_Human_List[Random.Range(0, 4)];
+    static void Spawn_Bed_At(int rank, int bed_number, Slot_State[] group, int index) {
+        var data = Human_Def.Default_Human_List[bed_number];
         var state = new Human_State();
+        data.rank = rank;
         state.attack_cycle.Value = 0/*data.battle.attack_cd*/;
 
         var h = new Human_Pawn() { data = data, state = state };
@@ -277,21 +284,21 @@ public static class Battle_Sys
         MessageBroker.Default.Publish(new Bed_Spawned { slot_id = group[index].id, human_data = data });
     }
 
-    public static void Spawn_Goblin_Random(Battle_Scope scope) {
+    public static void Spawn_Goblin_Random(int rank, Battle_Scope scope) {
         var index = Get_Empty_Slot(scope.a_group);
         if (index > -1) {
-            Spawn_Goblin_At(scope.a_group, index);
+            Spawn_Goblin_At(rank, scope.state.growth_rate, scope.a_group, index);
         }
     }
 
     public static void Spawn_Human_Random(Battle_Scope scope) {
         var index = Get_Empty_Slot(scope.b_group);
         if (index > -1) {
-            Spawn_Human_At(scope.state.difficulty, scope.b_group, index);
+            Spawn_Human_At((int)scope.state.difficulty + Random.Range(0,3), scope.state.growth_rate, scope.b_group, index);
         }
     }
 
-    public static void Spawn_Bed_Random(Battle_Scope scope) {
+    public static void Spawn_Bed_Random(int rank, int bed_number, Battle_Scope scope) {
         //var index = Get_Empty_Slot(scope.c_group);
         System.Array.Clear(empty_index_array, 0, empty_index_array.Length);
         int count = 0;
@@ -304,7 +311,7 @@ public static class Battle_Sys
 
         if (count > 0) {
             rand.Shuffle(count, empty_index_array);
-            Spawn_Bed_At(scope.c_group, empty_index_array[0]);
+            Spawn_Bed_At(rank, bed_number, scope.c_group, empty_index_array[0]);
         }
     }
 
@@ -347,14 +354,14 @@ public static class Battle_Sys
         }
     }
 
-    public static void Bed_Normal_Act(Battle_Scope scope, Human_Pawn pawn, float dt, (Slot_Type type, int id) slot_info) {
-        var g_state = pawn.state;
-        var g_data = pawn.data;
-        g_state.attack_cycle.Value = Mathf.Min(g_state.attack_cycle.Value + dt, g_data.battle.bed_spawn_cd);
-        if (g_state.attack_cycle.Value == g_data.battle.bed_spawn_cd) {
-            g_state.attack_cycle.Value = 0;
+    public static void Bed_Normal_Act(Battle_Scope scope, Human_Pawn pawn, Goblin_Pawn goblin_pawn, float dt, (Slot_Type type, int id) slot_info) {
+        var b_state = pawn.state;
+        var b_data = pawn.data;
+        b_state.attack_cycle.Value = Mathf.Min(b_state.attack_cycle.Value + dt, b_data.battle.bed_spawn_cd);
+        if (b_state.attack_cycle.Value == b_data.battle.bed_spawn_cd) {
+            b_state.attack_cycle.Value = 0;
 
-            Spawn_Goblin_Random(scope);
+            Spawn_Goblin_Random( ((b_data.rank + goblin_pawn.data.rank) / 2) , scope);
         }
     }
 
@@ -383,7 +390,7 @@ public static class Battle_Sys
             Game_Control.game_control.Hack_Pawn_Die(Slot_Type.B, human_slot_id);
 
             if (human_pawn.data.other.femininity > 0)
-                Spawn_Bed_Random(scope);
+                Spawn_Bed_Random(human_pawn.data.rank, human_pawn.data.other.beauty, scope);
         }
     }
 
