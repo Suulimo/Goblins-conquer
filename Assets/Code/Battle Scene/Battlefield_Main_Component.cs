@@ -46,7 +46,7 @@ public class Battlefield_Main_Component : MonoBehaviour
             Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
         }
         for (int i = 0; i < setting.bed_start_num; i++) {
-            Battle_Sys.Spawn_Bed_Random(Random.Range(1, 3), Random.Range(0, 6), Static_Game_Scope.battle_scope);
+            Battle_Sys.Spawn_Bed_Random(Random.Range(1, 3), 0, Static_Game_Scope.battle_scope);
         }
 
 

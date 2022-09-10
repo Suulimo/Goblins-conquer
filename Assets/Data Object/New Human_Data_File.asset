@@ -12,46 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c095a210efdd7854b965d5eae99c1ecf, type: 3}
   m_Name: New Human_Data_File
   m_EditorClassIdentifier: 
-  list:
-  - id: 
-    rank: 0
+  female_list:
+  - id: FEMALE_001
+    rank: 1
     other:
       beauty: 0
       name: 
-      sprite: 
-      sprite_bed: 
-      femininity: 0
+      sprite: EnemyFemale (1)
+      sprite_bed: Bed (1)
+      femininity: 1
     battle:
-      attack_cd: 0
-      attack_power: 0
+      attack_cd: 5
+      attack_power_base: 5
+      attack_growth_rate: 1.2
       ability_id: 
-      bed_spawn_cd: 0
-      hp: 0
-  - id: 
-    rank: 0
+      bed_spawn_cd: 20
+      hp_base: 50
+      hp_growth_rate: 1.2
+  male_list:
+  - id: MALE_001
+    rank: 1
     other:
-      beauty: 0
+      beauty: 1
       name: 
-      sprite: 
+      sprite: EnemyMale (1)
       sprite_bed: 
       femininity: 0
     battle:
-      attack_cd: 0
-      attack_power: 0
+      attack_cd: 5
+      attack_power_base: 5
+      attack_growth_rate: 1.1
       ability_id: 
       bed_spawn_cd: 0
-      hp: 0
-  - id: 
-    rank: 0
-    other:
-      beauty: 0
-      name: 
-      sprite: 
-      sprite_bed: 
-      femininity: 0
-    battle:
-      attack_cd: 0
-      attack_power: 0
-      ability_id: 
-      bed_spawn_cd: 0
-      hp: 0
+      hp_base: 60
+      hp_growth_rate: 1.1

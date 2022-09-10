@@ -21,19 +21,12 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  enemy_spawn_cd: 18
+  enemy_spawn_cd: 15
+  difficulty_growth_rate: 0.1
   enemy_male_num_weight: 80
   enemy_female_num_weight: 20
-  enemy_start_num: 6
-  ally_start_num: 10
-  bed_start_num: 2
-  enemy_lv1_hp: 10
-  enemy_lv1_attack: 10
-  enemy_hp_growth_rate: 1.1
-  enemy_attack_growth_rate: 1.05
-  ally_lv1_hp: 10
-  ally_lv1_attack: 10
-  ally_hp_growth_rate: 1.1
-  ally_attack_growth_rate: 1.05
-  bed_recovery_rate: 3
-  bed_spawn_accelerate: 1
+  enemy_start_num: 1
+  ally_start_num: 5
+  bed_start_num: 1
+  bed_recovery_rate: 1
+  bed_spawn_accelerate: 1.5

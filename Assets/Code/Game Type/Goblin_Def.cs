@@ -8,10 +8,7 @@ public class Goblin_Data
     public string id;
     public int rank;
 
-    [System.NonSerialized]
     public Goblin_Other_Data other;
-
-    [System.NonSerialized]
     public Goblin_BattleData battle;
 
 }
@@ -29,9 +26,11 @@ public class Goblin_Other_Data
 public class Goblin_BattleData
 {
     public float attack_cd;
-    public int attack_power;
+    public int attack_power_base;
+    public float attack_growth_rate = 1.1f;
     public string ability_id;
-    public int hp;
+    public int hp_base;
+    public float hp_growth_rate = 1.1f;
 }
 
 public static class Goblin_Def
@@ -50,9 +49,9 @@ public static class Goblin_Def
             battle = new Goblin_BattleData
             {
                 attack_cd = 3,
-                attack_power = 3,
+                attack_power_base = 3,
                 ability_id = "GOBLIBILITY_000",
-                hp = 50,
+                hp_base = 50,
             },
         },
         new Goblin_Data() {
@@ -67,9 +66,9 @@ public static class Goblin_Def
             battle = new Goblin_BattleData
             {
                 attack_cd = 3,
-                attack_power = 5,
+                attack_power_base = 5,
                 ability_id = "GOBLIBILITY_000",
-                hp = 50,
+                hp_base = 50,
             },
         },
         new Goblin_Data() {
@@ -84,9 +83,9 @@ public static class Goblin_Def
             battle = new Goblin_BattleData
             {
                 attack_cd = 4,
-                attack_power = 10,
+                attack_power_base = 10,
                 ability_id = "GOBLIBILITY_000",
-                hp = 200,
+                hp_base = 200,
             },
         },
         new Goblin_Data() {
@@ -101,9 +100,9 @@ public static class Goblin_Def
             battle = new Goblin_BattleData
             {
                 attack_cd = 3,
-                attack_power = 15,
+                attack_power_base = 15,
                 ability_id = "GOBLIBILITY_000",
-                hp = 200,
+                hp_base = 200,
             },
         },
         new Goblin_Data() {
@@ -118,9 +117,9 @@ public static class Goblin_Def
             battle = new Goblin_BattleData
             {
                 attack_cd = 3,
-                attack_power = 15,
+                attack_power_base = 15,
                 ability_id = "GOBLIBILITY_000",
-                hp = 300,
+                hp_base = 300,
             },
         },
         new Goblin_Data() {
@@ -135,9 +134,9 @@ public static class Goblin_Def
             battle = new Goblin_BattleData
             {
                 attack_cd = 3,
-                attack_power = 20,
+                attack_power_base = 20,
                 ability_id = "GOBLIBILITY_000",
-                hp = 250,
+                hp_base = 250,
             },
         },
         new Goblin_Data() {
@@ -152,9 +151,9 @@ public static class Goblin_Def
             battle = new Goblin_BattleData
             {
                 attack_cd = 3,
-                attack_power = 20,
+                attack_power_base = 20,
                 ability_id = "GOBLIBILITY_000",
-                hp = 300,
+                hp_base = 300,
             },
         },
     };

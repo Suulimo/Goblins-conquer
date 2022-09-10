@@ -15,99 +15,75 @@ public static class Cheat_Code
         UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Battle Scene");
     }
 
+    [DisableInEditorMode]
     public static void TimeScale(float ts = 1) {
         Time.timeScale = ts;
     }
 
-    public static void Win() {
+    [DisableInEditorMode]
+    public static void Time_1x() {
+        Time.timeScale = 1;
     }
 
-    public static void Lose() {
+    [DisableInEditorMode]
+    public static void Time_2x() {
+        Time.timeScale = 2;
     }
 
-    public static void Hp0() {
+    [DisableInEditorMode]
+    public static void Time_4x() {
+        Time.timeScale = 4;
     }
 
-    public static void Revive() {
+    [DisableInEditorMode]
+    public static void Time_10x() {
+        Time.timeScale = 10;
     }
 
-    public static void ClearLevel() {
+    [DisableInEditorMode]
+    public static void Buy_Goblin_x1() {
+        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
     }
 
-    public static void UnloadUnuse() {
-        Resources.UnloadUnusedAssets();
+    [DisableInEditorMode]
+    public static void Buy_Goblin_x5() {
+        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
+        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
+        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
+        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
+        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
     }
 
-    [FoldoutGroup("Common UI"), Indent]
-    public static async void SettingUI() {
+    [DisableInEditorMode]
+    public static void Buy_Human_x1() {
+        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
     }
 
-    [FoldoutGroup("Common UI"), Indent]
-    public static async void CatBoxPageUI() {
-    }
-
-    [FoldoutGroup("Common UI"), Indent]
-    public static async void CatBoxPageUnlockUI() {
-    }
-
-    [FoldoutGroup("Common UI"), Indent]
-    public static async void UIRareReward() {
-    }
-
-    [FoldoutGroup("Common UI"), Indent]
-    public static async void UIRoomDecoReward() {
-    }
-
-    [FoldoutGroup("Common UI"), Indent]
-    public static async void CatLibraryPageUI() {
-    }
-
-    [FoldoutGroup("Common UI"), Indent]
-    public static async void CatInfoPageUI() {
-    }
-
-    [FoldoutGroup("Common UI"), Indent]
-    public static async void CatLevelUpPageUI() {
-    }
-
-    [FoldoutGroup("Common UI"), Indent]
-    public static void QteColor() {
-    }
-
-    public static void CoinParticle() {
-    }
-
-    public static void GroundBreakParticle() {
+    [DisableInEditorMode]
+    public static void Buy_Human_x5() {
+        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
+        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
+        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
+        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
+        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
     }
 
 
-    public static void ClearInventory() {
-    }
+    //public static void UnloadUnuse() {
+    //    Resources.UnloadUnusedAssets();
+    //}
 
-    public static void ClearLibrary() {
-    }
+    //[FoldoutGroup("Common UI"), Indent]
+    //public static async void SettingUI() {
+    //}
 
-    public static void Add10000Medal() {
-    }
+    //public static void ClearInventory() {
+    //}
 
-    public static void Add10000Coin() {
-    }
-
-    public static void Add10000Gem() {
-    }
-
-    static public void PlaySfx(Sound_Id sid = Sound_Id.Click_Bottun) {
-        //AudioSystem.PlaySfx(sid);
-    }
-
-    static public void PlayMusic(Music_Id mid = Music_Id.Title_Scene) {
-        //AudioSystem.PlayMusic(mid);
-    }
-
-    public static void µL¼Ä1000¬í() {
-        if (!EditorApplication.isPlaying)
-            return;
-    }
+    //public static void µL¼Ä1000¬í() {
+    //    if (!EditorApplication.isPlaying)
+    //        return;
+    //}
 }
 
 #endif

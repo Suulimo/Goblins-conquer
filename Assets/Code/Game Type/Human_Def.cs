@@ -29,10 +29,12 @@ public class Human_Other_Data
 public class Human_Battle_Data
 {
     public float attack_cd;
-    public int attack_power;
+    public int attack_power_base;
+    public float attack_growth_rate = 1.05f;
     public string ability_id;
     public float bed_spawn_cd;
-    public int hp;
+    public int hp_base;
+    public float hp_growth_rate = 1.05f;
 }
 
 public static class Human_Def
@@ -53,9 +55,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 5,
-                attack_power = 5,
+                attack_power_base = 5,
                 ability_id = "ABILITY_000",
-                hp = 50,
+                hp_base = 50,
                 bed_spawn_cd = 20,
             },
         },
@@ -73,9 +75,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 6,
-                attack_power = 5,
+                attack_power_base = 5,
                 ability_id = "ABILITY_000",
-                hp = 70,
+                hp_base = 70,
                 bed_spawn_cd = 20,
             },
         },
@@ -93,9 +95,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 5,
-                attack_power = 7,
+                attack_power_base = 7,
                 ability_id = "ABILITY_000",
-                hp = 50,
+                hp_base = 50,
                 bed_spawn_cd = 20,
             },
         },
@@ -113,9 +115,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 4,
-                attack_power = 5,
+                attack_power_base = 5,
                 ability_id = "ABILITY_000",
-                hp = 50,
+                hp_base = 50,
                 bed_spawn_cd = 20,
             },
         },
@@ -133,9 +135,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 5,
-                attack_power = 6,
+                attack_power_base = 6,
                 ability_id = "ABILITY_000",
-                hp = 60,
+                hp_base = 60,
                 bed_spawn_cd = 20,
             },
         },
@@ -153,9 +155,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 4.5f,
-                attack_power = 6,
+                attack_power_base = 6,
                 ability_id = "ABILITY_000",
-                hp = 50,
+                hp_base = 50,
                 bed_spawn_cd = 20,
             },
         },
@@ -176,9 +178,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 5,
-                attack_power = 5,
+                attack_power_base = 5,
                 ability_id = "ABILITY_000",
-                hp = 60,
+                hp_base = 60,
             },
         },
         new Human_Data() {
@@ -195,9 +197,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 5,
-                attack_power = 5,
+                attack_power_base = 5,
                 ability_id = "ABILITY_000",
-                hp = 60,
+                hp_base = 60,
             },
         },
         new Human_Data() {
@@ -214,9 +216,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 5,
-                attack_power = 5,
+                attack_power_base = 5,
                 ability_id = "ABILITY_000",
-                hp = 60,
+                hp_base = 60,
             },
         },
         new Human_Data() {
@@ -233,9 +235,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 5,
-                attack_power = 5,
+                attack_power_base = 5,
                 ability_id = "ABILITY_000",
-                hp = 60,
+                hp_base = 60,
             },
         },
         new Human_Data() {
@@ -252,9 +254,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 5,
-                attack_power = 5,
+                attack_power_base = 5,
                 ability_id = "ABILITY_000",
-                hp = 60,
+                hp_base = 60,
             },
         },
         new Human_Data() {
@@ -271,9 +273,9 @@ public static class Human_Def
             battle = new Human_Battle_Data
             {
                 attack_cd = 5,
-                attack_power = 5,
+                attack_power_base = 5,
                 ability_id = "ABILITY_000",
-                hp = 60,
+                hp_base = 60,
             },
         },
     };

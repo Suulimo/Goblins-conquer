@@ -19,6 +19,11 @@ public class Data_Manager : MonoBehaviour
     public Share_Pic share_pic;
     public Share_Audio share_audio;
     public Temp_Game_Setting temp_game_setting;
+    public Human_Data_File human_data_file;
+    public Goblin_Data_File goblin_data_file;
+
+    public bool use_human_data_file = true;
+    public bool use_goblin_data_file = true;
 
     public Dictionary<string, (GameObject prefab, int initPoolCapacity)> prefabDict;
     public Dictionary<string, (GameObject prefab, int initPoolCapacity)> monsterPrefabDict;
@@ -43,6 +48,15 @@ public class Data_Manager : MonoBehaviour
         Assert.AreEqual(handle.Status, UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded, "UI資源載入出現錯誤");
 
         handle.Result.TryGetComponent(out _singleton);
+
+        if (_singleton.use_human_data_file && _singleton.human_data_file != null) {
+            Human_Def.Default_Human_List = _singleton.human_data_file.female_list.ToArray();
+            Human_Def.Default_Male_Human_List = _singleton.human_data_file.male_list.ToArray();
+        }
+        if (_singleton.use_goblin_data_file && _singleton.goblin_data_file != null) {
+            Goblin_Def.Default_Goblin_List = _singleton.goblin_data_file.goblin_list.ToArray();
+        }
+
     }
 
     async UniTaskVoid Awake() {

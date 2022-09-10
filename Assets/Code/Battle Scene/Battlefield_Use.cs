@@ -390,11 +390,12 @@ public class Battlefield_Use
 
         var pawn_object = slot_goblin.Get_Pawn_Object;
 
-        await pawn_object.transform.DOMove(slot_human.transform.position, 0.3f);
-        // state
-        Battle_Sys.Goblin_Attack_Human(battle_scope, human_pawn, slot_human.slot_id, goblin_pawn, slot_goblin.slot_id);
-        await pawn_object.transform.DOMove(slot_goblin.transform.position, 0.3f);
-
+        if (slot_human != null) {
+            await pawn_object.transform.DOMove(slot_human.transform.position, 0.3f);
+            // state
+            Battle_Sys.Goblin_Attack_Human(battle_scope, human_pawn, slot_human.slot_id, goblin_pawn, slot_goblin.slot_id);
+            await pawn_object.transform.DOMove(slot_goblin.transform.position, 0.3f);
+        }
         //Battle_Sys.Set_Slot_Pawn_Busy(battle_scope, (slot_human.slot_type, slot_human.slot_id), false);
         Battle_Sys.Set_Slot_Pawn_Busy(battle_scope, (slot_goblin.slot_type, slot_goblin.slot_id), false);
 
@@ -411,11 +412,12 @@ public class Battlefield_Use
 
         var pawn_object = slot_human.Get_Pawn_Object;
 
-        await pawn_object.transform.DOMove(slot_goblin.transform.position, 0.3f);
-        // state
-        Battle_Sys.Human_Attack_Goblin(battle_scope, human_pawn, slot_human.slot_id, goblin_pawn, slot_goblin.slot_id);
-        await pawn_object.transform.DOMove(slot_human.transform.position, 0.3f);
-
+        if (slot_goblin != null) {
+            await pawn_object.transform.DOMove(slot_goblin.transform.position, 0.3f);
+            // state
+            Battle_Sys.Human_Attack_Goblin(battle_scope, human_pawn, slot_human.slot_id, goblin_pawn, slot_goblin.slot_id);
+            await pawn_object.transform.DOMove(slot_human.transform.position, 0.3f);
+        }
         Battle_Sys.Set_Slot_Pawn_Busy(battle_scope, (slot_human.slot_type, slot_human.slot_id), false);
         //Battle_Sys.Set_Slot_Pawn_Busy(battle_scope, (slot_goblin.slot_type, slot_goblin.slot_id), false);
 
@@ -441,7 +443,7 @@ public class Battlefield_Use
 
     public (Slot_Type, int, Vector3) Scan_Target(Vector3 center, int layer) {
         var start = center;
-        var num2 = Physics2D.OverlapCircleNonAlloc(start, 20, overlapResults, layer);
+        var num2 = Physics2D.OverlapCircleNonAlloc(start, 40, overlapResults, layer);
 
         System.Array.Sort(overlapResults, 0, num2, new Point_Distance_Comparer(start));
 
@@ -476,9 +478,9 @@ public class Battlefield_Use
     public (int, int, int) MakeMap(Tilemap tilemap, GameObject slot_clone) {
         // scan
         (BoundsInt bound, int count, Slot_Type type, Color color, int layer)[] loop_setting = {
-            (new BoundsInt(-3, -6, 0, 4, 12, 0), 0, Slot_Type.A, new Color32(0, 0, 255, 100), LayerMask.NameToLayer("Takeable_A")),
-            (new BoundsInt(3, -6, 0, 3, 12, 0), 0, Slot_Type.B, new Color32(255, 0, 255, 100), LayerMask.NameToLayer("Takeable_B")),
-            (new BoundsInt(-6, -6, 0, 2, 12, 0), 0, Slot_Type.C, new Color32(0, 255, 0, 100), LayerMask.NameToLayer("Takeable_C")),
+            (new BoundsInt(-3, -4, 0, 4, 9, 0), 0, Slot_Type.A, new Color32(0, 0, 255, 100), LayerMask.NameToLayer("Takeable_A")),
+            (new BoundsInt(3, -4, 0, 2, 9, 0), 0, Slot_Type.B, new Color32(255, 0, 255, 100), LayerMask.NameToLayer("Takeable_B")),
+            (new BoundsInt(-6, -4, 0, 2, 9, 0), 0, Slot_Type.C, new Color32(0, 255, 0, 100), LayerMask.NameToLayer("Takeable_C")),
         };
 
         for (int s = 0; s < loop_setting.Length; s++) {

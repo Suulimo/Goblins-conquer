@@ -27,8 +27,6 @@ public class Battle_State
     [PropertyRange(1, 100)]
     public float difficulty = 1.0f;
 
-    public float growth_rate = 1.05f;
-
     public bool is_auto_spawn = true;
 
 }

@@ -9,6 +9,7 @@ using Sirenix.OdinInspector;
 public class Temp_Game_Setting : SerializedScriptableObject
 {
     public float enemy_spawn_cd = 8;
+    public float difficulty_growth_rate = 0.1f;
 
     public float enemy_male_num_weight;
     public float enemy_female_num_weight;
@@ -16,16 +17,6 @@ public class Temp_Game_Setting : SerializedScriptableObject
     public int enemy_start_num = 3;
     public int ally_start_num = 3;
     public int bed_start_num = 1;
-
-    public float enemy_lv1_hp = 10;
-    public float enemy_lv1_attack = 10;
-    public float enemy_hp_growth_rate = 1.1f;
-    public float enemy_attack_growth_rate = 1.05f;
-
-    public float ally_lv1_hp = 10;
-    public float ally_lv1_attack = 10;
-    public float ally_hp_growth_rate = 1.1f;
-    public float ally_attack_growth_rate = 1.05f;
 
     public int bed_recovery_rate = 3;
 

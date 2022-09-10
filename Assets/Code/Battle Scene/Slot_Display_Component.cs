@@ -15,7 +15,7 @@ public class Slot_Display_Component : MonoBehaviour
 
         human_pawn = pawn;
         if (human_pawn != null) {
-            rank_text.text = pawn.data.rank.ToString();
+            rank_text.text = pawn.state.rank.ToString();
             cd_bar.Init(pawn.state.attack_cycle, pawn.data.battle.bed_spawn_cd);
         }
     }
