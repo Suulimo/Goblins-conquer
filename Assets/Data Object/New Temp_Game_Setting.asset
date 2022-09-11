@@ -21,12 +21,12 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  enemy_spawn_cd: 15
-  difficulty_growth_rate: 0.1
+  enemy_spawn_cd: 12
+  difficulty_growth_rate: 1
   enemy_male_num_weight: 80
   enemy_female_num_weight: 20
-  enemy_start_num: 1
+  enemy_start_num: 2
   ally_start_num: 5
   bed_start_num: 1
   bed_recovery_rate: 1
-  bed_spawn_accelerate: 1.5
+  bed_spawn_accelerate: 1.3

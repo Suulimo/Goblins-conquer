@@ -24,11 +24,11 @@ MonoBehaviour:
     battle:
       attack_cd: 5
       attack_power_base: 5
-      attack_growth_rate: 1.2
+      attack_growth_rate: 1.1
       ability_id: 
       bed_spawn_cd: 20
-      hp_base: 50
-      hp_growth_rate: 1.2
+      hp_base: 30
+      hp_growth_rate: 1.1
   male_list:
   - id: MALE_001
     rank: 1
@@ -44,5 +44,5 @@ MonoBehaviour:
       attack_growth_rate: 1.1
       ability_id: 
       bed_spawn_cd: 0
-      hp_base: 60
+      hp_base: 40
       hp_growth_rate: 1.1
