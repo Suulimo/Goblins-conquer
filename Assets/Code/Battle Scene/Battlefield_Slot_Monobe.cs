@@ -58,6 +58,15 @@ public class Battlefield_Slot_Monobe : MonoBehaviour
         sprite_renderer.color = original_color;
     }
 
+    public void Reset_Color() {
+        sprite_renderer.color = original_color;
+    }
+
+    public void Set_Mark_Color() {
+        sprite_renderer.color = Color.white;
+    }
+
+
     private void Awake() {
         original_location = transform.position;
         sprite_renderer = GetComponent<SpriteRenderer>();
@@ -80,6 +89,9 @@ public class Battlefield_Slot_Monobe : MonoBehaviour
     }
 
     private void OnMouseEnter() {
+        if (GCQ.Static_Game_Scope.battlefield_main_ref.Use.current_cursor_mode != GCQ.Battlefield_Use.Cursor_Mode.Drag)
+            return;
+
         var c = Color.white * 0.5f + original_color * 0.5f;
         c.a = 1;
         sprite_renderer.color = c;
@@ -87,17 +99,23 @@ public class Battlefield_Slot_Monobe : MonoBehaviour
     }
 
     private void OnMouseExit() {
+        if (GCQ.Static_Game_Scope.battlefield_main_ref.Use.current_cursor_mode != GCQ.Battlefield_Use.Cursor_Mode.Drag)
+            return;
         MessageBroker.Default.Publish(new Drag_To_Cancel { });
         sprite_renderer.color = original_color;
     }
 
     private void OnMouseDown() {
+        if (GCQ.Static_Game_Scope.battlefield_main_ref.Use.current_cursor_mode != GCQ.Battlefield_Use.Cursor_Mode.Drag)
+            return;
         if (slot_type == GCQ.Slot_Type.U)
             return;
         MessageBroker.Default.Publish(new Drag_Begin { slot_id = slot_id, slot_type = slot_type });
     }
 
     private void OnMouseUp() {
+        if (GCQ.Static_Game_Scope.battlefield_main_ref.Use.current_cursor_mode != GCQ.Battlefield_Use.Cursor_Mode.Drag)
+            return;
         MessageBroker.Default.Publish(new Drag_End { slot_id = slot_id, slot_type = slot_type });
     }
 

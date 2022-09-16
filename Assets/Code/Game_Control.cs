@@ -84,6 +84,17 @@ public class Game_Control : MonoBehaviour
             GCQ.Static_Game_Scope.game_scope_data.running.Value ^= true;
             Time.timeScale = (GCQ.Static_Game_Scope.game_scope_data.running.Value) ? 1 : 0;
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            GCQ.Static_Game_Scope.battlefield_main_ref.Use.Change_Cursor_Mode(GCQ.Battlefield_Use.Cursor_Mode.Drag);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            GCQ.Static_Game_Scope.battlefield_main_ref.Use.Change_Cursor_Mode(GCQ.Battlefield_Use.Cursor_Mode.Cast);
+        }
+
+        if (Input.GetMouseButtonDown(0)) {
+            GCQ.Static_Game_Scope.battlefield_main_ref.Use.Test_Hp_Item_Cast();
+        }
     }
 
 

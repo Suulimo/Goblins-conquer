@@ -14,6 +14,16 @@ namespace GCQ
 {
     public class Battlefield_Use
     {
+        public enum Cursor_Mode {
+            Drag,
+            Select,
+            Cast,
+        }
+
+        Cursor_Mode cursor_mode = Cursor_Mode.Drag;
+
+        public Cursor_Mode current_cursor_mode => cursor_mode;
+
         Battlefield_Main_Monobe main_component;
 
         bool is_dragging;
@@ -29,6 +39,10 @@ namespace GCQ
 
         Collider2D[] overlapResults = new Collider2D[50];
         const float movetime = .15f;
+
+        Camera camera_main = null;
+
+        Vector3Int[] test_cast_shape = { new(0, 0, 0), new(-1, 0, 0), new(0, 1, 0), new(1, 0, 0), new(0, -1, 0) };
 
         public Battlefield_Slot_Monobe Get_Slot_Monobe(Slot_Type type, int2 id) {
             return slot_look_up[(type, id)];
@@ -58,10 +72,65 @@ namespace GCQ
         }
 
         void My_Update(float dt) {
-            if (is_dragging) {
-                var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                cursor.z = 0;
-                main_component.dragged.transform.position = cursor;
+
+            if (cursor_mode == Cursor_Mode.Drag) {
+                if (is_dragging) {
+                    var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    cursor.z = 0;
+                    main_component.dragged.transform.position = cursor;
+                }
+            }
+            else if (cursor_mode == Cursor_Mode.Cast) {
+
+                camera_main ??= Camera.main;
+
+                Reset_Tile_State();
+
+                var tilemap = main_component.tilemap;
+                var wPos = camera_main.ScreenToWorldPoint(Input.mousePosition);
+
+                var mouse_in_cell = tilemap.WorldToCell(wPos);
+                Debug.Log(mouse_in_cell);
+                for (int i = 0; i < test_cast_shape.Length; i++) {
+                    var shape_i = test_cast_shape[i];
+                    var shape_cell = mouse_in_cell + shape_i;
+
+                    if (tiles_bounds_a.Contains(shape_cell))
+                        tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y].Set_Mark_Color();
+                }
+            }
+        }
+
+        public void Change_Cursor_Mode(Cursor_Mode mode) {
+            cursor_mode = mode;
+
+            Reset_Tile_State();
+        }
+
+        public void Test_Hp_Item_Cast() {
+            if (cursor_mode == Cursor_Mode.Cast) {
+
+                camera_main ??= Camera.main;
+
+                Reset_Tile_State();
+
+                var tilemap = main_component.tilemap;
+                var wPos = camera_main.ScreenToWorldPoint(Input.mousePosition);
+
+                var mouse_in_cell = tilemap.WorldToCell(wPos);
+                Debug.Log(mouse_in_cell);
+                for (int i = 0; i < test_cast_shape.Length; i++) {
+                    var shape_i = test_cast_shape[i];
+                    var shape_cell = mouse_in_cell + shape_i;
+
+                    if (tiles_bounds_a.Contains(shape_cell)) {
+                        var slot_data = tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y].Data;
+                        if (slot_data.goblin != null) {
+                            slot_data.goblin.combat.hp.Value = Mathf.Min(slot_data.goblin.combat.hp.Value + 50, slot_data.goblin.combat.hp_max);
+                        }
+                    }
+                        
+                }
             }
         }
 
@@ -451,6 +520,20 @@ namespace GCQ
         Battlefield_Slot_Monobe[][] tiles_info_b;
         Battlefield_Slot_Monobe[][] tiles_info_c;
 
+        BoundsInt tiles_bounds_a = new BoundsInt(-3, -4, 0, 5, 10, 1);
+        BoundsInt tiles_bounds_b = new BoundsInt(3, -4, 0, 3, 10, 1);
+        BoundsInt tiles_bounds_c = new BoundsInt(-6, -4, 0, 3, 10, 1);
+
+        void Reset_Tile_State() {
+            for (int i = 0; i < tiles_info_a.Length; i++) {
+                var arr = tiles_info_a[i];
+                for (int j = 0; j < arr.Length; j++) {
+                    var slot = arr[j];
+                    slot.Reset_Color();
+                }
+            }
+        }
+
 
         public (int, int, int) MakeMap(System.Func<Slot_Type, int2, Slot_Data> add_slot_data) {
             Tilemap tilemap = main_component.tilemap;
@@ -472,18 +555,18 @@ namespace GCQ
             // scan
             (BoundsInt bound, int count, Slot_Type type, Color color,
              int layer, Battlefield_Slot_Monobe[][] to_tiles, Vector3Int tile_base)[] loop_setting = {
-            (new BoundsInt(-3, -4, 0, 4, 9, 0), 0, Slot_Type.A, new Color32(0, 0, 255, 100),
+            (tiles_bounds_a, 0, Slot_Type.A, new Color32(0, 0, 255, 100),
                 LayerMask.NameToLayer("Takeable_A"), tiles_info_a, tiles_base_a),
-            (new BoundsInt(3, -4, 0, 2, 9, 0), 0, Slot_Type.B, new Color32(255, 0, 255, 100),
+            (tiles_bounds_b, 0, Slot_Type.B, new Color32(255, 0, 255, 100),
                 LayerMask.NameToLayer("Takeable_B"), tiles_info_b, tiles_base_b),
-            (new BoundsInt(-6, -4, 0, 2, 9, 0), 0, Slot_Type.C, new Color32(0, 255, 0, 100),
+            (tiles_bounds_c, 0, Slot_Type.C, new Color32(0, 255, 0, 100),
                 LayerMask.NameToLayer("Takeable_C"), tiles_info_c, tiles_base_c),
         };
 
             for (int s = 0; s < loop_setting.Length; s++) {
                 ref var setting = ref loop_setting[s];
-                for (int i = setting.bound.xMax; i >= setting.bound.xMin; i--) {
-                    for (int j = setting.bound.yMin; j <= setting.bound.yMax; j++) {
+                for (int i = setting.bound.xMax - 1; i >= setting.bound.xMin; i--) {
+                    for (int j = setting.bound.yMin; j < setting.bound.yMax; j++) {
                         var tl = tilemap.GetTile(new Vector3Int(i, j, 0));
                         if (tl != null) {
 
