@@ -95,7 +95,7 @@ namespace GCQ
                     var shape_cell = mouse_in_cell + shape_i;
 
                     if (tiles_bounds_a.Contains(shape_cell))
-                        tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y].Set_Mark_Color();
+                        tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y]?.Set_Mark_Color();
                 }
             }
         }
@@ -528,7 +528,7 @@ namespace GCQ
                 var arr = tiles_info_a[i];
                 for (int j = 0; j < arr.Length; j++) {
                     var slot = arr[j];
-                    slot.Reset_Color();
+                    slot?.Reset_Color();
                 }
             }
         }
