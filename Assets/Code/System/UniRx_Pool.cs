@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx;
+﻿using System.Collections.Generic;
 using UniRx.Toolkit;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 public class UniRx_Pool : ObjectPool<UniRx_Pool_Component>
@@ -44,14 +42,14 @@ public class UniRx_Pool : ObjectPool<UniRx_Pool_Component>
 
         switch (instance.type) {
             case UniRx_Pool_Type.Goblin:
-                var g_pawn_control = instance.GetComponent<Pawn_Component>();
+                var g_pawn_control = instance.GetComponent<Pawn_Monobe>();
                 g_pawn_control.goblin_pawn = null;
                 g_pawn_control.human_pawn = null;
                 instance.transform.position = Vector3.zero;
                 break;
 
             case UniRx_Pool_Type.Human:
-                var h_pawn_control = instance.GetComponent<Pawn_Component>();
+                var h_pawn_control = instance.GetComponent<Pawn_Monobe>();
                 h_pawn_control.goblin_pawn = null;
                 h_pawn_control.human_pawn = null;
                 instance.transform.position = Vector3.zero;
@@ -68,16 +66,16 @@ public class UniRx_Pool : ObjectPool<UniRx_Pool_Component>
 
         switch (instance.type) {
             case UniRx_Pool_Type.Goblin:
-                var g_pawn_control = instance.GetComponent<Pawn_Component>();
+                var g_pawn_control = instance.GetComponent<Pawn_Monobe>();
                 g_pawn_control.goblin_pawn = null;
                 g_pawn_control.human_pawn = null;
                 break;
 
             case UniRx_Pool_Type.Human:
-                var h_pawn_control = instance.GetComponent<Pawn_Component>();
+                var h_pawn_control = instance.GetComponent<Pawn_Monobe>();
                 h_pawn_control.goblin_pawn = null;
                 h_pawn_control.human_pawn = null;
-                instance.transform.position = Vector3.zero; 
+                instance.transform.position = Vector3.zero;
                 break;
 
             case UniRx_Pool_Type.None:

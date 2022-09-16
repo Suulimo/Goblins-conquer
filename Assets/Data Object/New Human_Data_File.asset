@@ -21,13 +21,13 @@ MonoBehaviour:
       sprite: EnemyFemale (1)
       sprite_bed: Bed (1)
       femininity: 1
-    battle:
+    combat:
       attack_cd: 5
       attack_power_base: 5
       attack_growth_rate: 1.2
       ability_id: 
       bed_spawn_cd: 20
-      hp_base: 50
+      hp_base: 15
       hp_growth_rate: 1.2
   male_list:
   - id: MALE_001
@@ -38,11 +38,11 @@ MonoBehaviour:
       sprite: EnemyMale (1)
       sprite_bed: 
       femininity: 0
-    battle:
+    combat:
       attack_cd: 5
       attack_power_base: 5
       attack_growth_rate: 1.1
       ability_id: 
       bed_spawn_cd: 0
-      hp_base: 60
+      hp_base: 15
       hp_growth_rate: 1.1

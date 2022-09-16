@@ -2,7 +2,6 @@
 // Created: 2018/07/13
 
 #if true && (UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_5 || UNITY_2017_1_OR_NEWER) // MODULE_MARKER
-using System;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins;
 using DG.Tweening.Plugins.Core.PathCore;
@@ -12,7 +11,7 @@ using UnityEngine;
 #pragma warning disable 1591
 namespace DG.Tweening
 {
-	public static class DOTweenModulePhysics2D
+    public static class DOTweenModulePhysics2D
     {
         #region Shortcuts
 
@@ -22,8 +21,7 @@ namespace DG.Tweening
         /// Also stores the Rigidbody2D as the tween's target so it can be used for filtered operations</summary>
         /// <param name="endValue">The end value to reach</param><param name="duration">The duration of the tween</param>
         /// <param name="snapping">If TRUE the tween will smoothly snap all values to integers</param>
-        public static TweenerCore<Vector2, Vector2, VectorOptions> DOMove(this Rigidbody2D target, Vector2 endValue, float duration, bool snapping = false)
-        {
+        public static TweenerCore<Vector2, Vector2, VectorOptions> DOMove(this Rigidbody2D target, Vector2 endValue, float duration, bool snapping = false) {
             TweenerCore<Vector2, Vector2, VectorOptions> t = DOTween.To(() => target.position, target.MovePosition, endValue, duration);
             t.SetOptions(snapping).SetTarget(target);
             return t;
@@ -33,8 +31,7 @@ namespace DG.Tweening
         /// Also stores the Rigidbody2D as the tween's target so it can be used for filtered operations</summary>
         /// <param name="endValue">The end value to reach</param><param name="duration">The duration of the tween</param>
         /// <param name="snapping">If TRUE the tween will smoothly snap all values to integers</param>
-        public static TweenerCore<Vector2, Vector2, VectorOptions> DOMoveX(this Rigidbody2D target, float endValue, float duration, bool snapping = false)
-        {
+        public static TweenerCore<Vector2, Vector2, VectorOptions> DOMoveX(this Rigidbody2D target, float endValue, float duration, bool snapping = false) {
             TweenerCore<Vector2, Vector2, VectorOptions> t = DOTween.To(() => target.position, target.MovePosition, new Vector2(endValue, 0), duration);
             t.SetOptions(AxisConstraint.X, snapping).SetTarget(target);
             return t;
@@ -44,8 +41,7 @@ namespace DG.Tweening
         /// Also stores the Rigidbody2D as the tween's target so it can be used for filtered operations</summary>
         /// <param name="endValue">The end value to reach</param><param name="duration">The duration of the tween</param>
         /// <param name="snapping">If TRUE the tween will smoothly snap all values to integers</param>
-        public static TweenerCore<Vector2, Vector2, VectorOptions> DOMoveY(this Rigidbody2D target, float endValue, float duration, bool snapping = false)
-        {
+        public static TweenerCore<Vector2, Vector2, VectorOptions> DOMoveY(this Rigidbody2D target, float endValue, float duration, bool snapping = false) {
             TweenerCore<Vector2, Vector2, VectorOptions> t = DOTween.To(() => target.position, target.MovePosition, new Vector2(0, endValue), duration);
             t.SetOptions(AxisConstraint.Y, snapping).SetTarget(target);
             return t;
@@ -54,8 +50,7 @@ namespace DG.Tweening
         /// <summary>Tweens a Rigidbody2D's rotation to the given value.
         /// Also stores the Rigidbody2D as the tween's target so it can be used for filtered operations</summary>
         /// <param name="endValue">The end value to reach</param><param name="duration">The duration of the tween</param>
-        public static TweenerCore<float, float, FloatOptions> DORotate(this Rigidbody2D target, float endValue, float duration)
-        {
+        public static TweenerCore<float, float, FloatOptions> DORotate(this Rigidbody2D target, float endValue, float duration) {
             TweenerCore<float, float, FloatOptions> t = DOTween.To(() => target.rotation, target.MoveRotation, endValue, duration);
             t.SetTarget(target);
             return t;
@@ -72,8 +67,7 @@ namespace DG.Tweening
         /// <param name="numJumps">Total number of jumps</param>
         /// <param name="duration">The duration of the tween</param>
         /// <param name="snapping">If TRUE the tween will smoothly snap all values to integers</param>
-        public static Sequence DOJump(this Rigidbody2D target, Vector2 endValue, float jumpPower, int numJumps, float duration, bool snapping = false)
-        {
+        public static Sequence DOJump(this Rigidbody2D target, Vector2 endValue, float jumpPower, int numJumps, float duration, bool snapping = false) {
             if (numJumps < 1) numJumps = 1;
             float startPosY = 0;
             float offsetY = -1;
@@ -114,8 +108,7 @@ namespace DG.Tweening
         public static TweenerCore<Vector3, Path, PathOptions> DOPath(
             this Rigidbody2D target, Vector2[] path, float duration, PathType pathType = PathType.Linear,
             PathMode pathMode = PathMode.Full3D, int resolution = 10, Color? gizmoColor = null
-        )
-        {
+        ) {
             if (resolution < 1) resolution = 1;
             int len = path.Length;
             Vector3[] path3D = new Vector3[len];
@@ -142,8 +135,7 @@ namespace DG.Tweening
         public static TweenerCore<Vector3, Path, PathOptions> DOLocalPath(
             this Rigidbody2D target, Vector2[] path, float duration, PathType pathType = PathType.Linear,
             PathMode pathMode = PathMode.Full3D, int resolution = 10, Color? gizmoColor = null
-        )
-        {
+        ) {
             if (resolution < 1) resolution = 1;
             int len = path.Length;
             Vector3[] path3D = new Vector3[len];
@@ -160,8 +152,7 @@ namespace DG.Tweening
         // Used by path editor when creating the actual tween, so it can pass a pre-compiled path
         internal static TweenerCore<Vector3, Path, PathOptions> DOPath(
             this Rigidbody2D target, Path path, float duration, PathMode pathMode = PathMode.Full3D
-        )
-        {
+        ) {
             TweenerCore<Vector3, Path, PathOptions> t = DOTween.To(PathPlugin.Get(), () => target.position, x => target.MovePosition(x), path, duration)
                 .SetTarget(target);
 
@@ -171,8 +162,7 @@ namespace DG.Tweening
         }
         internal static TweenerCore<Vector3, Path, PathOptions> DOLocalPath(
             this Rigidbody2D target, Path path, float duration, PathMode pathMode = PathMode.Full3D
-        )
-        {
+        ) {
             Transform trans = target.transform;
             TweenerCore<Vector3, Path, PathOptions> t = DOTween.To(PathPlugin.Get(), () => trans.localPosition, x => target.MovePosition(trans.parent == null ? x : trans.parent.TransformPoint(x)), path, duration)
                 .SetTarget(target);
@@ -188,6 +178,6 @@ namespace DG.Tweening
         #endregion
 
         #endregion
-	}
+    }
 }
 #endif

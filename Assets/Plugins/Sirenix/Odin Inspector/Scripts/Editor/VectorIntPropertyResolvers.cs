@@ -12,8 +12,7 @@ namespace Sirenix.OdinInspector.Editor.Drawers
 
     public sealed class Vector2IntResolver : BaseMemberPropertyResolver<Vector2Int>
     {
-        protected override InspectorPropertyInfo[] GetPropertyInfos()
-        {
+        protected override InspectorPropertyInfo[] GetPropertyInfos() {
             return new InspectorPropertyInfo[]
             {
                 InspectorPropertyInfo.CreateValue("x", 0, this.Property.ValueEntry.SerializationBackend,
@@ -30,8 +29,7 @@ namespace Sirenix.OdinInspector.Editor.Drawers
 
     public sealed class Vector3IntResolver : BaseMemberPropertyResolver<Vector3Int>
     {
-        protected override InspectorPropertyInfo[] GetPropertyInfos()
-        {
+        protected override InspectorPropertyInfo[] GetPropertyInfos() {
             return new InspectorPropertyInfo[]
             {
                 InspectorPropertyInfo.CreateValue("x", 0, this.Property.ValueEntry.SerializationBackend,

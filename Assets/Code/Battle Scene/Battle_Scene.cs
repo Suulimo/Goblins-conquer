@@ -1,38 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using UniRx;
-using static Static_Game_Scope;
+using UnityEngine;
 
 public class Battle_Scene : MonoBehaviour
 {
-    public Battle_State battle_state = null;
-    [SerializeField] Battlefield_Main_Component battle_field_main;
+    [SerializeField] Battle_Scope_Data battle_state = null;
+    [SerializeField] Battlefield_Main_Monobe battle_field_main;
 
     void Awake() {
-        battle_scope = new Battle_Scope();
-        battle_scope.Init_Scope();
-        battle_state = battle_scope.state;
+        GCQ.Static_Game_Scope.battle_scene_ref = this;
 
-        battle_state.play_speed.Subscribe(value =>
-        {
-            Time.timeScale = value;
+        MessageBroker.Default.Receive<GCQ.Battle_Scope_Init_Complete_Trigger>().Subscribe(_ => {
+            battle_state = GCQ.Static_Game_Scope.battle_scope.data;
+            battle_state.difficulty += 3.0f * Data_Manager.data_manager.temp_game_setting.difficulty_growth_rate;
+            battle_state.play_speed.Subscribe(value => {
+                Time.timeScale = value;
+            }).AddTo(this);
         }).AddTo(this);
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        var (n1, n2, n3) = battle_field_main.InitMap();
-        battle_scope.Init_Scope_Slot(n1, n2, n3);
+        MessageBroker.Default.Receive<GCQ.Battle_Scope_Run_Trigger>().Subscribe(_ => {
+            UniTaskAsyncEnumerable.EveryUpdate(PlayerLoopTiming.LastUpdate).Subscribe(_ => {
+                // 關卡主要loop規則
+                GCQ.Loop_Sys.Run_Last_Update(Time.deltaTime);
+            }).AddTo(gameObject);
+        }).AddTo(this);
 
-        UniTaskAsyncEnumerable.EveryUpdate(PlayerLoopTiming.LastUpdate).Subscribe(_ => {
-            // 關卡主要loop規則
-            Loop_Sys.Run_Last_Update(Time.deltaTime);
-        }).AddTo(gameObject);
-
-        //battle_state.growth_rate = Data_Manager.data_manager.temp_game_setting.enemy_attack_growth_rate;
     }
 }

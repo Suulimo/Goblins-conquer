@@ -20,12 +20,10 @@ namespace Sirenix.Utilities
         private static readonly string[] DEFINES = new string[] { "ODIN_INSPECTOR", "ODIN_INSPECTOR_3", "ODIN_INSPECTOR_3_1" };
 
         [InitializeOnLoadMethod]
-        private static void EnsureScriptingDefineSymbol()
-        {
+        private static void EnsureScriptingDefineSymbol() {
             var currentTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
 
-            if (currentTarget == BuildTargetGroup.Unknown)
-            {
+            if (currentTarget == BuildTargetGroup.Unknown) {
                 return;
             }
 
@@ -34,12 +32,9 @@ namespace Sirenix.Utilities
 
             bool changed = false;
 
-            foreach (var define in DEFINES)
-            {
-                if (defines.Contains(define) == false)
-                {
-                    if (definesString.EndsWith(";", StringComparison.InvariantCulture) == false)
-                    {
+            foreach (var define in DEFINES) {
+                if (defines.Contains(define) == false) {
+                    if (definesString.EndsWith(";", StringComparison.InvariantCulture) == false) {
                         definesString += ";";
                     }
 
@@ -48,8 +43,7 @@ namespace Sirenix.Utilities
                 }
             }
 
-            if (changed)
-            {
+            if (changed) {
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(currentTarget, definesString);
             }
         }

@@ -19,7 +19,7 @@ MonoBehaviour:
       beauty: 0
       name: 
       sprite: Goblin (1)
-    battle:
+    combat:
       attack_cd: 3
       attack_power_base: 3
       attack_growth_rate: 1.1

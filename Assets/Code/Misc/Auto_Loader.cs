@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
+using UnityEngine.Assertions;
+using UnityEngine.LowLevel;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,23 +9,29 @@ using UnityEditor;
 
 public class Auto_Loader
 {
+    // AfterAssembliesLoaded is called before BeforeSceneLoad
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+    public static void InitUniTaskLoop() {
+        var loop = PlayerLoop.GetCurrentPlayerLoop();
+        Cysharp.Threading.Tasks.PlayerLoopHelper.Initialize(ref loop);
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     /// <summary>加載應用程序管理器</summary>
-    private static async UniTask LoadAppManager() {
+    private static void LoadAppManager() {
         Debug.Log("Auto_Loader Before scene loaded");
 
         Application.targetFrameRate = 500;
 
-
         if (Data_Manager.data_manager == null) {
-            await Data_Manager.Make_Instance();
+            Data_Manager.Make_Instance_Sync();
         }
 
         if (Game_Control.game_control == null) {
-            await Game_Control.Make_Instance();
+            Game_Control.Make_Instance_Sync();
         }
 
-        await UniTask.WaitUntil(() => Data_Manager.UserReady());
+        Assert.IsTrue(Data_Manager.UserReady());
 
         Debug.Log("Auto_Loader Before scene loaded await end");
     }

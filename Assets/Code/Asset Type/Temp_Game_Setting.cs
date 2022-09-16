@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx;
-using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObject/Temp Game Setting", order = 1)]
 public class Temp_Game_Setting : SerializedScriptableObject

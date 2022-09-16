@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Point_Distance_Comparer : IComparer<Collider2D>
 {
@@ -22,12 +22,22 @@ public static class Copy_Sorted_Point_Ext
     }
 }
 
-public class Human_List_Comparer : IComparer<Human_Data>
+public class Human_List_Comparer : IComparer<GCQ.Human_Spec>
 {
     // Call CaseInsensitiveComparer.Compare with the parameters reversed.
-    public int Compare(Human_Data a, Human_Data b) {
+    public int Compare(GCQ.Human_Spec a, GCQ.Human_Spec b) {
         // id: CAT_008 - CAT_001
         return (a.other.beauty - b.other.beauty);
+    }
+
+}
+
+public class Int2_Comparer : IComparer<Unity.Mathematics.int2>
+{
+    // Call CaseInsensitiveComparer.Compare with the parameters reversed.
+    public int Compare(Unity.Mathematics.int2 a, Unity.Mathematics.int2 b) {
+        int dx = (a.x - b.x);
+        return (dx != 0) ? dx : a.y - b.y;
     }
 
 }

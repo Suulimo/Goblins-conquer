@@ -1,7 +1,6 @@
 // Author: Daniele Giardini - http://www.demigiant.com
 // Created: 2018/07/13
 
-using System;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins;
 using UnityEngine;
@@ -9,10 +8,9 @@ using UnityEngine;
 #pragma warning disable 1591
 namespace DG.Tweening
 {
-	public static class DOTweenProShortcuts
+    public static class DOTweenProShortcuts
     {
-        static DOTweenProShortcuts()
-        {
+        static DOTweenProShortcuts() {
             // Create stub instances of custom plugins, in order to allow IL2CPP to understand they must be included in the build
 #pragma warning disable 219
             SpiralPlugin stub = new SpiralPlugin();
@@ -86,5 +84,5 @@ namespace DG.Tweening
 #endif
 
         #endregion
-	}
+    }
 }

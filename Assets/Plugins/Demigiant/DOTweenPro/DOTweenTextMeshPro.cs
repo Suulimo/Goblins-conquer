@@ -30,7 +30,7 @@ namespace DG.Tweening
     /// </summary>
     public static class ShortcutExtensionsTMPText
     {
-        #region Colors
+#region Colors
 
         /// <summary>Tweens a TextMeshPro's color to the given value.
         /// Also stores the TextMeshPro as the tween's target so it can be used for filtered operations</summary>
@@ -95,9 +95,9 @@ namespace DG.Tweening
             return t;
         }
 
-        #endregion
+#endregion
 
-        #region Other
+#region Other
 
         /// <summary>Tweens a TextMeshPro's scale to the given value (using correct uniform scale as TMP requires).
         /// Also stores the TextMeshPro as the tween's target so it can be used for filtered operations</summary>
@@ -171,10 +171,10 @@ namespace DG.Tweening
             return t;
         }
 
-        #endregion
+#endregion
     }
 
-    #region DOTweenTMPAnimator
+#region DOTweenTMPAnimator
 
     // █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
     // ███ CLASS ███████████████████████████████████████████████████████████████████████████████████████████████████████████
@@ -344,7 +344,7 @@ namespace DG.Tweening
             return true;
         }
 
-        #region Word Setters
+#region Word Setters
 
         /// <summary>
         /// Skews a span of characters uniformly (like normal skew works in graphic applications)
@@ -420,9 +420,9 @@ namespace DG.Tweening
             }
         }
 
-        #endregion
+#endregion
 
-        #region Char Getters
+#region Char Getters
 
         /// <summary>
         /// Returns the current color of the given character, if it exists and is visible.
@@ -464,9 +464,9 @@ namespace DG.Tweening
             return _charTransforms[charIndex].scale;
         }
 
-        #endregion
+#endregion
 
-        #region Char Setters
+#region Char Setters
 
         /// <summary>
         /// Immediately sets the color of the given character.
@@ -591,9 +591,9 @@ namespace DG.Tweening
             _charTransforms[charIndex] = c;
         }
 
-        #endregion
+#endregion
 
-        #region Char Tweens
+#region Char Tweens
 
         /// <summary>Tweens a character's alpha to the given value and returns the <see cref="Tween"/>.
         /// Will return NULL if the <see cref="charIndex"/> is invalid or the character isn't visible.</summary>
@@ -848,7 +848,7 @@ namespace DG.Tweening
             }, duration, strength, vibrato, randomness, fadeOut);
         }
 
-        #endregion
+#endregion
 
         // ███ INTERNAL CLASSES ████████████████████████████████████████████████████████████████████████████████████████████████
 
@@ -1032,6 +1032,6 @@ namespace DG.Tweening
         }
     }
 
-    #endregion
+#endregion
 }
 #endif

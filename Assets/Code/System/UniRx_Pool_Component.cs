@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx;
 using System.Threading;
+using UniRx;
+using UnityEngine;
 
 public enum UniRx_Pool_Type
 {

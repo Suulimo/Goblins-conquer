@@ -1,10 +1,6 @@
-using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
-using UnityEditor;
-using UniRx;
-using System.Linq;
-using System.Collections.Generic;
+using UnityEngine;
 
 #if UNITY_EDITOR
 
@@ -12,7 +8,23 @@ public static class Cheat_Code
 {
     [DisableInEditorMode]
     public static void 重新開始() {
-        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Battle Scene");
+        UniTask.Void(async () => {
+            await UniTask.SwitchToMainThread();
+            Game_Control.game_control.SafeCancellationDispose();
+            Data_Manager.data_manager.Force_Return_Pool();
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Battle Scene");
+            GCQ.Static_Game_Scope.Restart();
+        });
+    }
+
+    [DisableInEditorMode]
+    public static void Title() {
+        UniTask.Void(async () => {
+            await UniTask.SwitchToMainThread();
+            Game_Control.game_control.SafeCancellationDispose();
+            Data_Manager.data_manager.Force_Return_Pool();
+            UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene");
+        });
     }
 
     [DisableInEditorMode]
@@ -42,30 +54,30 @@ public static class Cheat_Code
 
     [DisableInEditorMode]
     public static void Buy_Goblin_x1() {
-        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
     }
 
     [DisableInEditorMode]
     public static void Buy_Goblin_x5() {
-        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
-        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
-        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
-        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
-        Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
     }
 
     [DisableInEditorMode]
     public static void Buy_Human_x1() {
-        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
     }
 
     [DisableInEditorMode]
     public static void Buy_Human_x5() {
-        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
-        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
-        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
-        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
-        Battle_Sys.Spawn_Human_Random(Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
     }
 
 

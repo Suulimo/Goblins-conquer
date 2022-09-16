@@ -1,7 +1,7 @@
-using UnityEngine;
 using UniRx;
+using UnityEngine;
 
-public class Action_Bar : MonoBehaviour
+public class Action_Bar_Monobe : MonoBehaviour
 {
     public GameObject statusBar;
 

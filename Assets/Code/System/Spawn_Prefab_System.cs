@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx.Toolkit;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using static Data_Manager;
 
 public readonly struct PoolObj_GameObj
@@ -131,7 +128,7 @@ public static class SpawnPrefabSystem
             return;
         }
 
-        var poolObj = gObj.GetComponent<UniRx_Pool_Component >();
+        var poolObj = gObj.GetComponent<UniRx_Pool_Component>();
 
         if (poolObj == null) {
             Debug.LogWarning($"returning a non-pool object : {gObj.name}", gObj);

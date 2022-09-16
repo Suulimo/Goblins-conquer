@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using UniRx;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
+using TMPro;
+using UniRx;
+using UnityEngine;
 
 public class Difficulty_DIsplay_Temp : MonoBehaviour
 {
     public TMP_Text timer_text;
 
-    // Start is called before the first frame update
-    void Update()
-    {
-        timer_text.text = Static_Game_Scope.battle_scope.state.difficulty.ToString();
+    void Awake() {
+        MessageBroker.Default.Receive<GCQ.Battle_Scope_Init_Complete_Trigger>().Subscribe(_ => {
+            UniTaskAsyncEnumerable.EveryUpdate().Subscribe(_ => {
+                timer_text.text = GCQ.Static_Game_Scope.battle_scope.data.difficulty.ToString();
+            }).AddTo(this);
+        }).AddTo(this);
     }
 }

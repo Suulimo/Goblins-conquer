@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
-using UnityEngine.AddressableAssets;
-using UnityEngine.Assertions;
 using Sirenix.OdinInspector;
 using System.Threading;
 using UniRx;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
 public class Game_Control : MonoBehaviour
@@ -14,14 +12,8 @@ public class Game_Control : MonoBehaviour
     private static Game_Control _singleton;
     public static Game_Control game_control => _singleton;
 
-    // HACK, TODO
-    public System.Func<Slot_Type, int, Vector3> Hack_Ask_Position;
-    public System.Func<GameObject, (Slot_Type, int, Vector3)> Hack_Ask_Slot;
-    public System.Func<Vector3, int, (Slot_Type, int, Vector3)> Hack_Scan_Target;
-    public System.Action<Slot_Type, int> Hack_Pawn_Die;
-
     [ShowInInspector]
-    Game_State game_state => Static_Game_Scope.game_state;
+    GCQ.Game_Scope_Data game_state => GCQ.Static_Game_Scope.game_scope_data;
 
     private CancellationTokenSource _cancel = null;
     private CompositeDisposable _com = null;
@@ -30,22 +22,18 @@ public class Game_Control : MonoBehaviour
     public static CompositeDisposable SceneLifetimeDisposable => _singleton.CompositeDisposableOnExitScene;
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-        _cancel = new CancellationTokenSource();
-
-        //mmFaderRound.SendMessage("Awake");
+        if (_cancel == null)
+            _cancel = new CancellationTokenSource();
     }
 
     private void OnSceneUnloaded(Scene scene) {
-        SafeCancellationDispose();
-
-        Time.timeScale = 1;
+        //SafeCancellationDispose();
     }
 
     public void SafeCancellationDispose() {
         CallCancel();
         if (_com != null)
             _com.Clear();
-
     }
 
     private void CallCancel() {
@@ -65,7 +53,7 @@ public class Game_Control : MonoBehaviour
     }
 
 
-    public static async UniTask Make_Instance() {
+    public static async UniTask Make_Instance_Async() {
         var handle = Addressables.InstantiateAsync("Game_Control");
         await handle.Task;
         Assert.AreEqual(handle.Status, UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded, "資源載入出現錯誤");
@@ -73,14 +61,28 @@ public class Game_Control : MonoBehaviour
         handle.Result.TryGetComponent(out _singleton);
     }
 
+    public static void Make_Instance_Sync() {
+        var result = Addressables.InstantiateAsync("Game_Control").WaitForCompletion();
+
+        result.TryGetComponent(out _singleton);
+    }
+
     void Awake() {
         DontDestroyOnLoad(gameObject);
+
+#if UNITY_EDITOR
+        if (_cancel == null)
+            _cancel = new CancellationTokenSource();
+#endif
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            Static_Game_Scope.game_state.running.Value ^= true;
-            Time.timeScale = (Static_Game_Scope.game_state.running.Value) ? 1 : 0;
+            GCQ.Static_Game_Scope.game_scope_data.running.Value ^= true;
+            Time.timeScale = (GCQ.Static_Game_Scope.game_scope_data.running.Value) ? 1 : 0;
         }
     }
 

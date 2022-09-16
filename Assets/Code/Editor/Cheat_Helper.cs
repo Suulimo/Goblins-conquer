@@ -1,14 +1,14 @@
-using UnityEngine;
-using UnityEditor;
 using Sirenix.OdinInspector.Editor;
+using UnityEditor;
+using UnityEngine;
 
 public class Cheat_Helper : EditorWindow
 {
     [MenuItem("My Game/Play \u2044 Time Scale _F1")]
     public static void ToggleTime() {
         if (EditorApplication.isPlaying) {
-            Static_Game_Scope.game_state.running.Value ^= true;
-            Time.timeScale = (Static_Game_Scope.game_state.running.Value) ? 1 : 0;
+            GCQ.Static_Game_Scope.game_scope_data.running.Value ^= true;
+            Time.timeScale = (GCQ.Static_Game_Scope.game_scope_data.running.Value) ? 1 : 0;
             Debug.LogWarning(Time.timeScale);
 
         }

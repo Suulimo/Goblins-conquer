@@ -1,15 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using static Static_Game_Scope;
+using UniRx;
+using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.Assertions;
 
-public class Battlefield_Slot_Component : MonoBehaviour
+public class Battlefield_Slot_Monobe : MonoBehaviour
 {
-    public Slot_Type slot_type;
-    public int slot_id;
+    public GCQ.Slot_Type slot_type;
+    public int2 slot_id;
 
     public Vector3 original_location;
 
@@ -21,6 +20,15 @@ public class Battlefield_Slot_Component : MonoBehaviour
     SpriteRenderer pawon_sprite_renderer;
 
     GameObject slot_display_object;
+
+    GCQ.Slot_Data data;
+
+    public void Set_Data(GCQ.Slot_Data value) {
+        data = value;
+        Assert.IsNotNull(data);
+    }
+
+    public GCQ.Slot_Data Data => data;
 
     public bool Lock_Collider {
         set => my_collider2D.enabled = !value;
@@ -39,13 +47,13 @@ public class Battlefield_Slot_Component : MonoBehaviour
     public GameObject Get_Slot_Display_Object => slot_display_object;
 
 
-    public Swap_Info Get_Swap_Info => new Swap_Info {
+    public GCQ.Swap_Info Get_Swap_Info => new GCQ.Swap_Info {
         sprite = pawon_sprite_renderer != null ? pawon_sprite_renderer.sprite : null,
         flip_x = pawon_sprite_renderer != null && pawon_sprite_renderer.flipX,
         color = original_color,
     };
 
-    public void Set_Swap_Info(Swap_Info info) {
+    public void Set_Swap_Info(GCQ.Swap_Info info) {
         original_color = info.color;
         sprite_renderer.color = original_color;
     }
@@ -63,13 +71,12 @@ public class Battlefield_Slot_Component : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Start() {
+
     }
 
     private void OnMouseOver() {
-       
+
     }
 
     private void OnMouseEnter() {
@@ -80,12 +87,12 @@ public class Battlefield_Slot_Component : MonoBehaviour
     }
 
     private void OnMouseExit() {
-        MessageBroker.Default.Publish(new Drag_To_Cancel{ });
+        MessageBroker.Default.Publish(new Drag_To_Cancel { });
         sprite_renderer.color = original_color;
     }
 
     private void OnMouseDown() {
-        if (slot_type == Slot_Type.U)
+        if (slot_type == GCQ.Slot_Type.U)
             return;
         MessageBroker.Default.Publish(new Drag_Begin { slot_id = slot_id, slot_type = slot_type });
     }
@@ -96,9 +103,9 @@ public class Battlefield_Slot_Component : MonoBehaviour
 
     private void OnMouseUpAsButton() {
         switch (slot_type) {
-            case Slot_Type.C:
-            case Slot_Type.B:
-            case Slot_Type.A:
+            case GCQ.Slot_Type.C:
+            case GCQ.Slot_Type.B:
+            case GCQ.Slot_Type.A:
                 //fnHopB();
                 break;
         }

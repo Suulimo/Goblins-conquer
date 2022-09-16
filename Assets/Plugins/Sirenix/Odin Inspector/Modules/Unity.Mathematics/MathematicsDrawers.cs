@@ -7,12 +7,12 @@
 namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 {
 #if UNITY_EDITOR
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
     using Sirenix.OdinInspector.Editor;
     using Sirenix.Utilities;
     using Sirenix.Utilities.Editor;
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
     using Unity.Mathematics;
     using UnityEditor;
     using UnityEngine;
@@ -71,14 +71,12 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
     public abstract class MatrixProcessor<T> : OdinAttributeProcessor<T>
     {
-        public override void ProcessSelfAttributes(InspectorProperty property, List<Attribute> attributes)
-        {
+        public override void ProcessSelfAttributes(InspectorProperty property, List<Attribute> attributes) {
             attributes.GetOrAddAttribute<InlinePropertyAttribute>();
             attributes.GetOrAddAttribute<DisableUnityMatrixDrawerAttribute>();
         }
 
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
-        {
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes) {
             attributes.Add(new HideLabelAttribute());
             attributes.Add(new MatrixChildAttribute());
         }
@@ -86,17 +84,14 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
 
     public class DisableUnityMatrixDrawerAttributeDrawer : OdinAttributeDrawer<DisableUnityMatrixDrawerAttribute>
     {
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.SkipWhenDrawing = true;
             var chain = this.Property.GetActiveDrawerChain().BakedDrawerArray;
 
-            for (int i = 0; i < chain.Length; i++)
-            {
+            for (int i = 0; i < chain.Length; i++) {
                 var type = chain[i].GetType();
 
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(UnityPropertyDrawer<,>) && type.GetGenericArguments()[0].Name == "MatrixDrawer")
-                {
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(UnityPropertyDrawer<,>) && type.GetGenericArguments()[0].Name == "MatrixDrawer") {
                     chain[i].SkipWhenDrawing = true;
                     break;
                 }
@@ -110,20 +105,17 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 100;
 
-                if (label != null)
-                {
+                if (label != null) {
                     GUILayout.Space(3); // Ugh, better than nothing
                 }
 
@@ -146,20 +138,17 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 100;
 
-                if (label != null)
-                {
+                if (label != null) {
                     GUILayout.Space(3); // Ugh, better than nothing
                 }
 
@@ -185,20 +174,17 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
                 var showLabels = !this.isMatrixChild && SirenixEditorFields.ResponsiveVectorComponentFields && contentRect.width >= 100;
 
-                if (label != null)
-                {
+                if (label != null) {
                     GUILayout.Space(3); // Ugh, better than nothing
                 }
 
@@ -227,13 +213,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
@@ -243,8 +227,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
                     EditorGUI.BeginChangeCheck();
                     var vec = SirenixEditorFields.VectorPrefixSlideRect(labelRect, new Vector2(val.x, val.y));
                     val = new float2(vec.x, vec.y);
-                    if (EditorGUI.EndChangeCheck())
-                    {
+                    if (EditorGUI.EndChangeCheck()) {
                         this.ValueEntry.SmartValue = val;
                     }
                 }
@@ -262,13 +245,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
         /// <summary>
         /// Populates the generic menu for the property.
         /// </summary>
-        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu)
-        {
+        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu) {
             float2 value = (float2)property.ValueEntry.WeakSmartValue;
             var vec = new Vector2(value.x, value.y);
 
-            if (genericMenu.GetItemCount() > 0)
-            {
+            if (genericMenu.GetItemCount() > 0) {
                 genericMenu.AddSeparator("");
             }
             genericMenu.AddItem(new GUIContent("Normalize"), Mathf.Approximately(vec.magnitude, 1f), () => NormalizeEntries(property));
@@ -281,23 +262,17 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
             genericMenu.AddItem(new GUIContent("Down", "Set the vector to (0, -1)"), vec == Vector2.down, () => SetVector(property, Vector2.down));
         }
 
-        private void SetVector(InspectorProperty property, Vector2 value)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void SetVector(InspectorProperty property, Vector2 value) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = new float2(value.x, value.y);
                 }
             });
         }
 
-        private void NormalizeEntries(InspectorProperty property)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void NormalizeEntries(InspectorProperty property) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = math.normalizesafe((float2)property.ValueEntry.WeakValues[i]);
                 }
             });
@@ -308,13 +283,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
@@ -324,8 +297,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
                     EditorGUI.BeginChangeCheck();
                     var vec = SirenixEditorFields.VectorPrefixSlideRect(labelRect, new Vector3(val.x, val.y, val.z));
                     val = new float3(vec.x, vec.y, vec.z);
-                    if (EditorGUI.EndChangeCheck())
-                    {
+                    if (EditorGUI.EndChangeCheck()) {
                         this.ValueEntry.SmartValue = val;
                     }
                 }
@@ -344,13 +316,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
         /// <summary>
         /// Populates the generic menu for the property.
         /// </summary>
-        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu)
-        {
+        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu) {
             float3 value = (float3)property.ValueEntry.WeakSmartValue;
             var vec = new Vector3(value.x, value.y, value.z);
 
-            if (genericMenu.GetItemCount() > 0)
-            {
+            if (genericMenu.GetItemCount() > 0) {
                 genericMenu.AddSeparator("");
             }
             genericMenu.AddItem(new GUIContent("Normalize"), Mathf.Approximately(vec.magnitude, 1f), () => NormalizeEntries(property));
@@ -365,23 +335,17 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
             genericMenu.AddItem(new GUIContent("Back", "Set the vector property to (0, 0, -1)"), vec == Vector3.back, () => SetVector(property, Vector3.back));
         }
 
-        private void SetVector(InspectorProperty property, Vector3 value)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void SetVector(InspectorProperty property, Vector3 value) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = new float3(value.x, value.y, value.z);
                 }
             });
         }
 
-        private void NormalizeEntries(InspectorProperty property)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void NormalizeEntries(InspectorProperty property) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = math.normalizesafe((float3)property.ValueEntry.WeakValues[i]);
                 }
             });
@@ -392,13 +356,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
@@ -408,8 +370,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
                     EditorGUI.BeginChangeCheck();
                     var vec = SirenixEditorFields.VectorPrefixSlideRect(labelRect, new Vector4(val.x, val.y, val.z, val.w));
                     val = new float4(vec.x, vec.y, vec.z, vec.w);
-                    if (EditorGUI.EndChangeCheck())
-                    {
+                    if (EditorGUI.EndChangeCheck()) {
                         this.ValueEntry.SmartValue = val;
                     }
                 }
@@ -429,13 +390,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
         /// <summary>
         /// Populates the generic menu for the property.
         /// </summary>
-        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu)
-        {
+        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu) {
             float4 value = (float4)property.ValueEntry.WeakSmartValue;
             var vec = new Vector4(value.x, value.y, value.z, value.w);
 
-            if (genericMenu.GetItemCount() > 0)
-            {
+            if (genericMenu.GetItemCount() > 0) {
                 genericMenu.AddSeparator("");
             }
             genericMenu.AddItem(new GUIContent("Normalize"), Mathf.Approximately(vec.magnitude, 1f), () => NormalizeEntries(property));
@@ -450,23 +409,17 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
             genericMenu.AddItem(new GUIContent("Back", "Set the vector property to (0, 0, -1, 0)"), (Vector3)vec == Vector3.back, () => SetVector(property, Vector3.back));
         }
 
-        private void SetVector(InspectorProperty property, Vector4 value)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void SetVector(InspectorProperty property, Vector4 value) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = new float4(value.x, value.y, value.z, value.w);
                 }
             });
         }
 
-        private void NormalizeEntries(InspectorProperty property)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void NormalizeEntries(InspectorProperty property) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = math.normalizesafe((float4)property.ValueEntry.WeakValues[i]);
                 }
             });
@@ -478,13 +431,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
@@ -494,8 +445,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
                     EditorGUI.BeginChangeCheck();
                     var vec = SirenixEditorFields.VectorPrefixSlideRect(labelRect, new Vector2((float)val.x, (float)val.y));
                     val = new double2(vec.x, vec.y);
-                    if (EditorGUI.EndChangeCheck())
-                    {
+                    if (EditorGUI.EndChangeCheck()) {
                         this.ValueEntry.SmartValue = val;
                     }
                 }
@@ -513,13 +463,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
         /// <summary>
         /// Populates the generic menu for the property.
         /// </summary>
-        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu)
-        {
+        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu) {
             double2 value = (double2)property.ValueEntry.WeakSmartValue;
             var vec = new Vector2((float)value.x, (float)value.y);
 
-            if (genericMenu.GetItemCount() > 0)
-            {
+            if (genericMenu.GetItemCount() > 0) {
                 genericMenu.AddSeparator("");
             }
             genericMenu.AddItem(new GUIContent("Normalize"), Mathf.Approximately(vec.magnitude, 1f), () => NormalizeEntries(property));
@@ -532,23 +480,17 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
             genericMenu.AddItem(new GUIContent("Down", "Set the vector to (0, -1)"), vec == Vector2.down, () => SetVector(property, Vector2.down));
         }
 
-        private void SetVector(InspectorProperty property, Vector2 value)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void SetVector(InspectorProperty property, Vector2 value) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = new double2(value.x, value.y);
                 }
             });
         }
 
-        private void NormalizeEntries(InspectorProperty property)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void NormalizeEntries(InspectorProperty property) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = math.normalizesafe((double2)property.ValueEntry.WeakValues[i]);
                 }
             });
@@ -559,13 +501,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
@@ -575,8 +515,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
                     EditorGUI.BeginChangeCheck();
                     var vec = SirenixEditorFields.VectorPrefixSlideRect(labelRect, new Vector3((float)val.x, (float)val.y, (float)val.z));
                     val = new double3(vec.x, vec.y, vec.z);
-                    if (EditorGUI.EndChangeCheck())
-                    {
+                    if (EditorGUI.EndChangeCheck()) {
                         this.ValueEntry.SmartValue = val;
                     }
                 }
@@ -595,13 +534,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
         /// <summary>
         /// Populates the generic menu for the property.
         /// </summary>
-        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu)
-        {
+        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu) {
             double3 value = (double3)property.ValueEntry.WeakSmartValue;
             var vec = new Vector3((float)value.x, (float)value.y, (float)value.z);
 
-            if (genericMenu.GetItemCount() > 0)
-            {
+            if (genericMenu.GetItemCount() > 0) {
                 genericMenu.AddSeparator("");
             }
             genericMenu.AddItem(new GUIContent("Normalize"), Mathf.Approximately(vec.magnitude, 1f), () => NormalizeEntries(property));
@@ -616,23 +553,17 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
             genericMenu.AddItem(new GUIContent("Back", "Set the vector property to (0, 0, -1)"), vec == Vector3.back, () => SetVector(property, Vector3.back));
         }
 
-        private void SetVector(InspectorProperty property, Vector3 value)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void SetVector(InspectorProperty property, Vector3 value) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = new double3(value.x, value.y, value.z);
                 }
             });
         }
 
-        private void NormalizeEntries(InspectorProperty property)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void NormalizeEntries(InspectorProperty property) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = math.normalizesafe((double3)property.ValueEntry.WeakValues[i]);
                 }
             });
@@ -643,13 +574,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
@@ -659,8 +588,7 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
                     EditorGUI.BeginChangeCheck();
                     var vec = SirenixEditorFields.VectorPrefixSlideRect(labelRect, new Vector4((float)val.x, (float)val.y, (float)val.z, (float)val.w));
                     val = new double4(vec.x, vec.y, vec.z, vec.w);
-                    if (EditorGUI.EndChangeCheck())
-                    {
+                    if (EditorGUI.EndChangeCheck()) {
                         this.ValueEntry.SmartValue = val;
                     }
                 }
@@ -680,13 +608,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
         /// <summary>
         /// Populates the generic menu for the property.
         /// </summary>
-        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu)
-        {
+        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu) {
             double4 value = (double4)property.ValueEntry.WeakSmartValue;
             var vec = new Vector4((float)value.x, (float)value.y, (float)value.z, (float)value.w);
 
-            if (genericMenu.GetItemCount() > 0)
-            {
+            if (genericMenu.GetItemCount() > 0) {
                 genericMenu.AddSeparator("");
             }
             genericMenu.AddItem(new GUIContent("Normalize"), Mathf.Approximately(vec.magnitude, 1f), () => NormalizeEntries(property));
@@ -701,23 +627,17 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
             genericMenu.AddItem(new GUIContent("Back", "Set the vector property to (0, 0, -1, 0)"), (Vector3)vec == Vector3.back, () => SetVector(property, Vector3.back));
         }
 
-        private void SetVector(InspectorProperty property, Vector4 value)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void SetVector(InspectorProperty property, Vector4 value) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = new double4(value.x, value.y, value.z, value.w);
                 }
             });
         }
 
-        private void NormalizeEntries(InspectorProperty property)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void NormalizeEntries(InspectorProperty property) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = math.normalizesafe((double4)property.ValueEntry.WeakValues[i]);
                 }
             });
@@ -728,13 +648,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
@@ -753,13 +671,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
@@ -779,13 +695,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
@@ -806,13 +720,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
@@ -831,13 +743,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
@@ -857,13 +767,11 @@ namespace Sirenix.OdinInspector.Modules.UnityMathematics.Editor
     {
         private bool isMatrixChild;
 
-        protected override void Initialize()
-        {
+        protected override void Initialize() {
             this.isMatrixChild = this.Property.GetAttribute<MatrixChildAttribute>() != null;
         }
 
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             Rect contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {

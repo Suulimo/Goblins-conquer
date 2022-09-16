@@ -8,9 +8,9 @@
 
 namespace Sirenix.OdinInspector.Editor.Drawers
 {
-    using Utilities.Editor;
     using UnityEditor;
     using UnityEngine;
+    using Utilities.Editor;
 
     /// <summary>
     /// Vector2Int proprety drawer.
@@ -20,15 +20,13 @@ namespace Sirenix.OdinInspector.Editor.Drawers
         /// <summary>
         /// Draws the property.
         /// </summary>
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             var contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
                 EditorGUI.BeginChangeCheck();
                 var val = SirenixEditorFields.VectorPrefixSlideRect(labelRect, (Vector2)this.ValueEntry.SmartValue);
-                if (EditorGUI.EndChangeCheck())
-                {
+                if (EditorGUI.EndChangeCheck()) {
                     this.ValueEntry.SmartValue = new Vector2Int((int)val.x, (int)val.y);
                 }
 
@@ -45,12 +43,10 @@ namespace Sirenix.OdinInspector.Editor.Drawers
         /// <summary>
         /// Populates the generic menu for the property.
         /// </summary>
-        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu)
-        {
+        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu) {
             Vector2Int value = (Vector2Int)property.ValueEntry.WeakSmartValue;
 
-            if (genericMenu.GetItemCount() > 0)
-            {
+            if (genericMenu.GetItemCount() > 0) {
                 genericMenu.AddSeparator("");
             }
             genericMenu.AddItem(new GUIContent("Zero", "Set the vector to (0, 0)"), value == Vector2Int.zero, () => SetVector(property, Vector2Int.zero));
@@ -62,12 +58,9 @@ namespace Sirenix.OdinInspector.Editor.Drawers
             genericMenu.AddItem(new GUIContent("Down", "Set the vector to (0, -1)"), value == Vector2Int.down, () => SetVector(property, Vector2Int.down));
         }
 
-        private void SetVector(InspectorProperty property, Vector2Int value)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
-                for (int i = 0; i < property.ValueEntry.ValueCount; i++)
-                {
+        private void SetVector(InspectorProperty property, Vector2Int value) {
+            property.Tree.DelayActionUntilRepaint(() => {
+                for (int i = 0; i < property.ValueEntry.ValueCount; i++) {
                     property.ValueEntry.WeakValues[i] = value;
                 }
             });
@@ -82,15 +75,13 @@ namespace Sirenix.OdinInspector.Editor.Drawers
         /// <summary>
         /// Draws the property.
         /// </summary>
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
+        protected override void DrawPropertyLayout(GUIContent label) {
             Rect labelRect;
             var contentRect = SirenixEditorGUI.BeginHorizontalPropertyLayout(label, out labelRect);
             {
                 EditorGUI.BeginChangeCheck();
                 var val = SirenixEditorFields.VectorPrefixSlideRect(labelRect, (Vector3)this.ValueEntry.SmartValue);
-                if (EditorGUI.EndChangeCheck())
-                {
+                if (EditorGUI.EndChangeCheck()) {
                     this.ValueEntry.SmartValue = new Vector3Int((int)val.x, (int)val.y, (int)val.z);
                 }
 
@@ -108,12 +99,10 @@ namespace Sirenix.OdinInspector.Editor.Drawers
         /// <summary>
         /// Populates the generic menu for the property.
         /// </summary>
-        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu)
-        {
+        public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu) {
             Vector3Int value = (Vector3Int)property.ValueEntry.WeakSmartValue;
 
-            if (genericMenu.GetItemCount() > 0)
-            {
+            if (genericMenu.GetItemCount() > 0) {
                 genericMenu.AddSeparator("");
             }
 
@@ -128,10 +117,8 @@ namespace Sirenix.OdinInspector.Editor.Drawers
             genericMenu.AddItem(new GUIContent("Back", "Set the vector property to (0, 0, -1)"), value == new Vector3Int(0, 0, -1), () => SetVector(property, new Vector3Int(0, 0, -1)));
         }
 
-        private void SetVector(InspectorProperty property, Vector3Int value)
-        {
-            property.Tree.DelayActionUntilRepaint(() =>
-            {
+        private void SetVector(InspectorProperty property, Vector3Int value) {
+            property.Tree.DelayActionUntilRepaint(() => {
                 property.ValueEntry.WeakSmartValue = value;
             });
         }
