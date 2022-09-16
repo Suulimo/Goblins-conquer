@@ -90,7 +90,6 @@ namespace GCQ
                 var wPos = camera_main.ScreenToWorldPoint(Input.mousePosition);
 
                 var mouse_in_cell = tilemap.WorldToCell(wPos);
-                Debug.Log(mouse_in_cell);
                 for (int i = 0; i < test_cast_shape.Length; i++) {
                     var shape_i = test_cast_shape[i];
                     var shape_cell = mouse_in_cell + shape_i;
