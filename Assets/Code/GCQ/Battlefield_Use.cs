@@ -18,6 +18,7 @@ namespace GCQ
             Drag,
             Select,
             Cast,
+            PostCast,
         }
 
         Cursor_Mode cursor_mode = Cursor_Mode.Drag;
@@ -28,9 +29,13 @@ namespace GCQ
 
         bool is_dragging;
         bool is_drag_ready;
+        bool is_picking_up;
 
         Slot_Type to_slot_type;
         int2 to_slot_id;
+        Slot_Type selected_slot_type;
+        int2 selected_slot_id;
+
 
         Vector3 out_of_screen = new Vector3(-10000, 0, 0);
 
@@ -58,6 +63,8 @@ namespace GCQ
             MessageBroker.Default.Receive<Drag_End>().Subscribe(OnDragEnd).AddTo(main_component);
             MessageBroker.Default.Receive<Drag_Cancel>().Subscribe(OnDragCancel).AddTo(main_component);
 
+            MessageBroker.Default.Receive<Selection_Done>().Subscribe(On_Selection_Done).AddTo(main_component);
+
             MessageBroker.Default.Receive<Human_Spawned>().Subscribe(Battlefield_Execution.On_Spawn_Human).AddTo(main_component);
             MessageBroker.Default.Receive<Goblin_Spawned>().Subscribe(Battlefield_Execution.On_Spawn_Goblin).AddTo(main_component);
             MessageBroker.Default.Receive<Bed_Spawned>().Subscribe(Battlefield_Execution.On_Spawn_Bed).AddTo(main_component);
@@ -72,17 +79,16 @@ namespace GCQ
         }
 
         void My_Update(float dt) {
+            camera_main ??= Camera.main;
 
             if (cursor_mode == Cursor_Mode.Drag) {
                 if (is_dragging) {
-                    var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    var cursor = camera_main.ScreenToWorldPoint(Input.mousePosition);
                     cursor.z = 0;
                     main_component.dragged.transform.position = cursor;
                 }
             }
             else if (cursor_mode == Cursor_Mode.Cast) {
-
-                camera_main ??= Camera.main;
 
                 Reset_Tile_State();
 
@@ -97,6 +103,35 @@ namespace GCQ
                     if (tiles_bounds_a.Contains(shape_cell))
                         tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y]?.Set_Mark_Color();
                 }
+            }
+            else if (cursor_mode == Cursor_Mode.Select) {
+
+                if (is_picking_up) {
+
+                    Reset_Tile_State();
+
+                    var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    cursor.z = 0;
+                    main_component.dragged.transform.position = cursor;
+
+                    var tilemap = main_component.tilemap;
+                    var wPos = camera_main.ScreenToWorldPoint(Input.mousePosition);
+
+                    var mouse_in_cell = tilemap.WorldToCell(wPos);
+                    if (tiles_bounds_a.Contains(mouse_in_cell)) {
+                        if ((mouse_in_cell.x, mouse_in_cell.y) != (selected_slot_id.x, selected_slot_id.y))
+                            tiles_info_a[mouse_in_cell.x - tiles_base_a.x][mouse_in_cell.y - tiles_base_a.y]?.Set_Mark_Color();
+                    }
+
+                    slot_look_up[(selected_slot_type, selected_slot_id)]?.Set_Selected_Color();
+                }
+            }
+            else if (cursor_mode == Cursor_Mode.PostCast) {
+                Change_Cursor_Mode(Cursor_Mode.Drag);
+            }
+
+            if (Input.GetMouseButtonUp(1)) {
+                On_Selection_Cancel(new());
             }
         }
 
@@ -130,6 +165,7 @@ namespace GCQ
                     }
                         
                 }
+                Change_Cursor_Mode(Cursor_Mode.PostCast);
             }
         }
 
@@ -183,89 +219,94 @@ namespace GCQ
 
                 }
                 else {
-                    // 交換或移動
-                    var swap_a = slot_look_up[(to_slot_type, to_slot_id)];
-                    var swap_b = slot_look_up[(args.slot_type, args.slot_id)];
-
-                    if (swap_a && swap_b && (swap_a.slot_type == swap_b.slot_type)) {
-
-                        bool busy_a = Battle_Sys.Ask_Slot_Is_Busy(swap_a.Data);
-                        bool busy_b = Battle_Sys.Ask_Slot_Is_Busy(swap_b.Data);
-
-                        if (to_slot_type == Slot_Type.C) {
-                            if (!swap_a.Data.is_empty && !swap_b.Data.is_empty && !busy_a && !busy_b && swap_a.Data.bed != null && swap_b.Data.bed != null) {
-                                var c = swap_a.Get_Swap_Info;
-                                swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
-                                swap_b.Set_Swap_Info(c);
-                                _ = Tk_Swap_Pawn(swap_a, swap_b);
-                            }
-                            else if (swap_a.Data.is_empty && swap_b.Data.is_empty == false && swap_a.Data.bed != null) {
-                                var c = swap_a.Get_Swap_Info;
-                                swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
-                                swap_b.Set_Swap_Info(c);
-                                _ = Tk_Move_Pawn(swap_a, swap_b);
-                            }
-                        }
-                        else {
-                            // 交換
-                            if (!swap_a.Data.is_empty && !swap_b.Data.is_empty && !busy_a && !busy_b) {
-                                var c = swap_a.Get_Swap_Info;
-                                swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
-                                swap_b.Set_Swap_Info(c);
-
-                                _ = Tk_Swap_Pawn(swap_a, swap_b);
-                            }
-                            // 移動
-                            else if (swap_a.Data.is_empty && swap_b.Data.is_empty == false) {
-                                var c = swap_a.Get_Swap_Info;
-                                swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
-                                swap_b.Set_Swap_Info(c);
-                                _ = Tk_Move_Pawn(swap_a, swap_b);
-                            }
-                        }
-                    }
-
-                    // siu息
-                    if (swap_a && swap_b && (to_slot_type, args.slot_type) == (Slot_Type.C, Slot_Type.A)) {
-
-                        bool busy_a = Battle_Sys.Ask_Slot_Is_Busy(swap_a.Data);
-                        bool busy_b = Battle_Sys.Ask_Slot_Is_Busy(swap_b.Data);
-
-                        if (swap_a.Data.is_empty && swap_b.Data.is_empty == false && swap_a.Data.bed != null) {
-                            _ = Tk_Goblin_Goto_Bed(swap_a, swap_b);
-                        }
-                        else if (!swap_a.Data.is_empty && !swap_b.Data.is_empty && !busy_a && !busy_b) {
-                            var c = swap_a.Get_Swap_Info;
-                            swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
-                            swap_b.Set_Swap_Info(c);
-
-                            _ = Tk_Swap_Pawn(swap_a, swap_b);
-                        }
-
-                    }
-                    else if (swap_a && swap_b && (to_slot_type, args.slot_type) == (Slot_Type.A, Slot_Type.C)) {
-
-                        bool busy_a = Battle_Sys.Ask_Slot_Is_Busy(swap_a.Data);
-                        bool busy_b = Battle_Sys.Ask_Slot_Is_Busy(swap_b.Data);
-
-                        if (swap_a.Data.is_empty && swap_b.Data.is_empty == false) {
-                            _ = Tk_Goblin_Goto_Bed(swap_a, swap_b);
-                        }
-                        else if (!swap_a.Data.is_empty && !swap_b.Data.is_empty && !busy_a && !busy_b) {
-                            var c = swap_a.Get_Swap_Info;
-                            swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
-                            swap_b.Set_Swap_Info(c);
-
-                            _ = Tk_Swap_Pawn(swap_a, swap_b);
-                        }
-
-                    }
+                    Swap_or_Move(args, to_slot_type, to_slot_id);
                 }
             }
 
             is_dragging = false;
             is_drag_ready = false;
         }
+
+        private void Swap_or_Move(Drag_End args, Slot_Type type, int2 id) {
+            // 交換或移動
+            var swap_a = slot_look_up[(type, id)];
+            var swap_b = slot_look_up[(args.slot_type, args.slot_id)];
+
+            if (swap_a && swap_b && (swap_a.slot_type == swap_b.slot_type)) {
+
+                bool busy_a = Battle_Sys.Ask_Slot_Is_Busy(swap_a.Data);
+                bool busy_b = Battle_Sys.Ask_Slot_Is_Busy(swap_b.Data);
+
+                if (type == Slot_Type.C) {
+                    if (!swap_a.Data.is_empty && !swap_b.Data.is_empty && !busy_a && !busy_b && swap_a.Data.bed != null && swap_b.Data.bed != null) {
+                        var c = swap_a.Get_Swap_Info;
+                        swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
+                        swap_b.Set_Swap_Info(c);
+                        _ = Tk_Swap_Pawn(swap_a, swap_b);
+                    }
+                    else if (swap_a.Data.is_empty && swap_b.Data.is_empty == false && swap_a.Data.bed != null && !busy_b) {
+                        var c = swap_a.Get_Swap_Info;
+                        swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
+                        swap_b.Set_Swap_Info(c);
+                        _ = Tk_Move_Pawn(swap_a, swap_b);
+                    }
+                }
+                else {
+                    // 交換
+                    if (!swap_a.Data.is_empty && !swap_b.Data.is_empty && !busy_a && !busy_b) {
+                        var c = swap_a.Get_Swap_Info;
+                        swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
+                        swap_b.Set_Swap_Info(c);
+
+                        _ = Tk_Swap_Pawn(swap_a, swap_b);
+                    }
+                    // 移動
+                    else if (swap_a.Data.is_empty && swap_b.Data.is_empty == false && !busy_b) {
+                        var c = swap_a.Get_Swap_Info;
+                        swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
+                        swap_b.Set_Swap_Info(c);
+                        _ = Tk_Move_Pawn(swap_a, swap_b);
+                    }
+                }
+            }
+
+            // siu息
+            if (swap_a && swap_b && (type, args.slot_type) == (Slot_Type.C, Slot_Type.A)) {
+
+                bool busy_a = Battle_Sys.Ask_Slot_Is_Busy(swap_a.Data);
+                bool busy_b = Battle_Sys.Ask_Slot_Is_Busy(swap_b.Data);
+
+                if (swap_a.Data.is_empty && swap_b.Data.is_empty == false && swap_a.Data.bed != null && !busy_b) {
+                    _ = Tk_Goblin_Goto_Bed(swap_a, swap_b);
+                }
+                else if (!swap_a.Data.is_empty && !swap_b.Data.is_empty && !busy_a && !busy_b) {
+                    var c = swap_a.Get_Swap_Info;
+                    swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
+                    swap_b.Set_Swap_Info(c);
+
+                    _ = Tk_Swap_Pawn(swap_a, swap_b);
+                }
+
+            }
+            else if (swap_a && swap_b && (type, args.slot_type) == (Slot_Type.A, Slot_Type.C)) {
+
+                bool busy_a = Battle_Sys.Ask_Slot_Is_Busy(swap_a.Data);
+                bool busy_b = Battle_Sys.Ask_Slot_Is_Busy(swap_b.Data);
+
+                if (swap_a.Data.is_empty && swap_b.Data.is_empty == false && !busy_a) {
+                    _ = Tk_Goblin_Goto_Bed(swap_a, swap_b);
+                }
+                else if (!swap_a.Data.is_empty && !swap_b.Data.is_empty && !busy_a && !busy_b) {
+                    var c = swap_a.Get_Swap_Info;
+                    swap_a.Set_Swap_Info(swap_b.Get_Swap_Info);
+                    swap_b.Set_Swap_Info(c);
+
+                    _ = Tk_Swap_Pawn(swap_a, swap_b);
+                }
+
+            }
+        }
+
         void OnDragCancel(Drag_Cancel _) {
             main_component.dragged.transform.position = out_of_screen;
 
@@ -273,6 +314,64 @@ namespace GCQ
             is_drag_ready = false;
         }
 
+        void On_Selection_Done(Selection_Done args) {
+
+            if (cursor_mode == Cursor_Mode.Cast || cursor_mode == Cursor_Mode.PostCast)
+                return;
+
+            if (!is_picking_up) {
+
+                var slot = slot_look_up[(args.slot_type, args.slot_id)];
+                if (slot == null || slot.Data.is_empty == true)
+                    return;
+
+                Change_Cursor_Mode(GCQ.Battlefield_Use.Cursor_Mode.Select);
+
+                First_Seletion_Pick(args);
+                is_picking_up = true;
+            }
+            else {
+                Second_Selection_Drop(args);
+            }
+        }
+
+        void First_Seletion_Pick(Selection_Done args) {
+            var slot = slot_look_up[(args.slot_type, args.slot_id)];
+            if (slot == null)
+                return;
+
+            slot.Set_Selected_Color();
+
+            var info = slot.Get_Swap_Info;
+            //main_component.dragged.color = slot.Get_Swap_Info.color;
+            main_component.dragged.sprite = info.sprite;
+            main_component.dragged.flipX = info.flip_x;
+            main_component.dragged.color = Color.cyan;
+
+            selected_slot_id = args.slot_id;
+            selected_slot_type = args.slot_type;
+        }
+
+        void Second_Selection_Drop(Selection_Done args) {
+
+            if ((args.slot_type, args.slot_id.x, args.slot_id.y) != (selected_slot_type, selected_slot_id.x, selected_slot_id.y)) {
+                Swap_or_Move(new Drag_End { slot_type = selected_slot_type, slot_id = selected_slot_id }, args.slot_type, args.slot_id);
+            }
+            else {
+            }
+
+            On_Selection_Cancel(new());
+        }
+
+        void On_Selection_Cancel(Selection_Cancel _) {
+            main_component.dragged.transform.position = out_of_screen;
+
+            is_picking_up = false;
+
+            Reset_Tile_State();
+
+            GCQ.Static_Game_Scope.battlefield_main_ref.Use.Change_Cursor_Mode(GCQ.Battlefield_Use.Cursor_Mode.Drag);
+        }
 
 
         public void On_Goblin_vs_Human(Goblin_Attack_Human args) {
@@ -376,6 +475,7 @@ namespace GCQ
 
             Human_Pawn target_human_pawn = slot_human.Data.human;
             target_human_pawn.combat.melee_queue.Add(slot_goblin.Data.id);
+            Goblin_Pawn acting_goblin_pawn = slot_goblin.Data.goblin;
 
             slot_human.Lock_Collider = slot_human.Data.human.combat.melee_queue.Count >= 3;
             slot_goblin.Lock_Collider = true;
@@ -397,7 +497,7 @@ namespace GCQ
                 await slot_human.Get_Pawn_Object.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f);
            
                 // state
-                Battle_Sys.Goblin_Attack_Human(battle_scope, target_human_pawn, slot_human.slot_id, slot_goblin.Data.goblin, slot_goblin.slot_id);
+                Battle_Sys.Goblin_Attack_Human(battle_scope, target_human_pawn, slot_human.slot_id, acting_goblin_pawn, slot_goblin.slot_id);
 
                 cancel = await pawn_object.transform.DOMove(slot_goblin.transform.position, 0.4f).To_Kill_Cancel_Surpress();
                 if (cancel)
@@ -421,6 +521,7 @@ namespace GCQ
 
             Goblin_Pawn target_goblin_pawn = slot_goblin.Data.goblin;
             target_goblin_pawn.combat.melee_queue.Add(slot_human.Data.id);
+            Human_Pawn acting_human_pawn = slot_human.Data.human;
 
             slot_human.Lock_Collider = true;
             slot_goblin.Lock_Collider = slot_goblin.Data.goblin.combat.melee_queue.Count >= 3;
@@ -442,7 +543,7 @@ namespace GCQ
                 await slot_goblin.Get_Pawn_Object.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f);
 
                 // state
-                Battle_Sys.Human_Attack_Goblin(battle_scope, slot_human.Data.human, slot_human.slot_id, target_goblin_pawn, slot_goblin.slot_id);
+                Battle_Sys.Human_Attack_Goblin(battle_scope, acting_human_pawn, slot_human.slot_id, target_goblin_pawn, slot_goblin.slot_id);
 
                 cancel = await pawn_object.transform.DOMove(slot_human.transform.position, 0.4f).To_Kill_Cancel_Surpress();
                 if (cancel)

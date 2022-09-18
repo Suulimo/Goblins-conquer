@@ -13,5 +13,6 @@ namespace GCQ
         public int rank;
 
         public HashSet<Unity.Mathematics.int2> melee_queue = new ();
+        public HashSet<Unity.Mathematics.int2> movement_queue = new ();
     }
 }

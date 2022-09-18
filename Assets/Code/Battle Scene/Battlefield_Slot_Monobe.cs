@@ -66,6 +66,11 @@ public class Battlefield_Slot_Monobe : MonoBehaviour
         sprite_renderer.color = Color.white;
     }
 
+    public void Set_Selected_Color() {
+        var c = Color.black * 0.5f + original_color * 0.5f;
+        c.a = 1;
+        sprite_renderer.color = c;
+    }
 
     private void Awake() {
         original_location = transform.position;
@@ -124,7 +129,8 @@ public class Battlefield_Slot_Monobe : MonoBehaviour
             case GCQ.Slot_Type.C:
             case GCQ.Slot_Type.B:
             case GCQ.Slot_Type.A:
-                //fnHopB();
+                MessageBroker.Default.Publish(new Selection_Done { slot_id = slot_id, slot_type = slot_type });
+
                 break;
         }
     }

@@ -25,8 +25,8 @@ MonoBehaviour:
   difficulty_growth_rate: 0.1
   enemy_male_num_weight: 80
   enemy_female_num_weight: 20
-  enemy_start_num: 20
-  ally_start_num: 20
+  enemy_start_num: 1
+  ally_start_num: 1
   bed_start_num: 1
   bed_recovery_rate: 1
   bed_spawn_accelerate: 1.5

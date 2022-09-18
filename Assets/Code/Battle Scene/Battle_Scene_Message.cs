@@ -27,3 +27,13 @@ public struct Drag_End
 public struct Drag_Cancel
 {
 }
+
+public struct Selection_Done
+{
+    public GCQ.Slot_Type slot_type;
+    public int2 slot_id;
+}
+
+public struct Selection_Cancel
+{
+}
