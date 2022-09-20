@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Unity.Mathematics;
 
 public class Pawn_Monobe : MonoBehaviour
 {
@@ -14,12 +15,38 @@ public class Pawn_Monobe : MonoBehaviour
     public GCQ.Human_Pawn human_pawn;
     public GCQ.Human_Pawn bed_pawn;
 
-    // Start is called before the first frame update
-    void Start() {
+    Battlefield_Slot_Monobe on_slot;
 
+    SpriteRenderer sprite_renderer;
+    Color original_color;
+    Collider2D my_collider2D;
+
+
+    // Start is called before the first frame update
+    void Awake() {
+        sprite_renderer = GetComponent<SpriteRenderer>();
+        original_color = sprite_renderer.color;
+        my_collider2D = GetComponent<Collider2D>();
     }
 
-    private void OnEnable() {
+    public void Set_On_Slot(Battlefield_Slot_Monobe value) {
+        on_slot = value;
+    }
+
+    public Battlefield_Slot_Monobe Get_On_Slot => on_slot;
+
+    public void Reset_Color() {
+        sprite_renderer.color = original_color;
+    }
+
+    public void Set_Mark_Color() {
+        sprite_renderer.color = Color.black * 0.5f + Color.green * 0.5f;
+    }
+
+    public void Set_Selected_Color() {
+        var c = Color.red * 0.5f + original_color * 0.5f;
+        c.a = 1;
+        sprite_renderer.color = c;
     }
 
     public void Set_Goblin_Pawn(GCQ.Goblin_Pawn pawn) {

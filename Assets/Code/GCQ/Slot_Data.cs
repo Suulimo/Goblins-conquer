@@ -9,5 +9,6 @@
         public Goblin_Pawn goblin = null;
         public Goblin_Pawn prev_goblin = null;
         public bool is_empty = true;
+        public bool is_busy_spawning_or_dying = false;
     }
 }

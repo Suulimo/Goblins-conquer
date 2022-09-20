@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 namespace GCQ
 {
@@ -17,6 +18,7 @@ namespace GCQ
                 var pawn_control = p.gameObj.GetComponent<Pawn_Monobe>();
                 if (pawn_control != null) {
                     pawn_control.Set_Goblin_Pawn(to_slot.Data.goblin);
+                    pawn_control.Set_On_Slot(to_slot);
                 }
 
                 to_slot.Set_Pawn_Object(p.gameObj);
@@ -35,8 +37,14 @@ namespace GCQ
                 var pawn_control = p.gameObj.GetComponent<Pawn_Monobe>();
                 if (pawn_control != null) {
                     pawn_control.Set_Human_Pawn(to_slot.Data.human);
+                    pawn_control.Set_On_Slot(to_slot);
                 }
 
+                to_slot.Data.is_busy_spawning_or_dying = true;
+
+                pawn_control.transform.DOLocalMoveX(20, 0.5f).SetInverted().OnComplete(() => {
+                    to_slot.Data.is_busy_spawning_or_dying = false;
+                });
                 to_slot.Set_Pawn_Object(p.gameObj);
             }
 

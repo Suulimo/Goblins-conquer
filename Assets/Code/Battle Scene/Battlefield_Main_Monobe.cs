@@ -11,6 +11,7 @@ public class Battlefield_Main_Monobe : MonoBehaviour
     public Battlefield_Slot_Monobe[] c_group;
 
     public SpriteRenderer dragged;
+    public Vector3 drag_hold_offset;
 
     public Tilemap tilemap;
     public GameObject slot_clone;
