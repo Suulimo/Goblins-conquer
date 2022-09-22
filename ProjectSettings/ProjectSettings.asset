@@ -661,7 +661,22 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    Standalone: UNITASK_DOTWEEN_SUPPORT;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1
+    Android: EPO_DOTWEEN;EPO_DOTWEEN
+    CloudRendering: EPO_DOTWEEN;EPO_DOTWEEN
+    EmbeddedLinux: EPO_DOTWEEN;EPO_DOTWEEN
+    GameCoreScarlett: EPO_DOTWEEN;EPO_DOTWEEN
+    GameCoreXboxOne: EPO_DOTWEEN;EPO_DOTWEEN
+    Lumin: EPO_DOTWEEN;EPO_DOTWEEN
+    Nintendo Switch: EPO_DOTWEEN;EPO_DOTWEEN
+    PS4: EPO_DOTWEEN;EPO_DOTWEEN
+    PS5: EPO_DOTWEEN;EPO_DOTWEEN
+    Stadia: EPO_DOTWEEN;EPO_DOTWEEN
+    Standalone: UNITASK_DOTWEEN_SUPPORT;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;EPO_DOTWEEN
+    WebGL: EPO_DOTWEEN;EPO_DOTWEEN
+    Windows Store Apps: EPO_DOTWEEN;EPO_DOTWEEN
+    XboxOne: EPO_DOTWEEN;EPO_DOTWEEN
+    iPhone: EPO_DOTWEEN;EPO_DOTWEEN
+    tvOS: EPO_DOTWEEN;EPO_DOTWEEN
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

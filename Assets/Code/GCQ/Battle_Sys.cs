@@ -101,7 +101,7 @@ namespace GCQ
             int count = 0;
 
             foreach (var kv in group) {
-                if (kv.Value.is_empty) {
+                if (kv.Value.is_empty && kv.Value.is_busy_spawning_or_dying == false) {
                     empty_index_array[count] = kv.Key;
                     count++;
                 }
@@ -283,6 +283,9 @@ namespace GCQ
         }
 
         public static void Human_Attack_Goblin(Battle_Scope scope, Human_Pawn human_pawn, int2 human_slot_id, Goblin_Pawn goblin_pawn, int2 goblin_slot_id) {
+            if (goblin_pawn.combat.hp.Value <= 0)
+                return;
+            
             goblin_pawn.combat.hp.Value -= human_pawn.combat.attack_power;
 
             if (goblin_pawn.combat.hp.Value <= 0) {
@@ -296,6 +299,9 @@ namespace GCQ
         }
 
         public static void Goblin_Attack_Human(Battle_Scope scope, Human_Pawn human_pawn, int2 human_slot_id, Goblin_Pawn goblin_pawn, int2 goblin_slot_id) {
+            if (human_pawn.combat.hp.Value <= 0)
+                return;
+                
             human_pawn.combat.hp.Value -= goblin_pawn.combat.attack_power;
 
             if (human_pawn.combat.hp.Value <= 0) {

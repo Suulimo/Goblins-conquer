@@ -21,9 +21,18 @@ namespace GCQ
             PostCast,
         }
 
+        public enum Item_Test {
+            None,
+            Roast_Pork,
+            Birth_Drug,
+            Rage_Drug,
+        }
+
         Cursor_Mode cursor_mode = Cursor_Mode.Drag;
+        Item_Test item_holding = Item_Test.None;
 
         public Cursor_Mode current_cursor_mode => cursor_mode;
+        public Item_Test current_item_holding => item_holding;
 
         Battlefield_Main_Monobe main_component;
 
@@ -38,9 +47,14 @@ namespace GCQ
 
         RaycastHit2D[] hit_2Ds = new RaycastHit2D[20];
         int pawn_layer_mask = LayerMask.GetMask("Pawn");
+
         Pawn_Monobe target_pawn_monobe;
         Pawn_Monobe press_pawn_monobe;
         Pawn_Monobe select_pawn_monobe;
+
+        Battlefield_Slot_Monobe target_pawn_slot;
+        Battlefield_Slot_Monobe press_pawn_slot;
+        Battlefield_Slot_Monobe select_pawn_slot;
 
         Vector3 out_of_screen = new Vector3(-10000, 0, 0);
 
@@ -52,7 +66,39 @@ namespace GCQ
 
         Camera camera_main = null;
 
-        Vector3Int[] test_cast_shape = { new(0, 0, 0), new(-1, 0, 0), new(0, 1, 0), new(1, 0, 0), new(0, -1, 0) };
+        static Vector3Int
+            LEFT = new Vector3Int(-1, 0, 0),
+            RIGHT = new Vector3Int(1, 0, 0),
+            DOWN = new Vector3Int(0, -1, 0),
+            DOWNLEFT = new Vector3Int(-1, -1, 0),
+            DOWNRIGHT = new Vector3Int(1, -1, 0),
+            UP = new Vector3Int(0, 1, 0),
+            UPLEFT = new Vector3Int(-1, 1, 0),
+            UPRIGHT = new Vector3Int(1, 1, 0);
+
+        static Vector3Int[] directions_when_y_is_even =
+              { LEFT, RIGHT, DOWN, DOWNLEFT, UP, UPLEFT };
+        static Vector3Int[] directions_when_y_is_odd =
+              { LEFT, RIGHT, DOWN, DOWNRIGHT, UP, UPRIGHT };
+
+        public Vector3Int[] Neighbors(Vector3Int node) {
+            Vector3Int[] directions = (node.y % 2) == 0 ?
+                 directions_when_y_is_even :
+                 directions_when_y_is_odd;
+
+            return directions;
+        }
+
+        Vector3Int[] test_cast_shape_y_is_even = { new(0, 0, 0), /*new(-1, 0, 0),*/ new(0, 1, 0), new(1, 0, 0), new(0, -1, 0) };
+        Vector3Int[] test_cast_shape_y_is_odd = { new(0, 0, 0), /*new(-1, 0, 0),*/ new(1, 1, 0), new(1, 0, 0), new(1, -1, 0) };
+
+        public Vector3Int[] TestCast(Vector3Int node) {
+            Vector3Int[] directions = (node.y % 2) == 0 ?
+                 test_cast_shape_y_is_even :
+                 test_cast_shape_y_is_odd;
+
+            return directions;
+        }
 
         public Battlefield_Slot_Monobe Get_Slot_Monobe(Slot_Type type, int2 id) {
             return slot_look_up[(type, id)];
@@ -93,8 +139,6 @@ namespace GCQ
                 Cursor_Mode.Select => My_Update_Select(dt),
                 _ => -1,
             };
-
-            aaa(dt);
         }
 
         int My_Update_Drag(float dt) {
@@ -104,94 +148,243 @@ namespace GCQ
                 main_component.dragged.transform.position = cursor + main_component.drag_hold_offset;
             }
 
-            {
-                Ray cursor_ray = camera_main.ScreenPointToRay(Input.mousePosition);
-                var num = Physics2D.RaycastNonAlloc(cursor_ray.origin, cursor_ray.direction, hit_2Ds, 500, pawn_layer_mask);
-                if (num > 0) {
-                    if (hit_2Ds[0].collider.gameObject.TryGetComponent<Pawn_Monobe>(out var pawn_monobe)) {
 
-                        if (pawn_monobe != target_pawn_monobe) {
-                            target_pawn_monobe?.Reset_Color();
-                            pawn_monobe.Set_Mark_Color();
-                            target_pawn_monobe = pawn_monobe;
-                        }
+            Ray cursor_ray = camera_main.ScreenPointToRay(Input.mousePosition);
+            var num = Physics2D.RaycastNonAlloc(cursor_ray.origin, cursor_ray.direction, hit_2Ds, 500, pawn_layer_mask);
+            Pawn_Monobe hit_pawn = null;
+            for (int i = 0; i < num && hit_2Ds[i].collider.gameObject.TryGetComponent<Pawn_Monobe>(out var idle_pawn); i++) {
+                if (idle_pawn.Get_On_Slot?.Data.is_busy_spawning_or_dying == true)
+                    continue;
+                if (idle_pawn.Get_On_Slot?.Data.goblin?.combat.is_busy == true)
+                    continue;
+
+                hit_pawn = idle_pawn;
+                break;
+            }
+            var tilemap = main_component.tilemap;
+            var wPos = camera_main.ScreenToWorldPoint(Input.mousePosition);
+            var mouse_in_cell = tilemap.WorldToCell(wPos);
+            var slot = Get_Slot_At_Position(mouse_in_cell);
+
+            if (hit_pawn != null) {
+                if (hit_pawn != select_pawn_monobe) {
+                    target_pawn_monobe?.Reset_Color();
+                    target_pawn_monobe = hit_pawn;
+                    target_pawn_monobe.Set_Mark_Color();
+                    target_pawn_slot?.Reset_Color();
+                    target_pawn_slot = target_pawn_monobe.Get_On_Slot;
+                    target_pawn_slot?.Set_Mark_Color();
+                }
+            }
+            else if (slot != null) {
+                if ((mouse_in_cell.x, mouse_in_cell.y) != (selected_slot_id.x, selected_slot_id.y)) {
+                    target_pawn_slot?.Reset_Color();
+                    target_pawn_slot = slot;
+                    target_pawn_slot?.Set_Mark_Color();
+                    target_pawn_monobe?.Reset_Color();
+                    target_pawn_monobe = target_pawn_slot?.Get_Pawn_Monobe;
+                    target_pawn_monobe?.Set_Mark_Color();
+                }
+            }
+            else {
+                target_pawn_monobe?.Reset_Color();
+                target_pawn_monobe = null;
+
+                target_pawn_slot?.Reset_Color();
+                target_pawn_slot = null;
+            }
+
+            if (target_pawn_slot != null && target_pawn_slot.slot_type == Slot_Type.B)
+                return 0;
+            if (target_pawn_monobe != null && target_pawn_monobe.goblin_pawn == null)
+                return 0;
+
+            if (Input.GetMouseButtonDown(0)) {
+                if (hit_pawn != null) {
+                    press_pawn_monobe = hit_pawn;
+                    press_pawn_slot = press_pawn_monobe?.Get_On_Slot;
+                    On_Drag_Begin(new Drag_Begin { slot_id = hit_pawn.Get_On_Slot.slot_id, slot_type = hit_pawn.Get_On_Slot.slot_type });
+                }
+                else if (slot != null) {
+                    if ((mouse_in_cell.x, mouse_in_cell.y) != (selected_slot_id.x, selected_slot_id.y)) {
+                        On_Drag_Begin(new Drag_Begin { slot_id = slot.slot_id, slot_type = slot.slot_type });
+                        press_pawn_slot = slot;
+                        press_pawn_monobe = press_pawn_slot?.Get_Pawn_Monobe;
+                    }
+                }
+            }
+            else if (Input.GetMouseButtonUp(0)) {
+                if (hit_pawn != null) {
+                    if (press_pawn_monobe == hit_pawn) {
+                        select_pawn_monobe = press_pawn_monobe;
+                        select_pawn_slot = select_pawn_monobe?.Get_On_Slot;
+                        press_pawn_monobe = null;
+                        press_pawn_slot = null;
+                        target_pawn_monobe?.Reset_Color();
+                        target_pawn_monobe = null;
+                        target_pawn_slot?.Reset_Color();
+                        target_pawn_slot = null;
+
+                        On_Selection_Done(new Selection_Done { slot_id = hit_pawn.Get_On_Slot.slot_id, slot_type = hit_pawn.Get_On_Slot.slot_type });
+                    }
+                    else {
+                        is_drag_ready = true;
+                        On_Drag_End(new Drag_End { slot_id = hit_pawn.Get_On_Slot.slot_id, slot_type = hit_pawn.Get_On_Slot.slot_type });
+                        press_pawn_monobe = null;
+                        press_pawn_slot = null;
+                        target_pawn_monobe?.Reset_Color();
+                        target_pawn_monobe = null;
+                    }
+                }
+                else if (slot != null) {
+                    if (press_pawn_slot == slot) {
+                        select_pawn_slot = press_pawn_slot;
+                        select_pawn_monobe = select_pawn_slot?.Get_Pawn_Monobe;
+                        press_pawn_monobe = null;
+                        press_pawn_slot = null;
+                        target_pawn_monobe?.Reset_Color();
+                        target_pawn_monobe = null;
+                        target_pawn_slot?.Reset_Color();
+                        target_pawn_slot = null;
+
+                        On_Selection_Done(new Selection_Done { slot_id = slot.slot_id, slot_type = slot.slot_type });
+                    }
+                    else {
+                        is_drag_ready = true;
+                        On_Drag_End(new Drag_End { slot_id = slot.slot_id, slot_type = slot.slot_type });
+                        press_pawn_monobe = null;
+                        press_pawn_slot = null;
+                        target_pawn_monobe?.Reset_Color();
+                        target_pawn_monobe = null;
                     }
                 }
                 else {
-                    target_pawn_monobe?.Reset_Color();
-                    target_pawn_monobe = null;
+                    On_Drag_End(new());
                 }
+            }
+            return 0;
+        }
+
+        int My_Update_Select(float dt) {
+
+            if (is_picking_up == false)
+                return -1;
+
+            if (Input.GetMouseButtonUp(1)) {
+                On_Selection_Cancel(new());
+                return 0;
+            }
+
+            Reset_Tile_State();
+
+            var cursor = camera_main.ScreenToWorldPoint(Input.mousePosition);
+            cursor.z = 0;
+            main_component.dragged.transform.position = cursor + main_component.drag_hold_offset;
+
+            Ray cursor_ray = camera_main.ScreenPointToRay(Input.mousePosition);
+            var num = Physics2D.RaycastNonAlloc(cursor_ray.origin, cursor_ray.direction, hit_2Ds, 500, pawn_layer_mask);
+            Pawn_Monobe hit_pawn = null;
+            for (int i = 0; i < num && hit_2Ds[i].collider.gameObject.TryGetComponent<Pawn_Monobe>(out var idle_pawn); i++) {
+                if (idle_pawn.Get_On_Slot?.Data.is_busy_spawning_or_dying == true)
+                    continue;
+                if (idle_pawn.Get_On_Slot?.Data.goblin?.combat.is_busy == true)
+                    continue;
+
+                hit_pawn = idle_pawn;
+                break;
+            }
+            var tilemap = main_component.tilemap;
+            var wPos = camera_main.ScreenToWorldPoint(Input.mousePosition);
+            var mouse_in_cell = tilemap.WorldToCell(wPos);
+            var slot = Get_Slot_At_Position(mouse_in_cell);
+            
+            if (hit_pawn != null) {
+                if (hit_pawn != select_pawn_monobe) {
+                    target_pawn_monobe?.Reset_Color();
+                    target_pawn_monobe = hit_pawn;
+                    target_pawn_monobe.Set_Mark_Color();
+                    target_pawn_slot?.Reset_Color();
+                    target_pawn_slot = target_pawn_monobe.Get_On_Slot;
+                    target_pawn_slot?.Set_Mark_Color();
+                }
+            }
+            else if (slot != null) {
+                if ((mouse_in_cell.x, mouse_in_cell.y) != (selected_slot_id.x, selected_slot_id.y)) {
+                    target_pawn_slot?.Reset_Color();
+                    target_pawn_slot = slot;
+                    target_pawn_slot?.Set_Mark_Color();
+                    target_pawn_monobe?.Reset_Color();
+                    target_pawn_monobe = target_pawn_slot?.Get_Pawn_Monobe;
+                    target_pawn_monobe?.Set_Mark_Color();
+                }
+            }
+            else {
+                target_pawn_monobe?.Reset_Color();
+                target_pawn_monobe = null;
+
+                target_pawn_slot?.Reset_Color();
+                target_pawn_slot = null;
             }
 
             if (Input.GetMouseButtonDown(0)) {
-                Ray cursor_ray = camera_main.ScreenPointToRay(Input.mousePosition);
-                var num = Physics2D.RaycastNonAlloc(cursor_ray.origin, cursor_ray.direction, hit_2Ds, 500, pawn_layer_mask);
-                if (num > 0) {
-                    if (hit_2Ds[0].collider.gameObject.TryGetComponent<Pawn_Monobe>(out var pawn_monobe)) {
-                        press_pawn_monobe = pawn_monobe;
-
-                        On_Drag_Begin(new Drag_Begin { slot_id = pawn_monobe.Get_On_Slot.slot_id, slot_type = pawn_monobe.Get_On_Slot.slot_type });
-                    }
+                if (hit_pawn != null) {
+                    press_pawn_monobe = hit_pawn;
+                    press_pawn_slot = press_pawn_monobe?.Get_On_Slot;
                 }
-                else {
-                    var tilemap = main_component.tilemap;
-                    var wPos = camera_main.ScreenToWorldPoint(Input.mousePosition);
-
-                    var mouse_in_cell = tilemap.WorldToCell(wPos);
-                    if (tiles_bounds_a.Contains(mouse_in_cell)) {
-                        if ((mouse_in_cell.x, mouse_in_cell.y) != (selected_slot_id.x, selected_slot_id.y)) {
-                            var slot = tiles_info_a[mouse_in_cell.x - tiles_base_a.x][mouse_in_cell.y - tiles_base_a.y];
-
-                            On_Drag_Begin(new Drag_Begin { slot_id = slot.slot_id, slot_type = slot.slot_type });
-                        }
+                else if (slot != null) {
+                    if ((mouse_in_cell.x, mouse_in_cell.y) != (selected_slot_id.x, selected_slot_id.y)) {
+                        press_pawn_slot = slot;
+                        press_pawn_monobe = press_pawn_slot?.Get_Pawn_Monobe;
                     }
                 }
             }
             if (Input.GetMouseButtonUp(0)) {
-                Ray cursor_ray = camera_main.ScreenPointToRay(Input.mousePosition);
-                var num = Physics2D.RaycastNonAlloc(cursor_ray.origin, cursor_ray.direction, hit_2Ds, 500, pawn_layer_mask);
-                if (num > 0) {
-                    if (hit_2Ds[0].collider.gameObject.TryGetComponent<Pawn_Monobe>(out var pawn_monobe)) {
-                        if (press_pawn_monobe == pawn_monobe) {
-                            select_pawn_monobe = press_pawn_monobe;
-                            press_pawn_monobe = null;
-                            target_pawn_monobe?.Reset_Color();
-                            target_pawn_monobe = null;
+                if (hit_pawn != null) {
+                    if (press_pawn_monobe == hit_pawn) {
+                        press_pawn_monobe = null;
+                        press_pawn_slot = null;
+                        target_pawn_monobe?.Reset_Color();
+                        target_pawn_monobe = null;
+                        target_pawn_slot?.Reset_Color();
+                        target_pawn_slot = null;
 
-                            On_Selection_Done(new Selection_Done { slot_id = pawn_monobe.Get_On_Slot.slot_id, slot_type = pawn_monobe.Get_On_Slot.slot_type});
-                        }
-                        else {
-                            is_drag_ready = true;
+                        On_Selection_Done(new Selection_Done { slot_id = hit_pawn.Get_On_Slot.slot_id, slot_type = hit_pawn.Get_On_Slot.slot_type });
+                    }
+                }
+                else if (slot != null) {
+                    if (press_pawn_slot == slot) {
+                        press_pawn_slot = null;
+                        press_pawn_monobe = null;
+                        target_pawn_monobe?.Reset_Color();
+                        target_pawn_monobe = null;
+                        target_pawn_slot?.Reset_Color();
+                        target_pawn_slot = null;
 
-                            On_Drag_End(new Drag_End { slot_id = pawn_monobe.Get_On_Slot.slot_id, slot_type = pawn_monobe.Get_On_Slot.slot_type});
-
-                            press_pawn_monobe = null;
-                            target_pawn_monobe?.Reset_Color();
-                            target_pawn_monobe = null;
-                        }
+                        On_Selection_Done(new Selection_Done { slot_id = slot.slot_id, slot_type = slot.slot_type });
                     }
                 }
                 else {
-                    var tilemap = main_component.tilemap;
-                    var wPos = camera_main.ScreenToWorldPoint(Input.mousePosition);
-
-                    var mouse_in_cell = tilemap.WorldToCell(wPos);
-                    if (tiles_bounds_a.Contains(mouse_in_cell)) {
-                        if ((mouse_in_cell.x, mouse_in_cell.y) != (selected_slot_id.x, selected_slot_id.y)) {
-                            var slot = tiles_info_a[mouse_in_cell.x - tiles_base_a.x][mouse_in_cell.y - tiles_base_a.y];
-
-                            is_drag_ready = true;
-                            On_Drag_End(new Drag_End { slot_id = slot.slot_id, slot_type = slot.slot_type });
-                        }
-                    }
+                    On_Selection_Cancel(new());
                 }
             }
-
 
             return 0;
         }
 
         int My_Update_Cast(float dt) {
+
+            if (item_holding != Item_Test.None) {
+                var cursor = camera_main.ScreenToWorldPoint(Input.mousePosition);
+                cursor.z = 0;
+                main_component.dragged.transform.position = cursor;
+
+                main_component.dragged.sprite = (item_holding) switch {
+                    Item_Test.Roast_Pork => Data_Manager.data_manager.share_pic.item_pic["roast pork"],
+                    Item_Test.Rage_Drug => Data_Manager.data_manager.share_pic.item_pic["rage drug"],
+                    Item_Test.Birth_Drug => Data_Manager.data_manager.share_pic.item_pic["birth drug"],
+                };
+            }
+
 
             Reset_Tile_State();
 
@@ -199,82 +392,42 @@ namespace GCQ
             var wPos = camera_main.ScreenToWorldPoint(Input.mousePosition);
 
             var mouse_in_cell = tilemap.WorldToCell(wPos);
-            for (int i = 0; i < test_cast_shape.Length; i++) {
-                var shape_i = test_cast_shape[i];
-                var shape_cell = mouse_in_cell + shape_i;
 
-                if (tiles_bounds_a.Contains(shape_cell))
-                    tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y]?.Set_Mark_Color();
+            switch (item_holding) {
+                case Item_Test.Rage_Drug:
+                    var cast_rage_zone = Neighbors(mouse_in_cell);
+                    for (int i = 0; i < cast_rage_zone.Length; i++) {
+                        var shape_i = cast_rage_zone[i];
+                        var shape_cell = mouse_in_cell + shape_i;
+
+                        if (tiles_bounds_a.Contains(shape_cell))
+                            tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y]?.Set_Mark_Color();
+                    }
+                    break;
+                case Item_Test.Birth_Drug:
+                    //var neighbors = TestCast(mouse_in_cell);
+                    //for (int i = 0; i < neighbors.Length; i++) {
+                    //    var shape_i = neighbors[i];
+                    //    var shape_cell = mouse_in_cell + shape_i;
+
+                    //    if (tiles_bounds_a.Contains(shape_cell))
+                    //        tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y]?.Set_Mark_Color();
+                    //}
+                    break;
+                case Item_Test.Roast_Pork:
+                    var cast_pork_zone = TestCast(mouse_in_cell);
+                    for (int i = 0; i < cast_pork_zone.Length; i++) {
+                        var shape_i = cast_pork_zone[i];
+                        var shape_cell = mouse_in_cell + shape_i;
+
+                        if (tiles_bounds_a.Contains(shape_cell))
+                            tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y]?.Set_Mark_Color();
+                    }
+                    break;
+                default:
+                    break;
             }
             return 0;
-        }
-
-        int My_Update_Select(float dt) {
-
-            if (is_picking_up) {
-                Reset_Tile_State();
-
-                var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                cursor.z = 0;
-                main_component.dragged.transform.position = cursor + main_component.drag_hold_offset;
-
-                Ray cursor_ray = camera_main.ScreenPointToRay(Input.mousePosition);
-                var num = Physics2D.RaycastNonAlloc(cursor_ray.origin, cursor_ray.direction, hit_2Ds, 500, pawn_layer_mask);
-                if (num > 0) {
-                    if (hit_2Ds[0].collider.gameObject.TryGetComponent<Pawn_Monobe>(out var pawn_monobe)) {
-
-                        if (pawn_monobe != target_pawn_monobe) {
-                            target_pawn_monobe?.Reset_Color();
-                            pawn_monobe.Set_Mark_Color();
-                            target_pawn_monobe = pawn_monobe;
-                        }
-
-                        select_pawn_monobe?.Set_Selected_Color();
-                        select_pawn_monobe?.Get_On_Slot?.Set_Selected_Color();
-                    }
-                }
-                else {
-                    var tilemap = main_component.tilemap;
-                    var wPos = camera_main.ScreenToWorldPoint(Input.mousePosition);
-
-                    var mouse_in_cell = tilemap.WorldToCell(wPos);
-                    if (tiles_bounds_a.Contains(mouse_in_cell)) {
-                        if ((mouse_in_cell.x, mouse_in_cell.y) != (selected_slot_id.x, selected_slot_id.y))
-                            tiles_info_a[mouse_in_cell.x - tiles_base_a.x][mouse_in_cell.y - tiles_base_a.y]?.Set_Mark_Color();
-                    }
-
-                    slot_look_up[(selected_slot_type, selected_slot_id)]?.Set_Selected_Color();
-                }
-
-                if (Input.GetMouseButtonDown(0)) {
-                    cursor_ray = camera_main.ScreenPointToRay(Input.mousePosition);
-                    num = Physics2D.RaycastNonAlloc(cursor_ray.origin, cursor_ray.direction, hit_2Ds, 500, pawn_layer_mask);
-                    if (num > 0) {
-                        if (hit_2Ds[0].collider.gameObject.TryGetComponent<Pawn_Monobe>(out var pawn_monobe)) {
-                            press_pawn_monobe = pawn_monobe;
-                        }
-                    }
-                }
-                if (Input.GetMouseButtonUp(0)) {
-                    cursor_ray = camera_main.ScreenPointToRay(Input.mousePosition);
-                    num = Physics2D.RaycastNonAlloc(cursor_ray.origin, cursor_ray.direction, hit_2Ds, 500, pawn_layer_mask);
-                    if (num > 0) {
-                        if (hit_2Ds[0].collider.gameObject.TryGetComponent<Pawn_Monobe>(out var pawn_monobe)) {
-                            if (press_pawn_monobe == pawn_monobe) {
-                                select_pawn_monobe = press_pawn_monobe;
-                                press_pawn_monobe = null;
-                                target_pawn_monobe?.Reset_Color();
-                                target_pawn_monobe = null;
-
-                                On_Selection_Done(new Selection_Done { slot_id = pawn_monobe.Get_On_Slot.slot_id, slot_type = pawn_monobe.Get_On_Slot.slot_type });
-                            }
-                        }
-                    }
-                }
-
-            }
-            return 0;
-
         }
 
         int My_Update_PostCast(float dt) {
@@ -283,30 +436,6 @@ namespace GCQ
             return 0;
         }
 
-        void aaa(float dt) {
-            if (Input.GetMouseButtonUp(1)) {
-                On_Selection_Cancel(new());
-            }
-
-            if (Input.GetMouseButtonUp(0)) {
-                Ray cursor_ray = camera_main.ScreenPointToRay(Input.mousePosition);
-                var num = Physics2D.RaycastNonAlloc(cursor_ray.origin, cursor_ray.direction, hit_2Ds, 500, pawn_layer_mask);
-                if (num > 0) {
-                    if (hit_2Ds[0].collider.gameObject.TryGetComponent<Pawn_Monobe>(out var pawn_monobe)) {
-
-                        if (pawn_monobe != target_pawn_monobe) {
-                            target_pawn_monobe?.Reset_Color();
-                            pawn_monobe.Set_Mark_Color();
-                            target_pawn_monobe = pawn_monobe;
-                        }
-                    }
-                }
-                else {
-                    target_pawn_monobe?.Reset_Color();
-                    target_pawn_monobe = null;
-                }
-            }
-        }
 
         public void Change_Cursor_Mode(Cursor_Mode mode) {
             cursor_mode = mode;
@@ -314,7 +443,11 @@ namespace GCQ
             Reset_Tile_State();
         }
 
-        public void Test_Hp_Item_Cast() {
+        public void Change_Item_Holding(Item_Test item) {
+            item_holding = item;
+        }
+
+        public void Test_Item_Cast() {
             if (cursor_mode == Cursor_Mode.Cast) {
 
                 camera_main ??= Camera.main;
@@ -325,19 +458,43 @@ namespace GCQ
                 var wPos = camera_main.ScreenToWorldPoint(Input.mousePosition);
 
                 var mouse_in_cell = tilemap.WorldToCell(wPos);
-                Debug.Log(mouse_in_cell);
-                for (int i = 0; i < test_cast_shape.Length; i++) {
-                    var shape_i = test_cast_shape[i];
-                    var shape_cell = mouse_in_cell + shape_i;
 
-                    if (tiles_bounds_a.Contains(shape_cell)) {
-                        var slot_data = tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y].Data;
-                        if (slot_data.goblin != null) {
-                            slot_data.goblin.combat.hp.Value = Mathf.Min(slot_data.goblin.combat.hp.Value + 50, slot_data.goblin.combat.hp_max);
+                switch (item_holding) {
+                    case Item_Test.Birth_Drug:
+                        break;
+                    case Item_Test.Rage_Drug:
+                        var cast_rage_zone = Neighbors(mouse_in_cell);
+                        for (int i = 0; i < cast_rage_zone.Length; i++) {
+                            var shape_i = cast_rage_zone[i];
+                            var shape_cell = mouse_in_cell + shape_i;
+
+                            if (tiles_bounds_a.Contains(shape_cell)) {
+                                var slot_data = tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y]?.Data;
+                                if (slot_data?.goblin != null) {
+                                    slot_data.goblin.combat.hp.Value = Mathf.Min(slot_data.goblin.combat.hp.Value + 50, slot_data.goblin.combat.hp_max);
+                                }
+                            }
                         }
-                    }
-                        
+                        break;
+                    case Item_Test.Roast_Pork:
+                        var cast_pork_zone = TestCast(mouse_in_cell);
+                        for (int i = 0; i < cast_pork_zone.Length; i++) {
+                            var shape_i = cast_pork_zone[i];
+                            var shape_cell = mouse_in_cell + shape_i;
+
+                            if (tiles_bounds_a.Contains(shape_cell)) {
+                                var slot_data = tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y]?.Data;
+                                if (slot_data?.goblin != null) {
+                                    slot_data.goblin.combat.hp.Value = Mathf.Min(slot_data.goblin.combat.hp.Value + 50, slot_data.goblin.combat.hp_max);
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        break;
                 }
+
+                Change_Item_Holding(Item_Test.None);
                 Change_Cursor_Mode(Cursor_Mode.PostCast);
             }
         }
@@ -362,9 +519,20 @@ namespace GCQ
             if (is_dragging)
                 return;
 
+            if (args.slot_type == Slot_Type.U)
+                return;
+
             var slot = slot_look_up[(args.slot_type, args.slot_id)];
             if (slot == null)
                 return;
+
+            select_pawn_slot = slot;
+            slot.Set_Selected_Color();
+
+            if (slot.Get_Pawn_Object != null && slot.Get_Pawn_Object.TryGetComponent<Pawn_Monobe>(out var pawn_monobe)) {
+                select_pawn_monobe = pawn_monobe;
+                pawn_monobe.Set_Selected_Color();
+            }
 
             var info = slot.Get_Swap_Info;
             //main_component.dragged.color = slot.Get_Swap_Info.color;
@@ -394,7 +562,7 @@ namespace GCQ
                     if (discard != null) {
                         SpawnPrefabSystem.SafeReturn(discard.Get_Pawn_Object);
                         SpawnPrefabSystem.SafeReturn(discard.Get_Slot_Display_Object);
-                        Battle_Sys.Discard_Pawn_At(Static_Game_Scope.battle_scope, args.slot_type, args.slot_id);
+                        Battle_Sys.Discard_Pawn_At(Static_Game_Scope.battle_scope, from_slot_type, from_slot_id);
                     }
 
                 }
@@ -407,10 +575,10 @@ namespace GCQ
             is_drag_ready = false;
         }
 
-        private void Swap_or_Move(Drag_End args, Slot_Type type, int2 id) {
+        private void Swap_or_Move(Drag_End args, Slot_Type from_type, int2 from_id) {
             // ¥æ´«©Î²¾°Ê
             var swap_a = slot_look_up[(args.slot_type, args.slot_id)];
-            var swap_b = slot_look_up[(type, id)];
+            var swap_b = slot_look_up[(from_type, from_id)];
 
             if (swap_a && swap_b && (swap_a.slot_type == swap_b.slot_type)) {
 
@@ -451,7 +619,7 @@ namespace GCQ
             }
 
             // siu®§
-            if (swap_a && swap_b && (args.slot_type, type) == (Slot_Type.C, Slot_Type.A)) {
+            if (swap_a && swap_b && (args.slot_type, from_type) == (Slot_Type.C, Slot_Type.A)) {
 
                 bool busy_a = Battle_Sys.Ask_Slot_Is_Busy(swap_a.Data) || swap_a.Data.is_busy_spawning_or_dying;
                 bool busy_b = Battle_Sys.Ask_Slot_Is_Busy(swap_b.Data) || swap_b.Data.is_busy_spawning_or_dying;
@@ -468,7 +636,7 @@ namespace GCQ
                 }
 
             }
-            else if (swap_a && swap_b && (args.slot_type, type) == (Slot_Type.A, Slot_Type.C)) {
+            else if (swap_a && swap_b && (args.slot_type, from_type) == (Slot_Type.A, Slot_Type.C)) {
 
                 bool busy_a = Battle_Sys.Ask_Slot_Is_Busy(swap_a.Data) || swap_a.Data.is_busy_spawning_or_dying;
                 bool busy_b = Battle_Sys.Ask_Slot_Is_Busy(swap_b.Data) || swap_b.Data.is_busy_spawning_or_dying;
@@ -501,6 +669,9 @@ namespace GCQ
 
             if (!is_picking_up) {
 
+                if (args.slot_type == Slot_Type.U)
+                    return;
+
                 var slot = slot_look_up[(args.slot_type, args.slot_id)];
                 if (slot == null || slot.Data.is_empty == true)
                     return;
@@ -520,6 +691,7 @@ namespace GCQ
             if (slot == null)
                 return;
 
+            select_pawn_slot = slot;
             slot.Set_Selected_Color();
 
             if (slot.Get_Pawn_Object.TryGetComponent<Pawn_Monobe>(out var pawn_monobe)) {
@@ -543,8 +715,17 @@ namespace GCQ
 
         void Second_Selection_Drop(Selection_Done args) {
 
-            if ((args.slot_type, args.slot_id.x, args.slot_id.y) != (selected_slot_type, selected_slot_id.x, selected_slot_id.y)) {
-                Swap_or_Move(new Drag_End { slot_type = selected_slot_type, slot_id = selected_slot_id }, args.slot_type, args.slot_id);
+            if (args.slot_type == Slot_Type.U) {
+                // ¥á±ó
+                var discard = slot_look_up[(selected_slot_type, selected_slot_id)];
+                if (discard != null) {
+                    SpawnPrefabSystem.SafeReturn(discard.Get_Pawn_Object);
+                    SpawnPrefabSystem.SafeReturn(discard.Get_Slot_Display_Object);
+                    Battle_Sys.Discard_Pawn_At(Static_Game_Scope.battle_scope, from_slot_type, from_slot_id);
+                }
+            }
+            else if ((args.slot_type, args.slot_id.x, args.slot_id.y) != (selected_slot_type, selected_slot_id.x, selected_slot_id.y)) {
+                Swap_or_Move(new Drag_End { slot_type = args.slot_type, slot_id = args.slot_id }, selected_slot_type, selected_slot_id);
             }
             else {
             }
@@ -560,6 +741,9 @@ namespace GCQ
             Reset_Tile_State();
             select_pawn_monobe?.Reset_Color();
             select_pawn_monobe = null;
+
+            target_pawn_monobe?.Reset_Color();
+            target_pawn_monobe = null;
 
             GCQ.Static_Game_Scope.battlefield_main_ref.Use.Change_Cursor_Mode(GCQ.Battlefield_Use.Cursor_Mode.Drag);
             is_dragging = false;
@@ -709,9 +893,9 @@ namespace GCQ
                     return;
 
                 if (slot_human.Data.is_busy_spawning_or_dying == false) {
-                    _ = slot_human.Get_Pawn_Object.transform.DOKill();
-                    await slot_human.Get_Pawn_Object.transform.DOLocalRotate(new Vector3(0, 0, -10), 0.1f);
-                    await slot_human.Get_Pawn_Object.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f);
+                    _ = slot_human.Get_Pawn_Object?.transform.DOKill();
+                    await slot_human.Get_Pawn_Object?.transform.DOLocalRotate(new Vector3(0, 0, -10), 0.1f);
+                    await slot_human.Get_Pawn_Object?.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f);
                 }
                 // state
                 Battle_Sys.Goblin_Attack_Human(battle_scope, target_human_pawn, slot_human.slot_id, acting_goblin_pawn, slot_goblin.slot_id);
@@ -751,14 +935,17 @@ namespace GCQ
             var pawn_object = slot_human.Get_Pawn_Object;
 
             if (slot_goblin != null) {
+                if (pawn_object == null || slot_goblin == null) {
+                    Debug.LogError("AAA@@@");
+                }
                 var cancel = await pawn_object.transform.DOMove(slot_goblin.transform.position + new Vector3(2, 0, 0), movetime * distance).To_Kill_Cancel_Surpress();
                 if (cancel)    
                     return;
 
                 if (slot_goblin.Data.is_busy_spawning_or_dying == false) {
-                    _ = slot_goblin.Get_Pawn_Object.transform.DOKill();
-                    await slot_goblin.Get_Pawn_Object.transform.DOLocalRotate(new Vector3(0, 0, 10), 0.1f);
-                    await slot_goblin.Get_Pawn_Object.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f);
+                    _ = slot_goblin.Get_Pawn_Object?.transform.DOKill();
+                    await slot_goblin.Get_Pawn_Object?.transform.DOLocalRotate(new Vector3(0, 0, 10), 0.1f);
+                    await slot_goblin.Get_Pawn_Object?.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f);
                 }
                 // state
                 Battle_Sys.Human_Attack_Goblin(battle_scope, acting_human_pawn, slot_human.slot_id, target_goblin_pawn, slot_goblin.slot_id);
@@ -814,7 +1001,7 @@ namespace GCQ
 
                     Assert.IsNotNull(slot_control.Data);
 
-                    if (slot_control.Data.is_empty)
+                    if (slot_control.Data.is_empty || slot_control.Data.is_busy_spawning_or_dying)
                         continue;
 
                     return (slot_control.slot_type, slot_control.slot_id, slot_control.transform.position);
@@ -825,7 +1012,12 @@ namespace GCQ
 
         public void On_Pawn_Die(Slot_Type type, int2 id) {
             var discard = slot_look_up[(type, id)];
+            
             if (discard != null) {
+
+                if (discard.Data.human != null || discard.Data.goblin != null) {
+                    Debug.LogError("CCCC");
+                }
 
                 var jump_dir = (type) switch {
                     Slot_Type.A => new Vector3(-60, 0, 0),
@@ -843,8 +1035,12 @@ namespace GCQ
                 discard.Data.is_busy_spawning_or_dying = true;
                 discard.Get_Pawn_Object.transform.DOLocalRotate(rotate_dir, 1.0f, RotateMode.FastBeyond360).SetEase(Ease.Linear);
                 discard.Get_Pawn_Object.transform.DOLocalJump(jump_dir, 5, 1, 1.0f).SetEase(Ease.Linear).OnComplete(() => {
+                    if (discard.Data.human != null || discard.Data.goblin != null ) {
+                        Debug.LogError("BBBB");
+                    }
                     discard.Data.is_busy_spawning_or_dying = false;
                     SpawnPrefabSystem.SafeReturn(discard.Get_Pawn_Object);
+                    discard.Set_Pawn_Object(null);
                 });
             }
         }
@@ -860,6 +1056,21 @@ namespace GCQ
         BoundsInt tiles_bounds_a = new BoundsInt(-3, -4, 0, 5, 10, 1);
         BoundsInt tiles_bounds_b = new BoundsInt(3, -4, 0, 3, 10, 1);
         BoundsInt tiles_bounds_c = new BoundsInt(-6, -4, 0, 3, 10, 1);
+
+        Vector3Int trashcan_slot_xy = new Vector3Int(-6, -5, 0);
+        Battlefield_Slot_Monobe trashcan_slot;
+
+        Battlefield_Slot_Monobe Get_Slot_At_Position(Vector3Int pos) {
+            if (tiles_bounds_a.Contains(pos))
+                return tiles_info_a[pos.x - tiles_base_a.x][pos.y - tiles_base_a.y];
+            if (tiles_bounds_b.Contains(pos))
+                return tiles_info_b[pos.x - tiles_base_b.x][pos.y - tiles_base_b.y];
+            if (tiles_bounds_c.Contains(pos))
+                return tiles_info_c[pos.x - tiles_base_c.x][pos.y - tiles_base_c.y];
+            if (pos.x == trashcan_slot_xy.x && pos.y == trashcan_slot_xy.y)
+                return trashcan_slot;
+            return null;
+        }
 
         void Reset_Tile_State() {
             for (int i = 0; i < tiles_info_a.Length; i++) {
@@ -928,6 +1139,17 @@ namespace GCQ
                     }
                 }
             }
+
+            var new_trash_obj = GameObject.Instantiate(slot_clone);
+            new_trash_obj.GetComponent<SpriteRenderer>().color = Color.white;
+            new_trash_obj.transform.position = tilemap.GetCellCenterWorld(new Vector3Int(-4, -6, 0));
+            new_trash_obj.layer = LayerMask.NameToLayer("Default");
+            new_trash_obj.name = $"slot (trashcan)";
+
+            trashcan_slot = new_trash_obj.GetComponent<Battlefield_Slot_Monobe>();
+            trashcan_slot.slot_type = Slot_Type.U;
+            trashcan_slot.slot_id = new(-4, -6);
+            trashcan_slot.Reset_Original();
 
             return (loop_setting[0].count, loop_setting[1].count, loop_setting[2].count);
         }

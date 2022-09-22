@@ -93,7 +93,7 @@ public class Game_Control : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(0)) {
-            GCQ.Static_Game_Scope.battlefield_main_ref.Use.Test_Hp_Item_Cast();
+            GCQ.Static_Game_Scope.battlefield_main_ref.Use.Test_Item_Cast();
         }
     }
 
