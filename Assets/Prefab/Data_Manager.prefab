@@ -47,8 +47,8 @@ MonoBehaviour:
   prefab_table: {fileID: 11400000, guid: 475925ae91a1a3044a39ed90c919b33a, type: 2}
   share_pic: {fileID: 11400000, guid: 2b3195a003807eb4182575c3eca3f58d, type: 2}
   share_audio: {fileID: 11400000, guid: 7b986533166cb4f459cc787c5511d706, type: 2}
-  temp_game_setting: {fileID: 11400000, guid: dfd0df7b92fcef740821d0cdfce52022, type: 2}
-  human_data_file: {fileID: 11400000, guid: 7146ea09c1a72634688dd2b620b8757c, type: 2}
-  goblin_data_file: {fileID: 11400000, guid: 7ee2ba85586602e4099957f5674ba2b1, type: 2}
+  temp_game_setting: {fileID: 11400000, guid: 303ef1f5a40f18e45a5e7788cc71e312, type: 2}
+  human_data_file: {fileID: 11400000, guid: d579614429e04bf43974d72139a8a88e, type: 2}
+  goblin_data_file: {fileID: 11400000, guid: 274bea681aced6a43963163ce25b2487, type: 2}
   use_human_data_file: 1
   use_goblin_data_file: 1

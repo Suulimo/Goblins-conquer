@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c095a210efdd7854b965d5eae99c1ecf, type: 3}
+  m_Name: New Human_Data_File (isaac 0922)
+  m_EditorClassIdentifier: 
+  female_list:
+  - id: FEMALE_001
+    rank: 1
+    other:
+      beauty: 0
+      name: 
+      sprite: EnemyFemale (1)
+      sprite_bed: Bed (1)
+      femininity: 1
+    combat:
+      attack_cd: 5
+      attack_power_base: 3
+      attack_growth_rate: 1.2
+      ability_id: 
+      bed_spawn_cd: 14
+      hp_base: 18
+      hp_growth_rate: 1.1
+  male_list:
+  - id: MALE_001
+    rank: 1
+    other:
+      beauty: 1
+      name: 
+      sprite: EnemyMale (1)
+      sprite_bed: 
+      femininity: 0
+    combat:
+      attack_cd: 5
+      attack_power_base: 5
+      attack_growth_rate: 1.1
+      ability_id: 
+      bed_spawn_cd: 0
+      hp_base: 27
+      hp_growth_rate: 1.1
