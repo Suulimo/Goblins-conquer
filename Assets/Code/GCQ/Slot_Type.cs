@@ -2,6 +2,6 @@
 {
     public enum Slot_Type
     {
-        A, B, C, U,
+        None = 0, A, B, C, U,
     }
 }

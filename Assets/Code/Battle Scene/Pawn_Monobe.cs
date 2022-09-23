@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using Unity.Mathematics;
 using EPOOutline;
+using Cysharp.Threading.Tasks;
 
 public class Pawn_Monobe : MonoBehaviour
 {
@@ -22,6 +23,10 @@ public class Pawn_Monobe : MonoBehaviour
     Color original_color;
     Collider2D my_collider2D;
     Outlinable outlinable;
+
+    int mark_count = 0;
+    int select_count = 0;
+    int on_hit_count = 0;
 
 
     // Start is called before the first frame update
@@ -47,6 +52,14 @@ public class Pawn_Monobe : MonoBehaviour
     public void Set_Mark_Color() {
         sprite_renderer.color = Color.black * 0.5f + Color.green * 0.5f;
         outlinable.FrontParameters.Enabled = true;
+    }
+
+    public async UniTaskVoid Set_On_Hit_Color() {
+        outlinable.FrontParameters.Enabled = true;
+        outlinable.FrontParameters.FillPass.Shader = Resources.Load<Shader>("Easy performant outline/Shaders/Fills/ColorFill");
+        await UniTask.Delay(200);
+        outlinable.FrontParameters.FillPass.Shader = Resources.Load<Shader>("Easy performant outline/Shaders/Outline");
+        outlinable.FrontParameters.Enabled = false;
     }
 
     public void Set_Selected_Color() {

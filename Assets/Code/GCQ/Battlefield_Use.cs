@@ -41,9 +41,9 @@ namespace GCQ
         bool is_picking_up;
 
         Slot_Type from_slot_type;
-        int2 from_slot_id;
+        int2 from_slot_id = new (-100, -100);
         Slot_Type selected_slot_type;
-        int2 selected_slot_id;
+        int2 selected_slot_id = new(-100, -100);
 
         RaycastHit2D[] hit_2Ds = new RaycastHit2D[20];
         int pawn_layer_mask = LayerMask.GetMask("Pawn");
@@ -893,6 +893,7 @@ namespace GCQ
                     return;
 
                 if (slot_human.Data.is_busy_spawning_or_dying == false) {
+                    //_ = slot_human.Get_Pawn_Monobe.Set_On_Hit_Color();
                     _ = slot_human.Get_Pawn_Object?.transform.DOKill();
                     await slot_human.Get_Pawn_Object?.transform.DOLocalRotate(new Vector3(0, 0, -10), 0.1f);
                     await slot_human.Get_Pawn_Object?.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f);
@@ -909,7 +910,7 @@ namespace GCQ
                     return;
 
                 target_human_pawn.combat.melee_queue.Remove(slot_goblin.Data.id);
-                slot_human.Lock_Collider = slot_human.Data.human?.combat.melee_queue.Count < 3;
+                slot_human.Lock_Collider = slot_human.Data.human?.combat.melee_queue.Count >= 3;
 
             }
             //Battle_Sys.Set_Slot_Pawn_Busy(slot_human.Data, false);
@@ -935,14 +936,12 @@ namespace GCQ
             var pawn_object = slot_human.Get_Pawn_Object;
 
             if (slot_goblin != null) {
-                if (pawn_object == null || slot_goblin == null) {
-                    Debug.LogError("AAA@@@");
-                }
                 var cancel = await pawn_object.transform.DOMove(slot_goblin.transform.position + new Vector3(2, 0, 0), movetime * distance).To_Kill_Cancel_Surpress();
                 if (cancel)    
                     return;
 
                 if (slot_goblin.Data.is_busy_spawning_or_dying == false) {
+                    //_ = slot_goblin.Get_Pawn_Monobe.Set_On_Hit_Color();
                     _ = slot_goblin.Get_Pawn_Object?.transform.DOKill();
                     await slot_goblin.Get_Pawn_Object?.transform.DOLocalRotate(new Vector3(0, 0, 10), 0.1f);
                     await slot_goblin.Get_Pawn_Object?.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f);
@@ -959,7 +958,7 @@ namespace GCQ
                     return;
 
                 target_goblin_pawn.combat.melee_queue.Remove(slot_human.Data.id);
-                slot_goblin.Lock_Collider = slot_goblin.Data.goblin?.combat.melee_queue.Count < 3;
+                slot_goblin.Lock_Collider = slot_goblin.Data.goblin?.combat.melee_queue.Count >= 3;
 
             }
             Battle_Sys.Set_Slot_Pawn_Busy(slot_human.Data, false);
@@ -1014,11 +1013,6 @@ namespace GCQ
             var discard = slot_look_up[(type, id)];
             
             if (discard != null) {
-
-                if (discard.Data.human != null || discard.Data.goblin != null) {
-                    Debug.LogError("CCCC");
-                }
-
                 var jump_dir = (type) switch {
                     Slot_Type.A => new Vector3(-60, 0, 0),
                     Slot_Type.B => new Vector3(30, 0, 0),
@@ -1035,9 +1029,6 @@ namespace GCQ
                 discard.Data.is_busy_spawning_or_dying = true;
                 discard.Get_Pawn_Object.transform.DOLocalRotate(rotate_dir, 1.0f, RotateMode.FastBeyond360).SetEase(Ease.Linear);
                 discard.Get_Pawn_Object.transform.DOLocalJump(jump_dir, 5, 1, 1.0f).SetEase(Ease.Linear).OnComplete(() => {
-                    if (discard.Data.human != null || discard.Data.goblin != null ) {
-                        Debug.LogError("BBBB");
-                    }
                     discard.Data.is_busy_spawning_or_dying = false;
                     SpawnPrefabSystem.SafeReturn(discard.Get_Pawn_Object);
                     discard.Set_Pawn_Object(null);
