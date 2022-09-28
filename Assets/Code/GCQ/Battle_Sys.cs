@@ -28,7 +28,7 @@ namespace GCQ
                     scope.data.enemy_spawn_timer.Value = Data_Manager.data_manager.temp_game_setting.enemy_spawn_cd;
                     var (num, arr) = Get_Empty_Slot(scope.slot_group[Slot_Type.B]);
                     if (num > 0) {
-                        Spawn_Human_At((int)scope.data.difficulty, scope.human_slot_group, arr[0]);
+                        Spawn_Human_At(scope, (int)scope.data.difficulty, scope.human_slot_group, arr[0]);
                         if (scope.data.difficulty < 100.0f) {
                             scope.data.difficulty += Data_Manager.data_manager.temp_game_setting.difficulty_growth_rate;
                         }
@@ -145,6 +145,35 @@ namespace GCQ
             //MessageBroker.Default.Publish(new Goblin_Spawned { slot_id = group[index].id, goblin_data = data });
         }
 
+        public static void Refresh_Spawn_Queue(Battle_Scope_Data bs_data) {
+            bs_data.spawn_queue.Clear();
+            var setting = Data_Manager.data_manager.temp_game_setting;
+            float female_ratio = 0;
+            if (setting.enemy_female_num_weight == 0 && setting.enemy_male_num_weight == 0)
+                female_ratio = 1;
+            else
+                female_ratio = setting.enemy_female_num_weight / (setting.enemy_female_num_weight + setting.enemy_male_num_weight);
+
+            int[] arr = new int[5];
+            for (int i = 0; i < 5; i++) {
+                arr[i] = (i + 1 <= Mathf.FloorToInt(female_ratio * 5)) ? 1 : 0;
+            }
+
+            rand.Shuffle(arr);
+            for (int i = 0; i < 5; i++) {
+                bs_data.spawn_queue.Add(arr[i]);
+            }
+        }
+
+        public static int Pop_Next_Spawn(Battle_Scope_Data bs_data) {
+            var result = bs_data.spawn_queue[0];
+            bs_data.spawn_queue.RemoveAt(0);
+            if (bs_data.spawn_queue.Count == 0) {
+                Refresh_Spawn_Queue(bs_data);
+            }
+            return result;
+        }
+
         static void Spawn_Goblin_At(int rank, SortedDictionary<int2, Slot_Data> group, int2 index) {
             var spec = Goblin_Def.Default_Goblin_List[UnityEngine.Random.Range(0, Goblin_Def.Default_Goblin_List.Length)];
             var combat = new Pawn_Combat();
@@ -160,9 +189,10 @@ namespace GCQ
             MessageBroker.Default.Publish(new Goblin_Spawned { slot_id = group[index].id, goblin_data = spec });
         }
 
-        static void Spawn_Human_At(int rank, SortedDictionary<int2, Slot_Data> group, int2 index) {
+        static void Spawn_Human_At(Battle_Scope scope, int rank, SortedDictionary<int2, Slot_Data> group, int2 index) {
             var setting = Data_Manager.data_manager.temp_game_setting;
-            var spec = (UnityEngine.Random.Range(0, setting.enemy_female_num_weight + setting.enemy_male_num_weight) < setting.enemy_male_num_weight) ? Human_Def.Default_Male_Human_List[0] : Human_Def.Default_Human_List[0];
+            bool is_male = Pop_Next_Spawn(scope.data) == 0;
+            var spec = (is_male) ? Human_Def.Default_Male_Human_List[0] : Human_Def.Default_Human_List[0];
             var combat = new Pawn_Combat();
             combat.rank = rank;
             combat.hp_max = (int)(spec.combat.hp_base * Mathf.Pow(spec.combat.hp_growth_rate, (rank - 1)));
@@ -199,7 +229,7 @@ namespace GCQ
             var (empty_num, arr) = Get_Empty_Slot(scope.human_slot_group);
             var spawn_num = Mathf.Min(num, empty_num);
             for (int i = 0; i < spawn_num; i++) {
-                Spawn_Human_At((int)scope.data.difficulty + UnityEngine.Random.Range(0, 3), scope.human_slot_group, arr[i]);
+                Spawn_Human_At(scope, (int)scope.data.difficulty + UnityEngine.Random.Range(0, 3), scope.human_slot_group, arr[i]);
             }
         }
 
@@ -314,6 +344,43 @@ namespace GCQ
 
                 if (human_pawn.spec.other.femininity > 0)
                     Spawn_Bed_Random(human_pawn.combat.rank, human_pawn.spec.other.beauty, scope);
+
+                if (human_pawn.spec.combat.item_drop_chance.Length > 0) {
+                    var drops = human_pawn.spec.combat.item_drop_chance;
+                    float totalWeight = 0;
+
+                    foreach (var lt in drops) {
+                        totalWeight += lt.drop_chance;
+                    }
+
+                    if (totalWeight < 1)
+                        totalWeight = 1;
+
+                    float cumulativeTotal = 0;
+                    float randomValue = UnityEngine.Random.Range(0, totalWeight);
+
+                    for (int i = 0; i < drops.Length; i++) {
+                        cumulativeTotal += drops[i].drop_chance;
+                        if (cumulativeTotal > randomValue) {
+                            var drop = drops[i].item;
+                            switch (drop) {
+                                case Battlefield_Use.Item_Test.Birth_Drug:
+                                    scope.data.inventory_birth_drug.Value++;
+                                    break;
+                                case Battlefield_Use.Item_Test.Rage_Drug:
+                                    scope.data.inventory_rage_drug.Value++;
+                                    break;
+                                case Battlefield_Use.Item_Test.Roast_Pork:
+                                    scope.data.inventory_roast_pork_num.Value++;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+
+                }
             }
         }
     }

@@ -32,6 +32,14 @@ namespace GCQ
         public float bed_spawn_cd;
         public int hp_base;
         public float hp_growth_rate = 1.05f;
+        public Item_Drop_Change[] item_drop_chance;
+    }
+
+    [System.Serializable]
+    public struct Item_Drop_Change
+    {
+        public Battlefield_Use.Item_Test item;
+        public float drop_chance;
     }
 
     public static class Human_Def

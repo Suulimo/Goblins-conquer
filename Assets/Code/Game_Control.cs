@@ -92,9 +92,6 @@ public class Game_Control : MonoBehaviour
             GCQ.Static_Game_Scope.battlefield_main_ref.Use.Change_Cursor_Mode(GCQ.Battlefield_Use.Cursor_Mode.Cast);
         }
 
-        if (Input.GetMouseButtonDown(0)) {
-            GCQ.Static_Game_Scope.battlefield_main_ref.Use.Test_Item_Cast();
-        }
     }
 
 

@@ -11,7 +11,7 @@ public class Battle_Scope_Data
         set => play_speed.Value = value;
     }
 
-    [HideInInspector]
+    [ReadOnly]
     public FloatReactiveProperty play_speed = new FloatReactiveProperty(1);
 
     public static float init_enemy_spawn_timer = GCQ.Game_Spec.INIT_ENEMY_SPAWN_TIME;
@@ -22,5 +22,11 @@ public class Battle_Scope_Data
     public float difficulty = 1.0f;
 
     public bool is_auto_spawn = true;
+
+    [ReadOnly] public IntReactiveProperty inventory_roast_pork_num = new IntReactiveProperty(0);
+    [ReadOnly] public IntReactiveProperty inventory_birth_drug = new IntReactiveProperty(0);
+    [ReadOnly] public IntReactiveProperty inventory_rage_drug = new IntReactiveProperty(1);
+
+    public ReactiveCollection<int> spawn_queue = new ReactiveCollection<int>();
 
 }

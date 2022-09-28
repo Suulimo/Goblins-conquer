@@ -29,6 +29,7 @@ MonoBehaviour:
       bed_spawn_cd: 14
       hp_base: 18
       hp_growth_rate: 1.1
+      item_drop_chance: []
   male_list:
   - id: MALE_001
     rank: 1
@@ -46,3 +47,10 @@ MonoBehaviour:
       bed_spawn_cd: 0
       hp_base: 27
       hp_growth_rate: 1.1
+      item_drop_chance:
+      - item: 1
+        drop_chance: 0.1
+      - item: 2
+        drop_chance: 0.1
+      - item: 3
+        drop_chance: 0.1

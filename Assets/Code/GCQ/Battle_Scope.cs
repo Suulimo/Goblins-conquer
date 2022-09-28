@@ -35,6 +35,8 @@ namespace GCQ
             };
 
             slot_state_look_up = new Dictionary<(Slot_Type, int2), Slot_Data>();
+
+            Battle_Sys.Refresh_Spawn_Queue(data);
         }
 
         public Slot_Data Add_Slot_Data(Slot_Type type, int2 id) {

@@ -373,6 +373,17 @@ namespace GCQ
 
         int My_Update_Cast(float dt) {
 
+            if (Input.GetMouseButtonDown(0)) {
+                Test_Item_Cast();
+                return 0;
+            }
+            if (Input.GetMouseButtonDown(1)) {
+                Change_Item_Holding(Item_Test.None);
+                Change_Cursor_Mode(Cursor_Mode.PostCast);
+                return 0;
+            }
+
+
             if (item_holding != Item_Test.None) {
                 var cursor = camera_main.ScreenToWorldPoint(Input.mousePosition);
                 cursor.z = 0;
@@ -431,6 +442,7 @@ namespace GCQ
         }
 
         int My_Update_PostCast(float dt) {
+            main_component.dragged.transform.position = out_of_screen;
 
             Change_Cursor_Mode(Cursor_Mode.Drag);
             return 0;
@@ -461,8 +473,10 @@ namespace GCQ
 
                 switch (item_holding) {
                     case Item_Test.Birth_Drug:
+                        battle_scope.data.inventory_birth_drug.Value--;
                         break;
                     case Item_Test.Rage_Drug:
+                        battle_scope.data.inventory_rage_drug.Value--;
                         var cast_rage_zone = Neighbors(mouse_in_cell);
                         for (int i = 0; i < cast_rage_zone.Length; i++) {
                             var shape_i = cast_rage_zone[i];
@@ -477,6 +491,7 @@ namespace GCQ
                         }
                         break;
                     case Item_Test.Roast_Pork:
+                        battle_scope.data.inventory_roast_pork_num.Value--;
                         var cast_pork_zone = TestCast(mouse_in_cell);
                         for (int i = 0; i < cast_pork_zone.Length; i++) {
                             var shape_i = cast_pork_zone[i];
