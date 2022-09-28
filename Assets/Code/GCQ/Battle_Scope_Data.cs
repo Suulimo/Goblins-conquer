@@ -24,7 +24,7 @@ public class Battle_Scope_Data
     public bool is_auto_spawn = true;
 
     [ReadOnly] public IntReactiveProperty inventory_roast_pork_num = new IntReactiveProperty(0);
-    [ReadOnly] public IntReactiveProperty inventory_birth_drug = new IntReactiveProperty(0);
+    [ReadOnly] public IntReactiveProperty inventory_birth_drug = new IntReactiveProperty(1);
     [ReadOnly] public IntReactiveProperty inventory_rage_drug = new IntReactiveProperty(1);
 
     public ReactiveCollection<int> spawn_queue = new ReactiveCollection<int>();

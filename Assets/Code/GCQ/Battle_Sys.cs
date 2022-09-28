@@ -307,13 +307,19 @@ namespace GCQ
         public static void Bed_Normal_Act(Battle_Scope scope, Human_Pawn pawn, Goblin_Pawn goblin_pawn, float dt) {
             var combat = pawn.combat;
             var spec = pawn.spec;
-            combat.attack_cycle.Value = Mathf.Min(combat.attack_cycle.Value + dt * Mathf.Pow(Data_Manager.data_manager.temp_game_setting.bed_spawn_accelerate, (combat.rank - 1)), spec.combat.bed_spawn_cd);
+
+            float drug_factor = (combat.birth_drug_time.Value > 0) ? 2 : 1;
+            combat.attack_cycle.Value = Mathf.Min(combat.attack_cycle.Value + drug_factor * dt * Mathf.Pow(Data_Manager.data_manager.temp_game_setting.bed_spawn_accelerate, (combat.rank - 1)), spec.combat.bed_spawn_cd);
             if (combat.attack_cycle.Value == spec.combat.bed_spawn_cd) {
                 var (num, arr) = Get_Empty_Slot(scope.goblin_slot_group);
                 if (num > 0) {
                     Spawn_Goblin_At(((combat.rank + goblin_pawn.combat.rank) / 2), scope.goblin_slot_group, arr[0]);
                     combat.attack_cycle.Value = 0;
                 }
+            }
+
+            if (combat.birth_drug_time.Value > 0) {
+                combat.birth_drug_time.Value = Mathf.Max(0, combat.birth_drug_time.Value - dt);
             }
         }
 

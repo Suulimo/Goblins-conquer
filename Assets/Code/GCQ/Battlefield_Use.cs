@@ -474,6 +474,14 @@ namespace GCQ
                 switch (item_holding) {
                     case Item_Test.Birth_Drug:
                         battle_scope.data.inventory_birth_drug.Value--;
+                        if (tiles_bounds_c.Contains(mouse_in_cell)) {
+                            var slot_data = tiles_info_c[mouse_in_cell.x - tiles_base_c.x][mouse_in_cell.y - tiles_base_c.y]?.Data;
+                            if (slot_data?.bed != null) {
+                                slot_data.bed.combat.birth_drug_time.Value += 30;
+                            }
+                        }
+
+
                         break;
                     case Item_Test.Rage_Drug:
                         battle_scope.data.inventory_rage_drug.Value--;
