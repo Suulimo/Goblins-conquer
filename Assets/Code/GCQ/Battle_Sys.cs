@@ -258,7 +258,8 @@ namespace GCQ
             var combat = slot.goblin.combat;
             var spec = slot.goblin.spec;
             var battle_use = Static_Game_Scope.battlefield_main_ref.Use;
-            combat.attack_cycle.Value = Mathf.Min(combat.attack_cycle.Value + dt, spec.combat.attack_cd);
+            float rage_factor = (combat.rage_time.Value > 0) ? 2 : 1;
+            combat.attack_cycle.Value = Mathf.Min(combat.attack_cycle.Value + dt * rage_factor, spec.combat.attack_cd);
             if (combat.attack_cycle.Value == spec.combat.attack_cd && combat.melee_queue.Count == 0) {
                 var me = battle_use.Get_Slot_Position(slot.slot_type, slot.id);
                 (Slot_Type scan_type, int2 scan_id, Vector3 scan_position) = battle_use.Scan_Target(me, LayerMask.GetMask("Takeable_B"));
@@ -268,6 +269,10 @@ namespace GCQ
                     MessageBroker.Default.Publish(msg);
                     combat.attack_cycle.Value = 0;
                 }
+            }
+
+            if (combat.rage_time.Value > 0) {
+                combat.rage_time.Value = Mathf.Max(0, combat.rage_time.Value - dt);
             }
         }
 

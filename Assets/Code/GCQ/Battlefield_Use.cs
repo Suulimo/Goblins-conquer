@@ -485,7 +485,7 @@ namespace GCQ
                             if (tiles_bounds_a.Contains(shape_cell)) {
                                 var slot_data = tiles_info_a[shape_cell.x - tiles_base_a.x][shape_cell.y - tiles_base_a.y]?.Data;
                                 if (slot_data?.goblin != null) {
-                                    slot_data.goblin.combat.hp.Value = Mathf.Min(slot_data.goblin.combat.hp.Value + 50, slot_data.goblin.combat.hp_max);
+                                    slot_data.goblin.combat.rage_time.Value += 15;
                                 }
                             }
                         }
