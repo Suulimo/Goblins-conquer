@@ -13,7 +13,7 @@ public class Game_Control : MonoBehaviour
     public static Game_Control game_control => _singleton;
 
     [ShowInInspector]
-    GCQ.Game_Scope_Data game_state => GCQ.Static_Game_Scope.game_scope_data;
+    GCQ.Game_Data game_state => GCQ.IGame_Scope.game_data;
 
     private CancellationTokenSource _cancel = null;
     private CompositeDisposable _com = null;
@@ -31,6 +31,7 @@ public class Game_Control : MonoBehaviour
     }
 
     public void SafeCancellationDispose() {
+        Debug.LogWarning("canc");
         CallCancel();
         if (_com != null)
             _com.Clear();
@@ -81,15 +82,15 @@ public class Game_Control : MonoBehaviour
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            GCQ.Static_Game_Scope.game_scope_data.running.Value ^= true;
-            Time.timeScale = (GCQ.Static_Game_Scope.game_scope_data.running.Value) ? 1 : 0;
+            GCQ.IGame_Scope.game_data.running.Value ^= true;
+            Time.timeScale = (GCQ.IGame_Scope.game_data.running.Value) ? 1 : 0;
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            GCQ.Static_Game_Scope.battlefield_main_ref.Use.Change_Cursor_Mode(GCQ.Battlefield_Use.Cursor_Mode.Drag);
+            GCQ.IGame_Scope.battle_scope.battlefield_main_ref.Use.Change_Cursor_Mode(GCQ.Cursor_Mode.Drag);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            GCQ.Static_Game_Scope.battlefield_main_ref.Use.Change_Cursor_Mode(GCQ.Battlefield_Use.Cursor_Mode.Cast);
+            GCQ.IGame_Scope.battle_scope.battlefield_main_ref.Use.Change_Cursor_Mode(GCQ.Cursor_Mode.Cast);
         }
 
     }

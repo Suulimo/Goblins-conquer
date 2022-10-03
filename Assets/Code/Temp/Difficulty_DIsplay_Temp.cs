@@ -11,7 +11,7 @@ public class Difficulty_DIsplay_Temp : MonoBehaviour
     void Awake() {
         MessageBroker.Default.Receive<GCQ.Battle_Scope_Init_Complete_Trigger>().Subscribe(_ => {
             UniTaskAsyncEnumerable.EveryUpdate().Subscribe(_ => {
-                timer_text.text = GCQ.Static_Game_Scope.battle_scope.data.difficulty.ToString();
+                timer_text.text = GCQ.IGame_Scope.battle_scope.data.difficulty.ToString();
             }).AddTo(this);
         }).AddTo(this);
     }

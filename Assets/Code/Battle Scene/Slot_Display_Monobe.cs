@@ -8,9 +8,6 @@ public class Slot_Display_Monobe : MonoBehaviour
     public GCQ.Human_Pawn human_pawn;
 
     public void Set_Bed_Pawn(GCQ.Human_Pawn pawn) {
-        var pool_component = GetComponent<UniRx_Pool_Component>();
-        var compoDispo = pool_component.GetCompositeDisposableOnReturn;
-
         human_pawn = pawn;
         if (human_pawn != null) {
             rank_text.text = pawn.combat.rank.ToString();

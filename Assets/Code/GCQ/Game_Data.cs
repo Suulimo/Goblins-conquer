@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GCQ
 {
-    public class Game_Scope_Data
+    public partial class Game_Data
     {
         public enum State
         {
@@ -48,6 +48,7 @@ namespace GCQ
 
             await Leave_State(current_state);
             await Enter_State(next);
+
             current_state = next;
             _ = Execute_State(current_state);
 
@@ -80,27 +81,6 @@ namespace GCQ
 
             if (state_worker.GetAwaiter().IsCompleted == false)
                 await state_worker;
-        }
-
-
-        async UniTask Init_State_Execution() {
-
-            // 確認需要引用的scene跟game component都已經實例化
-            var w1 = UniTask.WaitUntil(() => Static_Game_Scope.battle_scene_ref != null);
-            var w2 = UniTask.WaitUntil(() => Static_Game_Scope.battlefield_main_ref != null);
-
-            await UniTask.WhenAll(w1, w2);
-
-
-            Static_Game_Scope.battle_scope = new Battle_Scope();
-            Static_Game_Scope.battle_scope.Init_Scope();
-
-            var (n1, n2, n3) = Static_Game_Scope.battlefield_main_ref.Use.MakeMap(
-                Static_Game_Scope.battle_scope.Add_Slot_Data
-            );
-
-            MessageBroker.Default.Publish(new Battle_Scope_Init_Complete_Trigger { });
-            MessageBroker.Default.Publish(new Battle_Scope_Run_Trigger { });
         }
     }
 }

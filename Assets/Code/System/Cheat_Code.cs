@@ -13,7 +13,7 @@ public static class Cheat_Code
             Game_Control.game_control.SafeCancellationDispose();
             Data_Manager.data_manager.Force_Return_Pool();
             UnityEngine.SceneManagement.SceneManager.LoadScene("Battle Scene");
-            GCQ.Static_Game_Scope.Restart();
+            GCQ.IGame_Scope.Restart();
         });
     }
 
@@ -54,30 +54,30 @@ public static class Cheat_Code
 
     [DisableInEditorMode]
     public static void Buy_Goblin_x1() {
-        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Goblin_Random(GCQ.IGame_Scope.battle_scope, Random.Range(1, 4));
     }
 
     [DisableInEditorMode]
     public static void Buy_Goblin_x5() {
-        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
-        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
-        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
-        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
-        GCQ.Battle_Sys.Spawn_Goblin_Random(Random.Range(1, 4), GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Goblin_Random(GCQ.IGame_Scope.battle_scope, Random.Range(1, 4));
+        GCQ.Battle_Sys.Spawn_Goblin_Random(GCQ.IGame_Scope.battle_scope, Random.Range(1, 4));
+        GCQ.Battle_Sys.Spawn_Goblin_Random(GCQ.IGame_Scope.battle_scope, Random.Range(1, 4));
+        GCQ.Battle_Sys.Spawn_Goblin_Random(GCQ.IGame_Scope.battle_scope, Random.Range(1, 4));
+        GCQ.Battle_Sys.Spawn_Goblin_Random(GCQ.IGame_Scope.battle_scope, Random.Range(1, 4));
     }
 
     [DisableInEditorMode]
     public static void Buy_Human_x1() {
-        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.IGame_Scope.battle_scope);
     }
 
     [DisableInEditorMode]
     public static void Buy_Human_x5() {
-        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
-        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
-        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
-        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
-        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.IGame_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.IGame_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.IGame_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.IGame_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Human_Random(GCQ.IGame_Scope.battle_scope);
     }
 
 

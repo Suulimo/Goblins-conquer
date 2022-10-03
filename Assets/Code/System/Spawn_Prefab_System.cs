@@ -2,47 +2,29 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using static Data_Manager;
 
-public readonly struct PoolObj_GameObj
+//public readonly struct PoolObj_GameObj
+//{
+//    public readonly UniRx_Pool_Component poolObj;
+//    public readonly GameObject gameObj;
+
+//    PoolObj_GameObj(UniRx_Pool_Component po, GameObject ga) {
+//        poolObj = po;
+//        gameObj = ga;
+//    }
+
+//    public void Deconstruct(out UniRx_Pool_Component po, out GameObject ga) {
+//        po = poolObj;
+//        ga = gameObj;
+//    }
+
+//    public static implicit operator PoolObj_GameObj((UniRx_Pool_Component po, GameObject ga) x) => new PoolObj_GameObj(x.po, x.ga);
+//    public static implicit operator GameObject(PoolObj_GameObj x) => x.gameObj;
+//    //public static explicit operator UniRx_Pool_Component (PoolObj_GameObj x) => x.poolObj;
+//}
+
+public static class Rent_System
 {
-    public readonly UniRx_Pool_Component poolObj;
-    public readonly GameObject gameObj;
-
-    PoolObj_GameObj(UniRx_Pool_Component po, GameObject ga) {
-        poolObj = po;
-        gameObj = ga;
-    }
-
-    public void Deconstruct(out UniRx_Pool_Component po, out GameObject ga) {
-        po = poolObj;
-        ga = gameObj;
-    }
-
-    public static implicit operator PoolObj_GameObj((UniRx_Pool_Component po, GameObject ga) x) => new PoolObj_GameObj(x.po, x.ga);
-    public static implicit operator GameObject(PoolObj_GameObj x) => x.gameObj;
-    //public static explicit operator UniRx_Pool_Component (PoolObj_GameObj x) => x.poolObj;
-}
-
-public static class SpawnPrefabSystem
-{
-    public static GameObject Spawn(string key) {
-        if (data_manager.prefabDict.TryGetValue(key, out var value) == false || value.prefab == null) {
-            Debug.LogWarning("spawn dict hasn't got key: " + key);
-            return null;
-        }
-
-        return GameObject.Instantiate(value.prefab);
-    }
-
-    public static GameObject SpawnMonster(string key) {
-        if (data_manager.monsterPrefabDict.TryGetValue(key, out var value) == false || value.prefab == null) {
-            Debug.LogWarning("monster spawn dict hasn't got key: " + key);
-            return null;
-        }
-
-        return GameObject.Instantiate(value.prefab);
-    }
-
-    public static T Spawn<T>(string key) where T : MonoBehaviour {
+    public static T Spawn<T>(string key, Transform parent) where T : MonoBehaviour {
         var prefab = data_manager.prefabDict[key].prefab;
 
         if (prefab == null) {
@@ -50,7 +32,10 @@ public static class SpawnPrefabSystem
             return null;
         }
 
-        return GameObject.Instantiate(prefab).GetComponent<T>();
+        if (GameObject.Instantiate(prefab, parent).TryGetComponent<T>(out T tt))
+            return tt;
+
+        return null;
     }
 
 
@@ -63,26 +48,13 @@ public static class SpawnPrefabSystem
         return GameObject.Instantiate(value.prefab, parent);
     }
 
-    public static GameObject SpawnMonster(string key, Transform parent) {
-        if (data_manager.monsterPrefabDict.TryGetValue(key, out var value) == false || value.prefab == null) {
-            Debug.LogWarning("monster spawn dict hasn't got key: " + key);
-            return null;
-        }
+    public static Pawn_Monobe Rent_Pawn_Monobe(string key, Transform parent = null, bool worldPositionStays = true) {
 
-        return GameObject.Instantiate(value.prefab, parent);
-    }
-
-    public static PoolObj_GameObj Rent(string key, Transform parent = null, bool worldPositionStays = true) {
-        if (data_manager.pools.ContainsKey(key) == false) {
-            Debug.LogWarning("[Rent] object pool hasn't got key: " + key);
-            return (null, Spawn(key, parent));
-        }
-
-        var pool = data_manager.pools[key];
+        var pool = data_manager.pawn_monobe_pool;
 
         if (pool == null) {
             Debug.LogWarning("[Rent] object pool hasn't got key: " + key);
-            return (null, Spawn(key, parent));
+            return Spawn<Pawn_Monobe>(key, parent);
         }
 
         var pObj = pool.Rent();
@@ -91,20 +63,16 @@ public static class SpawnPrefabSystem
         if (parent != null)
             pObj.transform.SetParent(parent, worldPositionStays);
 
-        return (pObj, pObj.gameObject);
+        return pObj;
     }
 
-    public static PoolObj_GameObj RentMonster(string key, Transform parent = null, bool worldPositionStays = true) {
-        if (data_manager.pools.ContainsKey(key) == false) {
-            Debug.LogWarning("[Rent] object pool hasn't got key: " + key);
-            return (null, SpawnMonster(key, parent));
-        }
+    public static Slot_Display_Monobe Rent_Slot_Display_Monobe(string key, Transform parent = null, bool worldPositionStays = true) {
 
-        var pool = data_manager.pools[key];
+        var pool = data_manager.slot_display_monobe_pool;
 
         if (pool == null) {
             Debug.LogWarning("[Rent] object pool hasn't got key: " + key);
-            return (null, SpawnMonster(key, parent));
+            return Spawn<Slot_Display_Monobe>(key, parent);
         }
 
         var pObj = pool.Rent();
@@ -113,59 +81,37 @@ public static class SpawnPrefabSystem
         if (parent != null)
             pObj.transform.SetParent(parent, worldPositionStays);
 
-        return (pObj, pObj.gameObject);
+        return pObj;
     }
 
-    public static void SafeReturn(GameObject gObj) {
-        if (gObj != null && gObj.activeSelf)
-            Return(gObj);
+    public static void Return_Self(this Pawn_Monobe gObj) {
+        Return_Pawn_Monobe(gObj);
     }
 
-    static void Return(GameObject gObj) {
-        // Rex Particle 動畫完就自己setActive false，讓他可以回收
-        if (gObj.activeSelf == false) {
-            Debug.LogWarning($"returning an inactive object : {gObj.name}", gObj);
-            return;
-        }
+    public static void Return_Pawn_Monobe(Pawn_Monobe gObj) {
 
-        var poolObj = gObj.GetComponent<UniRx_Pool_Component>();
-
-        if (poolObj == null) {
-            Debug.LogWarning($"returning a non-pool object : {gObj.name}", gObj);
-            Object.Destroy(gObj);
-            return;
-        }
-
-        if (data_manager.pools.ContainsKey(poolObj.poolKey) == false) {
-            Debug.LogWarning("[Rent] object pool hasn't got key: " + poolObj.poolKey);
-            Object.Destroy(gObj);
-            return;
-        }
-
-        var pool = data_manager.pools[poolObj.poolKey];
+        var pool = data_manager.pawn_monobe_pool;
         if (pool == null) {
-            Debug.LogWarning("[Return] object pool hasn't got key: " + poolObj.poolKey, gObj);
+            Debug.LogWarning("[Return] object pool hasn't got key: " + gObj.name, gObj);
             Object.Destroy(gObj);
         }
 
-        if (poolObj.HasCompositeDisposable)
-            poolObj.GetCompositeDisposableOnReturn.Clear();
-
-        poolObj.CallCancel();
-
-        pool.Return(poolObj);
+        pool.Return(gObj);
     }
 
-    public static async UniTaskVoid Return(GameObject gObj, float sec) {
-        if (await UniTask.Delay((int)(sec * 1000), cancellationToken: Game_Control.SceneLifetimeCancelToken).SuppressCancellationThrow())
-            return;
-        SafeReturn(gObj);
+    public static void Return_Self(this Slot_Display_Monobe gObj) {
+        Return_Slot_Display_Monobe(gObj);
     }
 
-    public static async UniTaskVoid WillReturnInFrame(GameObject gObj, int frame) {
-        if (await UniTask.DelayFrame(frame, cancellationToken: Game_Control.SceneLifetimeCancelToken).SuppressCancellationThrow())
-            return;
-        SafeReturn(gObj);
+    public static void Return_Slot_Display_Monobe(Slot_Display_Monobe gObj) {
+
+        var pool = data_manager.slot_display_monobe_pool;
+        if (pool == null) {
+            Debug.LogWarning("[Return] object pool hasn't got key: " + gObj.name, gObj);
+            Object.Destroy(gObj);
+        }
+
+        pool.Return(gObj);
     }
 
 }

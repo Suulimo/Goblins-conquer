@@ -26,3 +26,29 @@ MonoBehaviour:
       ability_id: 
       hp_base: 25
       hp_growth_rate: 1.1
+  - id: GOBLIN_002
+    rank: 0
+    other:
+      beauty: 0
+      name: 
+      sprite: Goblin (2)
+    combat:
+      attack_cd: 6
+      attack_power_base: 5
+      attack_growth_rate: 1.1
+      ability_id: 
+      hp_base: 40
+      hp_growth_rate: 1.1
+  - id: GOBLIN_003
+    rank: 1
+    other:
+      beauty: 0
+      name: 
+      sprite: Goblin (3)
+    combat:
+      attack_cd: 2
+      attack_power_base: 2
+      attack_growth_rate: 1.5
+      ability_id: 
+      hp_base: 30
+      hp_growth_rate: 1.5

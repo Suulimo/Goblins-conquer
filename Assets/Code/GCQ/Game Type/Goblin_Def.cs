@@ -20,6 +20,8 @@ namespace GCQ
         public int beauty;
         public string name;
         public string sprite;
+        public string baba;
+        public string mama;
     }
 
     [System.Serializable]

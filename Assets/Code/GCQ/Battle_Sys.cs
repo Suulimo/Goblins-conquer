@@ -41,7 +41,7 @@ namespace GCQ
                     var g_state = a.goblin.combat;
                     if (g_state.is_busy)
                         continue;
-                    Goblin_Normal_Act(a, dt);
+                    Goblin_Normal_Act(scope, a, dt);
                 }
             }
 
@@ -50,7 +50,7 @@ namespace GCQ
                     var g_state = b.human.combat;
                     if (g_state.is_busy)
                         continue;
-                    Human_Normal_Act(b, dt);
+                    Human_Normal_Act(scope, b, dt);
                 }
             }
 
@@ -72,7 +72,7 @@ namespace GCQ
                     Bed_Normal_Act(scope, c.bed, c.goblin, dt);
                 }
                 if (c.goblin != null) {
-                    Goblin_Recover_Act(c, dt);
+                    Goblin_Recover_Act(scope, c, dt);
                 }
             }
 
@@ -119,11 +119,14 @@ namespace GCQ
             (a.is_empty, b.is_empty) = (b.is_empty, a.is_empty);
         }
 
-        public static void Set_Slot_Pawn_Busy(Slot_Data a, bool to_be_busy) {
-            if (a.human != null)
-                a.human.combat.is_busy = to_be_busy;
-            if (a.goblin != null)
-                a.goblin.combat.is_busy = to_be_busy;
+        public static void Set_Pawn_Busy(Human_Pawn a, bool to_be_busy) {
+            if (a != null)
+                a.combat.is_busy = to_be_busy;
+        }
+
+        public static void Set_Pawn_Busy(Goblin_Pawn a, bool to_be_busy) {
+            if (a != null)
+                a.combat.is_busy = to_be_busy;
         }
 
         public static bool Ask_Slot_Is_Busy(Slot_Data a) {
@@ -174,8 +177,27 @@ namespace GCQ
             return result;
         }
 
-        static void Spawn_Goblin_At(int rank, SortedDictionary<int2, Slot_Data> group, int2 index) {
-            var spec = Goblin_Def.Default_Goblin_List[UnityEngine.Random.Range(0, Goblin_Def.Default_Goblin_List.Length)];
+        static Human_Spec Pick_One(this Human_Spec[] spec) {
+            float totalWeight = 0;
+
+            foreach (var lt in spec) {
+                totalWeight += lt.encounter_weight;
+            }
+
+            float cumulativeTotal = 0;
+            float randomValue = UnityEngine.Random.Range(0, totalWeight);
+
+            for (int i = 0; i < spec.Length; i++) {
+                cumulativeTotal += spec[i].encounter_weight;
+                if (cumulativeTotal > randomValue) {
+                    return spec[i];
+                }
+            }
+            return default;
+        }
+
+
+        static void Spawn_Goblin_At(Battle_Scope scope, int rank, SortedDictionary<int2, Slot_Data> group, int2 index, Goblin_Spec spec) {
             var combat = new Pawn_Combat();
             combat.rank = rank;
             combat.hp_max = (int)(spec.combat.hp_base * Mathf.Pow(spec.combat.hp_growth_rate, (rank - 1)));
@@ -186,13 +208,13 @@ namespace GCQ
 
             group[index].goblin = g;
             group[index].is_empty = false;
-            MessageBroker.Default.Publish(new Goblin_Spawned { slot_id = group[index].id, goblin_data = spec });
+            Battlefield_Execution.On_Spawn_Goblin(new Goblin_Spawned { battle_scope_ref = scope, slot_id = group[index].id, goblin_data = spec });
         }
 
         static void Spawn_Human_At(Battle_Scope scope, int rank, SortedDictionary<int2, Slot_Data> group, int2 index) {
             var setting = Data_Manager.data_manager.temp_game_setting;
             bool is_male = Pop_Next_Spawn(scope.data) == 0;
-            var spec = (is_male) ? Human_Def.Default_Male_Human_List[0] : Human_Def.Default_Human_List[0];
+            var spec = (is_male) ? Human_Def.Default_Male_Human_List.Pick_One() : Human_Def.Default_Human_List.Pick_One();
             var combat = new Pawn_Combat();
             combat.rank = rank;
             combat.hp_max = (int)(spec.combat.hp_base * Mathf.Pow(spec.combat.hp_growth_rate, (rank - 1)));
@@ -203,25 +225,26 @@ namespace GCQ
 
             group[index].human = h;
             group[index].is_empty = false;
-            MessageBroker.Default.Publish(new Human_Spawned { slot_id = group[index].id, human_data = spec });
+            Battlefield_Execution.On_Spawn_Human(new Human_Spawned { battle_scope_ref = scope, slot_id = group[index].id, human_data = spec });
         }
 
-        static void Spawn_Bed_At(int rank, int bed_number, SortedDictionary<int2, Slot_Data> group, int2 index) {
-            var spec = Human_Def.Default_Human_List[bed_number];
+        static void Spawn_Bed_At(Battle_Scope scope, int rank, Human_Spec spec, SortedDictionary<int2, Slot_Data> group, int2 index) {
             var combat = new Pawn_Combat();
             combat.rank = rank;
             combat.attack_cycle.Value = 0/*data.battle.attack_cd*/;
 
             var h = new Human_Pawn() { spec = spec, combat = combat };
             group[index].bed = h;
-            MessageBroker.Default.Publish(new Bed_Spawned { slot_id = group[index].id, human_data = spec });
+            Battlefield_Execution.On_Spawn_Bed(new Bed_Spawned { battle_scope_ref = scope, slot_id = group[index].id, human_data = spec });
         }
 
-        public static void Spawn_Goblin_Random(int rank, Battle_Scope scope, int num = 1) {
+        public static void Spawn_Goblin_Random(Battle_Scope scope, int rank, int num = 1) {
             var (empty_num, arr) = Get_Empty_Slot(scope.goblin_slot_group);
             var spawn_num = Mathf.Min(num, empty_num);
             for (int i = 0; i < spawn_num; i++) {
-                Spawn_Goblin_At(rank, scope.goblin_slot_group, arr[i]);
+                var gb_spec = Goblin_Def.Default_Goblin_List[UnityEngine.Random.Range(0, Goblin_Def.Default_Goblin_List.Length)];
+
+                Spawn_Goblin_At(scope, rank, scope.goblin_slot_group, arr[i], gb_spec);
             }
         }
 
@@ -233,7 +256,7 @@ namespace GCQ
             }
         }
 
-        public static void Spawn_Bed_Random(int rank, int bed_number, Battle_Scope scope, int num = 1) {
+        public static void Spawn_Bed_Random(Battle_Scope scope, int rank, Human_Spec spec ,int num = 1) {
             //var index = Get_Empty_Slot(scope.c_group);
             System.Array.Clear(empty_index_array, 0, empty_index_array.Length);
             int count = 0;
@@ -249,23 +272,23 @@ namespace GCQ
                 rand.Shuffle(count, empty_index_array);
                 var spawn_num = Mathf.Min(num, count);
                 for (int i = 0; i < spawn_num; i++) {
-                    Spawn_Bed_At(rank, bed_number, scope.bed_slot_group, empty_index_array[i]);
+                    Spawn_Bed_At(scope, rank, spec, scope.bed_slot_group, empty_index_array[i]);
                 }
             }
         }
 
-        public static void Goblin_Normal_Act(Slot_Data slot, float dt) {
+        public static void Goblin_Normal_Act(Battle_Scope scope, Slot_Data slot, float dt) {
             var combat = slot.goblin.combat;
             var spec = slot.goblin.spec;
-            var battle_use = Static_Game_Scope.battlefield_main_ref.Use;
+            var battle_use = scope.battlefield_main_ref.Use;
             float rage_factor = (combat.rage_time.Value > 0) ? 2 : 1;
             combat.attack_cycle.Value = Mathf.Min(combat.attack_cycle.Value + dt * rage_factor, spec.combat.attack_cd);
             if (combat.attack_cycle.Value == spec.combat.attack_cd && combat.melee_queue.Count == 0) {
                 var me = battle_use.Get_Slot_Position(slot.slot_type, slot.id);
                 (Slot_Type scan_type, int2 scan_id, Vector3 scan_position) = battle_use.Scan_Target(me, LayerMask.GetMask("Takeable_B"));
                 if ((scan_id.x, scan_id.y) != (-100, -100)) {
-                    var msg = new Goblin_Attack_Human { goblin_slot_id = slot.id, human_slot_id = scan_id };
-                    battle_use.On_Goblin_vs_Human(msg);
+                    var msg = new Goblin_Attack_Human { battle_scope_ref = scope, goblin_slot_id = slot.id, human_slot_id = scan_id };
+                    _ = Battlefield_Execution.Tk_Goblin_attack_Human(msg);
                     MessageBroker.Default.Publish(msg);
                     combat.attack_cycle.Value = 0;
                 }
@@ -276,7 +299,7 @@ namespace GCQ
             }
         }
 
-        public static void Goblin_Recover_Act(Slot_Data slot, float dt) {
+        public static void Goblin_Recover_Act(Battle_Scope scope, Slot_Data slot, float dt) {
             var combat = slot.goblin.combat;
             var spec = slot.goblin.spec;
             combat.attack_cycle.Value = Mathf.Min(combat.attack_cycle.Value + dt * spec.combat.attack_cd, spec.combat.attack_cd);
@@ -287,17 +310,17 @@ namespace GCQ
         }
 
 
-        public static void Human_Normal_Act(Slot_Data slot, float dt) {
+        public static void Human_Normal_Act(Battle_Scope scope, Slot_Data slot, float dt) {
             var combat = slot.human.combat;
             var spec = slot.human.spec;
-            var battle_use = Static_Game_Scope.battlefield_main_ref.Use;
+            var battle_use = scope.battlefield_main_ref.Use;
             combat.attack_cycle.Value = Mathf.Min(combat.attack_cycle.Value + dt, spec.combat.attack_cd);
             if (combat.attack_cycle.Value == spec.combat.attack_cd && combat.melee_queue.Count == 0) {
                 var me = battle_use.Get_Slot_Position(slot.slot_type, slot.id);
                 (Slot_Type scan_type, int2 scan_id, Vector3 scan_position) = battle_use.Scan_Target(me, LayerMask.GetMask("Takeable_A"));
                 if ((scan_id.x, scan_id.y) != (-100, -100)) {
-                    var msg = new Human_Attack_Goblin { human_slot_id = slot.id, goblin_slot_id = scan_id };
-                    battle_use.On_Human_vs_Goblin(msg);
+                    var msg = new Human_Attack_Goblin { battle_scope_ref = scope, human_slot_id = slot.id, goblin_slot_id = scan_id };
+                    _ = Battlefield_Execution.Tk_Human_attack_Goblin(msg);
                     MessageBroker.Default.Publish(msg);
                     combat.attack_cycle.Value = 0;
                 }
@@ -313,7 +336,10 @@ namespace GCQ
             if (combat.attack_cycle.Value == spec.combat.bed_spawn_cd) {
                 var (num, arr) = Get_Empty_Slot(scope.goblin_slot_group);
                 if (num > 0) {
-                    Spawn_Goblin_At(((combat.rank + goblin_pawn.combat.rank) / 2), scope.goblin_slot_group, arr[0]);
+                    if (Babamama_Sys.Try_Find_Babamama(goblin_pawn.spec.id, pawn.spec.id, out var gb_spec) == false)
+                        gb_spec = Goblin_Def.Default_Goblin_List[UnityEngine.Random.Range(0, Goblin_Def.Default_Goblin_List.Length)];
+
+                    Spawn_Goblin_At(scope, ((combat.rank + goblin_pawn.combat.rank) / 2), scope.goblin_slot_group, arr[0], gb_spec);
                     combat.attack_cycle.Value = 0;
                 }
             }
@@ -335,7 +361,8 @@ namespace GCQ
                 scope.goblin_slot_group[goblin_slot_id].human = null;
                 scope.goblin_slot_group[goblin_slot_id].is_empty = true;
 
-                Static_Game_Scope.battlefield_main_ref.Use.On_Pawn_Die(Slot_Type.A, goblin_slot_id);
+                scope.battlefield_main_ref.Use.On_Pawn_Die(new Pawn_Die_Msg() { battle_scope_ref = scope, type = Slot_Type.A, id = goblin_slot_id });
+                Battlefield_Execution.On_Pawn_Die(new Pawn_Die_Msg() { battle_scope_ref = scope, type = Slot_Type.A, id = goblin_slot_id });
             }
         }
 
@@ -351,10 +378,11 @@ namespace GCQ
                 scope.human_slot_group[human_slot_id].human = null;
                 scope.human_slot_group[human_slot_id].is_empty = true;
 
-                Static_Game_Scope.battlefield_main_ref.Use.On_Pawn_Die(Slot_Type.B, human_slot_id);
+                scope.battlefield_main_ref.Use.On_Pawn_Die(new Pawn_Die_Msg() { battle_scope_ref = scope, type = Slot_Type.B, id = human_slot_id });
+                Battlefield_Execution.On_Pawn_Die(new Pawn_Die_Msg() { battle_scope_ref = scope, type = Slot_Type.B, id = human_slot_id });
 
                 if (human_pawn.spec.other.femininity > 0)
-                    Spawn_Bed_Random(human_pawn.combat.rank, human_pawn.spec.other.beauty, scope);
+                    Spawn_Bed_Random(scope, human_pawn.combat.rank, human_pawn.spec);
 
                 if (human_pawn.spec.combat.item_drop_chance.Length > 0) {
                     var drops = human_pawn.spec.combat.item_drop_chance;
@@ -375,13 +403,13 @@ namespace GCQ
                         if (cumulativeTotal > randomValue) {
                             var drop = drops[i].item;
                             switch (drop) {
-                                case Battlefield_Use.Item_Test.Birth_Drug:
+                                case Item_Test.Birth_Drug:
                                     scope.data.inventory_birth_drug.Value++;
                                     break;
-                                case Battlefield_Use.Item_Test.Rage_Drug:
+                                case Item_Test.Rage_Drug:
                                     scope.data.inventory_rage_drug.Value++;
                                     break;
-                                case Battlefield_Use.Item_Test.Roast_Pork:
+                                case Item_Test.Roast_Pork:
                                     scope.data.inventory_roast_pork_num.Value++;
                                     break;
                                 default:

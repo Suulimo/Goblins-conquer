@@ -2,38 +2,23 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-public struct Drag_To
+public struct Drag_Begin_Msg
+{
+    public GCQ.Slot_Type slot_type;
+    public int2 slot_id;
+    public bool cursor_diff;
+}
+
+public struct Drag_End_Msg
 {
     public GCQ.Slot_Type slot_type;
     public int2 slot_id;
 }
 
-public struct Drag_To_Cancel
-{
-}
-
-public struct Drag_Begin
+public struct Selection_Done_Msg
 {
     public GCQ.Slot_Type slot_type;
     public int2 slot_id;
+    public bool cursor_diff;
 }
 
-public struct Drag_End
-{
-    public GCQ.Slot_Type slot_type;
-    public int2 slot_id;
-}
-
-public struct Drag_Cancel
-{
-}
-
-public struct Selection_Done
-{
-    public GCQ.Slot_Type slot_type;
-    public int2 slot_id;
-}
-
-public struct Selection_Cancel
-{
-}

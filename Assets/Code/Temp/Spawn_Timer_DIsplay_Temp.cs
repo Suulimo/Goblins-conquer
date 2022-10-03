@@ -10,11 +10,11 @@ public class Spawn_Timer_DIsplay_Temp : MonoBehaviour
 
     void Awake() {
         MessageBroker.Default.Receive<GCQ.Battle_Scope_Init_Complete_Trigger>().Subscribe(_ => {
-            GCQ.Static_Game_Scope.battle_scope.data.enemy_spawn_timer.SubscribeToText(timer_text).AddTo(this);
+            GCQ.IGame_Scope.battle_scope.data.enemy_spawn_timer.SubscribeToText(timer_text).AddTo(this);
         }).AddTo(this);
     }
 
     private void OnMouseUpAsButton() {
-        GCQ.Static_Game_Scope.battle_scope.data.is_auto_spawn ^= true;
+        GCQ.IGame_Scope.battle_scope.data.is_auto_spawn ^= true;
     }
 }

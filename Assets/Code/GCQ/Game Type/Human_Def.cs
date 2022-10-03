@@ -5,6 +5,7 @@ namespace GCQ
     {
         public string id;
         public int rank;
+        public float encounter_weight = 1;
 
         public Human_Other_Spec other;
         public Human_Combat_Spec combat;
@@ -38,7 +39,7 @@ namespace GCQ
     [System.Serializable]
     public struct Item_Drop_Change
     {
-        public Battlefield_Use.Item_Test item;
+        public Item_Test item;
         public float drop_chance;
     }
 

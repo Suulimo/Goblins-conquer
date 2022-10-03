@@ -7,8 +7,8 @@ public class Cheat_Helper : EditorWindow
     [MenuItem("My Game/Play \u2044 Time Scale _F1")]
     public static void ToggleTime() {
         if (EditorApplication.isPlaying) {
-            GCQ.Static_Game_Scope.game_scope_data.running.Value ^= true;
-            Time.timeScale = (GCQ.Static_Game_Scope.game_scope_data.running.Value) ? 1 : 0;
+            GCQ.IGame_Scope.game_data.running.Value ^= true;
+            Time.timeScale = (GCQ.IGame_Scope.game_data.running.Value) ? 1 : 0;
             Debug.LogWarning(Time.timeScale);
 
         }

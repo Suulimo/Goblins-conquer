@@ -15,6 +15,7 @@ MonoBehaviour:
   female_list:
   - id: FEMALE_001
     rank: 1
+    encounter_weight: 1
     other:
       beauty: 0
       name: 
@@ -30,9 +31,46 @@ MonoBehaviour:
       hp_base: 18
       hp_growth_rate: 1.1
       item_drop_chance: []
+  - id: FEMALE_002
+    rank: 0
+    encounter_weight: 1
+    other:
+      beauty: 0
+      name: 
+      sprite: EnemyFemale (2)
+      sprite_bed: Bed (2)
+      femininity: 1
+    combat:
+      attack_cd: 5
+      attack_power_base: 4
+      attack_growth_rate: 1.3
+      ability_id: 
+      bed_spawn_cd: 15
+      hp_base: 15
+      hp_growth_rate: 1.05
+      item_drop_chance: []
+  - id: FEMALE_003
+    rank: 1
+    encounter_weight: 1
+    other:
+      beauty: 0
+      name: 
+      sprite: EnemyFemale (3)
+      sprite_bed: Bed (3)
+      femininity: 2
+    combat:
+      attack_cd: 10
+      attack_power_base: 10
+      attack_growth_rate: 1.05
+      ability_id: 
+      bed_spawn_cd: 20
+      hp_base: 30
+      hp_growth_rate: 1.05
+      item_drop_chance: []
   male_list:
   - id: MALE_001
     rank: 1
+    encounter_weight: 3
     other:
       beauty: 1
       name: 
@@ -50,7 +88,43 @@ MonoBehaviour:
       item_drop_chance:
       - item: 1
         drop_chance: 0.1
-      - item: 2
-        drop_chance: 0.1
+  - id: MALE_002
+    rank: 0
+    encounter_weight: 3
+    other:
+      beauty: 1
+      name: 
+      sprite: EnemyMale (2)
+      sprite_bed: 
+      femininity: 0
+    combat:
+      attack_cd: 5
+      attack_power_base: 5
+      attack_growth_rate: 1.1
+      ability_id: 
+      bed_spawn_cd: 0
+      hp_base: 27
+      hp_growth_rate: 1.1
+      item_drop_chance:
       - item: 3
         drop_chance: 0.1
+  - id: MALE_003
+    rank: 2
+    encounter_weight: 1
+    other:
+      beauty: 0
+      name: 
+      sprite: EnemyMale (3)
+      sprite_bed: 
+      femininity: 0
+    combat:
+      attack_cd: 12
+      attack_power_base: 20
+      attack_growth_rate: 1.2
+      ability_id: 
+      bed_spawn_cd: 0
+      hp_base: 30
+      hp_growth_rate: 1.05
+      item_drop_chance:
+      - item: 2
+        drop_chance: 0.3

@@ -365,7 +365,6 @@ GameObject:
   - component: {fileID: 5546383799432194840}
   - component: {fileID: 2408530691513594811}
   - component: {fileID: 6973947228529322273}
-  - component: {fileID: -5828934015811112394}
   m_Layer: 0
   m_Name: Temp Slot Display
   m_TagString: Untagged
@@ -458,20 +457,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-5828934015811112394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7910214482452611627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19988cb2e23afc842b2a96a9d34736da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 0
-  poolKey: Temp Slot Display
 --- !u!1 &8086021872382453318
 GameObject:
   m_ObjectHideFlags: 0

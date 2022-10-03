@@ -8,17 +8,17 @@ public class Item_Birth_Drug_Button_Temp : MonoBehaviour
 
     void Awake() {
         MessageBroker.Default.Receive<GCQ.Battle_Scope_Init_Complete_Trigger>().Subscribe(_ => {
-            num_text.text = $"{GCQ.Static_Game_Scope.battle_scope.data.inventory_birth_drug.Value}";
-            GCQ.Static_Game_Scope.battle_scope.data.inventory_birth_drug.Pairwise().Subscribe(pair => {
+            num_text.text = $"{GCQ.IGame_Scope.battle_scope.data.inventory_birth_drug.Value}";
+            GCQ.IGame_Scope.battle_scope.data.inventory_birth_drug.Pairwise().Subscribe(pair => {
                 num_text.DOCounter(pair.Previous, pair.Current, 0.8f);
             }).AddTo(this);
         }).AddTo(this);
     }
 
     private void OnMouseUpAsButton() {
-        if (GCQ.Static_Game_Scope.battle_scope.data.inventory_birth_drug.Value > 0) {
-            GCQ.Static_Game_Scope.battlefield_main_ref.Use.Change_Cursor_Mode(GCQ.Battlefield_Use.Cursor_Mode.Cast);
-            GCQ.Static_Game_Scope.battlefield_main_ref.Use.Change_Item_Holding(GCQ.Battlefield_Use.Item_Test.Birth_Drug);
+        if (GCQ.IGame_Scope.battle_scope.data.inventory_birth_drug.Value > 0) {
+            GCQ.IGame_Scope.battle_scope.battlefield_main_ref.Use.Change_Cursor_Mode(GCQ.Cursor_Mode.Cast);
+            GCQ.IGame_Scope.battle_scope.battlefield_main_ref.Use.Change_Item_Holding(GCQ.Item_Test.Birth_Drug);
         }
     }
 }

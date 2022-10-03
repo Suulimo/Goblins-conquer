@@ -15,6 +15,10 @@ namespace GCQ
 
     public class Battle_Scope
     {
+        // unity presenter
+        public Battle_Scene battle_scene_ref;
+        public Battlefield_Main_Monobe battlefield_main_ref;
+
         public Battle_Scope_Data data;
 
         public SortedDictionary<int2, Slot_Data> human_slot_group;
@@ -35,8 +39,6 @@ namespace GCQ
             };
 
             slot_state_look_up = new Dictionary<(Slot_Type, int2), Slot_Data>();
-
-            Battle_Sys.Refresh_Spawn_Queue(data);
         }
 
         public Slot_Data Add_Slot_Data(Slot_Type type, int2 id) {

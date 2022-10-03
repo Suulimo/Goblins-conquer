@@ -20,7 +20,7 @@ public class Battlefield_Slot_Monobe : MonoBehaviour
     SpriteRenderer pawn_sprite_renderer;
     Pawn_Monobe pawn_monobe;
 
-    GameObject slot_display_object;
+    Slot_Display_Monobe slot_display_object;
 
     GCQ.Slot_Data data;
 
@@ -44,11 +44,12 @@ public class Battlefield_Slot_Monobe : MonoBehaviour
 
     public GameObject Get_Pawn_Object => pawn_object;
 
-    public void Set_Slot_Display_Object(GameObject value) {
+    public void Set_Slot_Display_Object(Slot_Display_Monobe value) {
         slot_display_object = value;
     }
 
-    public GameObject Get_Slot_Display_Object => slot_display_object;
+    public Slot_Display_Monobe Get_Slot_Display_Object => slot_display_object;
+
     public Pawn_Monobe Get_Pawn_Monobe => pawn_monobe;
 
     public GCQ.Swap_Info Get_Swap_Info => new GCQ.Swap_Info {

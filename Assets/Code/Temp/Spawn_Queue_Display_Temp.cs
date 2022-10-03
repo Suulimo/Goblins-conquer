@@ -22,14 +22,14 @@ public class Spawn_Queue_Display_Temp : MonoBehaviour
 
                 for (int i = empty_to; i < 5; i++) {
                     if (i < count) {
-                        displays[i].sprite = (GCQ.Static_Game_Scope.battle_scope.data.spawn_queue[i - empty_to] > 0) ? female : male;
+                        displays[i].sprite = (GCQ.IGame_Scope.battle_scope.data.spawn_queue[i - empty_to] > 0) ? female : male;
                     }
                 }
             }
 
-            refresh(GCQ.Static_Game_Scope.battle_scope.data.spawn_queue.Count);
+            refresh(GCQ.IGame_Scope.battle_scope.data.spawn_queue.Count);
 
-            GCQ.Static_Game_Scope.battle_scope.data.spawn_queue.ObserveCountChanged().Subscribe(count => {
+            GCQ.IGame_Scope.battle_scope.data.spawn_queue.ObserveCountChanged().Subscribe(count => {
                 refresh(count);
             }); 
         }).AddTo(this);

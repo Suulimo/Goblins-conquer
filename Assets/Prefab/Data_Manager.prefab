@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2531036492649286794}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 500, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -50,5 +50,6 @@ MonoBehaviour:
   temp_game_setting: {fileID: 11400000, guid: 303ef1f5a40f18e45a5e7788cc71e312, type: 2}
   human_data_file: {fileID: 11400000, guid: d579614429e04bf43974d72139a8a88e, type: 2}
   goblin_data_file: {fileID: 11400000, guid: 274bea681aced6a43963163ce25b2487, type: 2}
+  special_goblin_data_file: {fileID: 11400000, guid: 7416bac9c3231d04388fd6e54cb19b63, type: 2}
   use_human_data_file: 1
   use_goblin_data_file: 1

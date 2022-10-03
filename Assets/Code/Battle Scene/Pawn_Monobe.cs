@@ -19,7 +19,7 @@ public class Pawn_Monobe : MonoBehaviour
 
     Battlefield_Slot_Monobe on_slot;
 
-    SpriteRenderer sprite_renderer;
+    public SpriteRenderer sprite_renderer { get; private set; }
     Color original_color;
     Collider2D my_collider2D;
     Outlinable outlinable;
@@ -69,9 +69,6 @@ public class Pawn_Monobe : MonoBehaviour
     }
 
     public void Set_Goblin_Pawn(GCQ.Goblin_Pawn pawn) {
-        var pool_component = GetComponent<UniRx_Pool_Component>();
-        var compoDispo = pool_component.GetCompositeDisposableOnReturn;
-
         goblin_pawn = pawn;
         if (goblin_pawn != null) {
             rank_text.text = pawn.combat.rank.ToString();
@@ -84,9 +81,6 @@ public class Pawn_Monobe : MonoBehaviour
     }
 
     public void Set_Human_Pawn(GCQ.Human_Pawn pawn) {
-        var pool_component = GetComponent<UniRx_Pool_Component>();
-        var compoDispo = pool_component.GetCompositeDisposableOnReturn;
-
         human_pawn = pawn;
         if (human_pawn != null) {
             rank_text.text = pawn.combat.rank.ToString();
@@ -99,9 +93,6 @@ public class Pawn_Monobe : MonoBehaviour
     }
 
     public void Set_Bed_Pawn(GCQ.Human_Pawn pawn) {
-        var pool_component = GetComponent<UniRx_Pool_Component>();
-        var compoDispo = pool_component.GetCompositeDisposableOnReturn;
-
         bed_pawn = pawn;
         if (bed_pawn != null) {
             rank_text.text = pawn.spec.rank.ToString();

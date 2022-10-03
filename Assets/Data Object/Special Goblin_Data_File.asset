@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4730727f4ab8d7644a244aad4396dc72, type: 3}
+  m_Name: Special Goblin_Data_File
+  m_EditorClassIdentifier: 
+  goblin_list:
+  - id: GOBLIN_001s
+    rank: 0
+    other:
+      beauty: 0
+      name: 
+      sprite: GoblinHob
+      baba: GOBLIN_003
+      mama: FEMALE_003
+    combat:
+      attack_cd: 15
+      attack_power_base: 20
+      attack_growth_rate: 1.4
+      ability_id: 
+      hp_base: 90
+      hp_growth_rate: 1.9

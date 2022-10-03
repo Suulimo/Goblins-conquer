@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
 public class Battle_Scene : MonoBehaviour
@@ -9,10 +10,11 @@ public class Battle_Scene : MonoBehaviour
     [SerializeField] Battlefield_Main_Monobe battle_field_main;
 
     void Awake() {
-        GCQ.Static_Game_Scope.battle_scene_ref = this;
+        Debug.Log("Set Battle Scene");
+        GCQ.IGame_Scope.battle_scope.battle_scene_ref = this;
 
         MessageBroker.Default.Receive<GCQ.Battle_Scope_Init_Complete_Trigger>().Subscribe(_ => {
-            battle_state = GCQ.Static_Game_Scope.battle_scope.data;
+            battle_state = GCQ.IGame_Scope.battle_scope.data;
             battle_state.difficulty += 3.0f * Data_Manager.data_manager.temp_game_setting.difficulty_growth_rate;
             battle_state.play_speed.Subscribe(value => {
                 Time.timeScale = value;
@@ -26,5 +28,9 @@ public class Battle_Scene : MonoBehaviour
             }).AddTo(gameObject);
         }).AddTo(this);
 
+        this.OnDestroyAsObservable().Subscribe(_ => {
+            GCQ.IGame_Scope.battle_scope.battle_scene_ref = null;
+            Debug.Log("Leave Battle Scene");
+        });
     }
 }

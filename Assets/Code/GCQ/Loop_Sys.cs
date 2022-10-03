@@ -1,4 +1,4 @@
-using static GCQ.Static_Game_Scope;
+using static GCQ.IGame_Scope;
 
 namespace GCQ
 {

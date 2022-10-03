@@ -9,7 +9,7 @@ public class Restart_Button_Temp : MonoBehaviour
             Game_Control.game_control.SafeCancellationDispose();
             Data_Manager.data_manager.Force_Return_Pool();
             UnityEngine.SceneManagement.SceneManager.LoadScene("Battle Scene");
-            GCQ.Static_Game_Scope.Restart();
+            GCQ.IGame_Scope.Restart();
         });
     }
 

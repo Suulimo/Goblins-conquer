@@ -23,8 +23,8 @@ MonoBehaviour:
     SerializationNodes: []
   enemy_spawn_cd: 13
   difficulty_growth_rate: 0.9
-  enemy_male_num_weight: 80
-  enemy_female_num_weight: 20
+  enemy_male_num_weight: 60
+  enemy_female_num_weight: 40
   enemy_start_num: 2
   ally_start_num: 5
   bed_start_num: 1

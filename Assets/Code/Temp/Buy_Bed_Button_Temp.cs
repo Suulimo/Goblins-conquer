@@ -4,8 +4,7 @@ using UnityEngine;
 public class Buy_Bed_Button_Temp : MonoBehaviour
 {
     private void OnMouseUpAsButton() {
-        Debug.Log("Bed");
-        GCQ.Battle_Sys.Spawn_Bed_Random(Random.Range(1, 3), 0, GCQ.Static_Game_Scope.battle_scope);
+        GCQ.Battle_Sys.Spawn_Bed_Random(GCQ.IGame_Scope.battle_scope, Random.Range(1, 3), Data_Manager.data_manager.human_data_file.female_list[0]);
     }
 
 }
